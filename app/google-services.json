@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "780883880844",
+    "project_id": "eventric-55704",
+    "storage_bucket": "eventric-55704.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:780883880844:android:f5a80736b637914f6104a9",
+        "android_client_info": {
+          "package_name": "com.eventric"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "780883880844-qqpv9580muncv7nhsv7jv6hjnm5adbn7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eventric",
+            "certificate_hash": "637d7556be3a68ccd44a8f40cd7ec5c1f1721171"
+          }
+        },
+        {
+          "client_id": "780883880844-38pbivks966sfdjtkp0hkqbabu6poagu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFAFdeXbNHi5jqN2WEaKeIn2Zkv5YFraE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "780883880844-38pbivks966sfdjtkp0hkqbabu6poagu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
