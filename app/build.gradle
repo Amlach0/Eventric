@@ -6,6 +6,13 @@ plugins {
     id 'kotlin-kapt'
 }
 
+def debugLoginUsername = 'admin@admin.com'
+def debugLoginPassword = 'admin123'
+
+def dsName = 'pref'
+
+def withQuotes = { s -> String.format("\"%1\$s\"", s) }
+
 android {
     namespace 'com.eventric'
     compileSdk 33
@@ -24,9 +31,19 @@ android {
     }
 
     buildTypes {
+        all{
+            buildConfigField 'String', 'DS_NAME', withQuotes(dsName)
+        }
         release {
+            buildConfigField 'String', 'USERNAME', withQuotes("")
+            buildConfigField 'String', 'PASSWORD', withQuotes("")
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            buildConfigField 'String', 'USERNAME', withQuotes(debugLoginUsername)
+            buildConfigField 'String', 'PASSWORD', withQuotes(debugLoginPassword)
         }
     }
     compileOptions {
@@ -40,7 +57,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0'
+        kotlinCompilerExtensionVersion "$compose_compiler_version"
     }
     packagingOptions {
         resources {
@@ -51,26 +68,37 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.10.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+
+    implementation "androidx.core:core-ktx:$core_ktx_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
 
     // Compose
-    implementation 'androidx.activity:activity-compose:1.7.0'
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.compose.material3:material3:1.1.0-beta02'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+    implementation platform("androidx.compose:compose-bom:$compose_bom_version")
+    implementation 'androidx.activity:activity-compose'
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.ui:ui-tooling-preview"
+    implementation 'androidx.compose.material3:material3:1.1.0-rc01'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4"
+    debugImplementation "androidx.compose.ui:ui-tooling"
+    debugImplementation "androidx.compose.ui:ui-test-manifest"
     implementation 'androidx.activity:activity-compose'
     implementation "androidx.compose.ui:ui"
     implementation "androidx.compose.ui:ui-tooling-preview"
     implementation 'androidx.compose.material:material'
     debugImplementation "androidx.compose.ui:ui-tooling"
     debugImplementation "androidx.compose.ui:ui-test-manifest"
+
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$junit_android_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+
+    //Preferences
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+
+    implementation "androidx.datastore:datastore-preferences:$preference_version"
 
     //Navigation Compose
     implementation "androidx.navigation:navigation-compose:$compose_navigation_version"

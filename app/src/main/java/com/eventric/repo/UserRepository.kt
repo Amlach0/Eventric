@@ -1,42 +1,62 @@
 package com.eventric.repo
 
+import android.util.Log
 import com.eventric.vo.User
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
+const val TAG = "UserRepository"
+
 @Singleton
 class UserRepository @Inject constructor() {
+    private var auth: FirebaseAuth = Firebase.auth
     private val userFlow = MutableStateFlow(User.EMPTY_USER)
     val user: StateFlow<User> by this::userFlow
-    private var savedUsers = mutableListOf<User>()
-
 
     init {
-        savedUsers += User(username = "admin", password = "admin", token = "")
+        GlobalScope.launch { refreshLoggedUser() }
     }
 
-    suspend fun login(username: String, password: String) {
-        delay(2000L)
-        val userLogin =
-            User(username = username, password = password, token = "")
-        if (savedUsers.contains(userLogin)) {
-            userFlow.value = userLogin
-        } else throw IllegalStateException("User not found")
+    suspend fun login(email: String, password: String) {
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful){
+                    Log.d(TAG, "signInWithEmail:success")
+                }
+                else{
+                    Log.d(TAG, "signInWithEmail:failure", task.exception)
+                    throw IllegalStateException("User not found")
+                }
+            }
+        refreshLoggedUser()
     }
 
     suspend fun logout(username: String, password: String) {
-        userFlow.value = User.EMPTY_USER
+        auth.signOut()
     }
 
-    suspend fun buildAuthorizationHeaders(): Map<String, String> {
-        return mapOf()
+    suspend fun refreshLoggedUser(){
+        val currentUser = auth.currentUser
+        userFlow.value = if (currentUser == null) User.EMPTY_USER
+        else User(
+            id=currentUser.uid,
+            email = currentUser.email?: ""
+        )
     }
 
-    suspend fun refreshToken() {}
+    suspend fun CreateAccount(email: String, password: String) {
+
+    }
 }
 
 sealed class Operation

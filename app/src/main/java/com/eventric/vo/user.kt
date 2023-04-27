@@ -2,15 +2,13 @@ package com.eventric.vo
 
 
 data class User(
-    val username: String,
-    val password: String,
-    val token: String,
+    val email: String,
+    val id: String,
 ) {
     companion object {
         val EMPTY_USER = User(
-            username = "",
-            password = "",
-            token = "",
+            email = "",
+            id = "",
         )
     }
 }

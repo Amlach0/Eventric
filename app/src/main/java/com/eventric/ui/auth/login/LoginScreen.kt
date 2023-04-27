@@ -3,6 +3,7 @@ package com.eventric.ui.auth.login
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.eventric.BuildConfig
 import com.eventric.repo.ErrorOperation
 import com.eventric.repo.LoadingOperation
 import com.eventric.repo.SuccessOperation
@@ -20,8 +21,8 @@ fun LoginScreen(
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf(BuildConfig.USERNAME) }
+    var password by remember { mutableStateOf(BuildConfig.PASSWORD) }
 
     var passwordVisible by remember { mutableStateOf(false) }
 

@@ -22,6 +22,7 @@ class DispatcherViewModel @Inject constructor(
     private val splashShown = savedStateHandle.getStateFlow(KEY_SHOW_SPLASH, false)
     private val user = userRepository.user
 
+
     val dispatcherStateFlow: Flow<DispatcherState> = combine(
         user,
         splashShown,
