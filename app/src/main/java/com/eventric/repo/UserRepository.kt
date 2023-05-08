@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
-const val TAG = "UserRepository"
+const val TAGuser = "UserRepository"
 
 @Singleton
 class UserRepository @Inject constructor() {
@@ -31,10 +31,10 @@ class UserRepository @Inject constructor() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful){
-                    Log.d(TAG, "signInWithEmail:success")
+                    Log.d(TAGuser, "signInWithEmail:success")
                 }
                 else{
-                    Log.d(TAG, "signInWithEmail:failure", task.exception)
+                    Log.d(TAGuser, "signInWithEmail:failure", task.exception)
                     throw IllegalStateException("User not found")
                 }
             }
