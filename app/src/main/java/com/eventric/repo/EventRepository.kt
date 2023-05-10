@@ -20,7 +20,7 @@ class EventRepository @Inject constructor() {
     private val db = Firebase.firestore
     private val events = db.collection("events")
 
-    suspend fun createEvent(event: Event) {
+    fun createEvent(event: Event) {
         events.add(event)
             .addOnSuccessListener { documentReference ->
                 Log.d(E_TAG, "Event written with ID: ${documentReference.id}")
