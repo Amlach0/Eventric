@@ -38,7 +38,7 @@ fun CustomButtonSubmit(
                 modifier = Modifier.weight(1F),
                 text = text,
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onPrimary,
             )
             Icon(
