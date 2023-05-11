@@ -1,16 +1,21 @@
 package com.eventric.vo
 
+import com.google.type.Date
+
 
 data class Event(
-    val id: String,
-    val name: String,
-    val location: String,
-) {
-    companion object {
-        val EMPTY_EVENT = Event(
-            name = "",
-            id = "",
-            location = ""
-        )
-    }
-}
+    val name: String?,
+    val image: String?,
+    val location: String?,
+    val date: DateRange?,
+    val dateRegistration: DateRange?,
+    val category: String?,
+    val type: String?,
+    val organizers: List<String?>,
+    val subscribed: List<String?>,
+)
+
+data class DateRange(
+    val start: Date,
+    val end: Date,
+)
