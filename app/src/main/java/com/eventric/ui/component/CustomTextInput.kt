@@ -52,12 +52,12 @@ fun CustomTextInput(
                 shape = MaterialTheme.shapes.small,
                 value = value,
                 onValueChange = onValueChange,
-                textStyle = MaterialTheme.typography.titleMedium,
+                textStyle = MaterialTheme.typography.bodyMedium,
                 singleLine = true,
                 placeholder = {
                     Text(
                         text = hint,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 },
@@ -114,12 +114,12 @@ fun CustomTextInput(
                 shape = MaterialTheme.shapes.small,
                 value = value,
                 onValueChange = onValueChange,
-                textStyle = MaterialTheme.typography.titleMedium,
+                textStyle = MaterialTheme.typography.bodyMedium,
                 singleLine = true,
                 placeholder = {
                     Text(
                         text = hint,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 },
