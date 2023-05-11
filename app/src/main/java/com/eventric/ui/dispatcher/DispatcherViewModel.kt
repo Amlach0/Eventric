@@ -29,7 +29,7 @@ class DispatcherViewModel @Inject constructor(
     ) { user, splashShown ->
         if (splashShown) {
             // configuration is loaded, lets check for user status
-            if (user == User.EMPTY_USER) {
+            if (user.second == User.EMPTY_USER) {
                 DispatcherState.USER_NOT_LOGGED
             } else {
                 DispatcherState.USER_LOGGED
