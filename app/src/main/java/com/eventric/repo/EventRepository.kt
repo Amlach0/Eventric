@@ -3,6 +3,7 @@ package com.eventric.repo
 import android.util.Log
 import com.eventric.vo.Event
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.snapshots
@@ -40,8 +41,13 @@ class EventRepository @Inject constructor() {
         flowOf()
     }
 
-    fun getAllEvents() = try {
+    fun getAllEvents(
+        filter: Filter = Filter(),
+        order: String = "name"
+    ) = try {
         events
+            .where(filter)
+            .orderBy(order)
             .snapshots().map { query: QuerySnapshot ->
                 var docList = listOf<Pair<String, Event>>()
                 for (doc in query) {
