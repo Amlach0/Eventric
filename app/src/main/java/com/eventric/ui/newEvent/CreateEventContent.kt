@@ -1,11 +1,7 @@
 package com.eventric.ui.newEvent
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,18 +33,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eventric.R
+import com.eventric.ui.component.CustomButtonSubmit
 import com.eventric.ui.component.CustomTextInput
 import com.eventric.ui.theme.EventricTheme
 import com.eventric.vo.EventCategory
 import com.eventric.vo.EventType
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateEventContent(
     name: String,
     location: String,
     category: EventCategory,
-    type: EventType
+    type: EventType,
+    onSubmit: () -> Unit,
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
@@ -94,7 +90,7 @@ fun CreateEventContent(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 hint = stringResource(id = R.string.event_label),
                 isLastInput = false,
-                value = "name"
+                value = name
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
@@ -108,7 +104,7 @@ fun CreateEventContent(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 hint = stringResource(id = R.string.location_label),
                 isLastInput = false,
-                value = ""
+                value = location
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
@@ -231,25 +227,21 @@ fun CreateEventContent(
             ) {
                 Button(onClick = { /*TODO*/ })
                 {
+
                 }
                 Button(onClick = { /*TODO*/ })
                 {
+
                 }
                 Button(onClick = { /*TODO*/ })
                 {
                 }
             }
-            Button(
+            CustomButtonSubmit(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { /*TODO*/ }
+                text = stringResource(id = R.string.common_create),
+                onClick = { onSubmit() }
             )
-            {
-                Text(
-                    text = "Prosegui",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontSize = 27.sp,
-                )
-            }
         }
     }
 }
@@ -266,7 +258,8 @@ fun CreateEventContentPreview() {
             name = name,
             location = location,
             category = EventCategory.NoCategory,
-            type = EventType.InviteOnly
+            type = EventType.InviteOnly,
+            onSubmit = {}
         )
     }
 }

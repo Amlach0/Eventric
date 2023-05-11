@@ -25,12 +25,23 @@ fun CreateEventScreen(
     var name by remember { mutableStateOf(BuildConfig.USERNAME) }
     var location by remember { mutableStateOf(BuildConfig.PASSWORD) }
 
+
+    fun onSubmit() = coroutineScope.launch {
+        if (createEventState !is LoadingOperation) {
+            try {
+                createEventViewModel.createEvent(name, location)
+            } catch (e: Exception) {
+                // Nothing to do
+            }
+        }
+    }
     EventricTheme {
         CreateEventContent(
             name = name,
             location = location,
             category = EventCategory.NoCategory,
-            type = EventType.InviteOnly
+            type = EventType.InviteOnly,
+            onSubmit = {}
         )
     }
 }
