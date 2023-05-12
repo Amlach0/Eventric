@@ -13,7 +13,9 @@ data class Event(
     val type: String?,
     val organizers: List<String?>,
     val subscribed: List<String?>,
-)
+){
+    constructor(): this(null, null, null, null, null, null, null, listOf(), listOf())
+}
 
 data class DateRange(
     val start: Date,
