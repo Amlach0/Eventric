@@ -10,7 +10,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -29,7 +29,7 @@ fun CustomButtonSubmit(
         Button(
             modifier = Modifier
                 .fillMaxSize(),
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary),
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
             shape = MaterialTheme.shapes.medium,
             contentPadding = PaddingValues(12.dp),
             onClick = { onClick() },
@@ -38,19 +38,19 @@ fun CustomButtonSubmit(
                 modifier = Modifier.weight(1F),
                 text = text,
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.subtitle1,
+                color = MaterialTheme.colors.onPrimary,
             )
             Icon(
                 modifier = Modifier
                     .background(
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colors.secondary,
                         shape = CircleShape
                     )
                     .padding(8.dp),
                 painter = painterResource(R.drawable.ic_arrow),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = MaterialTheme.colors.onPrimary
             )
         }
     }

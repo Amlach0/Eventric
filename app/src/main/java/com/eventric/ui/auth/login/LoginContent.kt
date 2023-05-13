@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +47,7 @@ fun LoginContent(
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background)
+        .background(MaterialTheme.colors.background)
     ) {
         /*
         Image(
@@ -71,11 +71,11 @@ fun LoginContent(
                     Modifier
                         .fillMaxWidth()
                         .height(56.dp)
-                        .background(MaterialTheme.colorScheme.error)
+                        .background(MaterialTheme.colors.error)
                 ) {
                     Text(
                         text = stringResource(R.string.error_login),
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.h3,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.align(Alignment.Center),
                         fontSize = 16.sp,
@@ -95,9 +95,9 @@ fun LoginContent(
             Text(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 text = stringResource(id = R.string.title_login),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.h4,
                 fontSize = 27.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colors.onBackground
             )
             Spacer(modifier = Modifier.height(20.dp))
             CustomTextInput(
