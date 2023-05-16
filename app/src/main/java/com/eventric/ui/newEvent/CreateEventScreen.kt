@@ -25,6 +25,14 @@ fun CreateEventScreen(
     var name by remember { mutableStateOf(BuildConfig.USERNAME) }
     var location by remember { mutableStateOf(BuildConfig.PASSWORD) }
 
+    fun onEventNameChange(value: String) {
+        name = value
+    }
+
+    fun onEventLocationChange(value: String) {
+        location = value
+    }
+
 
     fun onSubmit() = coroutineScope.launch {
         if (createEventState !is LoadingOperation) {
@@ -41,6 +49,8 @@ fun CreateEventScreen(
             location = location,
             category = EventCategory.NoCategory,
             type = EventType.InviteOnly,
+            onEventNameChange = ::onEventNameChange,
+            onEventLocationChange = ::onEventLocationChange,
             onSubmit = {}
         )
     }

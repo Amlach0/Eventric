@@ -1,7 +1,10 @@
 package com.eventric.ui.newEvent
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,12 +13,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,12 +41,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.eventric.R
 import com.eventric.ui.component.CustomButtonSubmit
 import com.eventric.ui.component.CustomTextInput
 import com.eventric.ui.theme.EventricTheme
+import com.eventric.ui.theme.Shapes
 import com.eventric.vo.EventCategory
 import com.eventric.vo.EventType
+
 
 @Composable
 fun CreateEventContent(
@@ -45,6 +57,8 @@ fun CreateEventContent(
     location: String,
     category: EventCategory,
     type: EventType,
+    onEventNameChange: (String) -> Unit,
+    onEventLocationChange: (String) -> Unit,
     onSubmit: () -> Unit,
 ) {
     Box(modifier = Modifier
@@ -90,7 +104,8 @@ fun CreateEventContent(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 hint = stringResource(id = R.string.event_label),
                 isLastInput = false,
-                value = name
+                value = name,
+                onValueChange = onEventNameChange,
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
@@ -104,7 +119,9 @@ fun CreateEventContent(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 hint = stringResource(id = R.string.location_label),
                 isLastInput = false,
-                value = location
+                icon = R.drawable.ic_location,
+                value = location,
+                onValueChange = onEventLocationChange
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
@@ -114,6 +131,86 @@ fun CreateEventContent(
                 fontSize = 27.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
+            var sameDay = false
+            var registrationSameDay = false
+            Row() {
+                Text(
+                    modifier = Modifier.padding(horizontal = 34.dp),
+                    text = "same day",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Checkbox(
+                    checked = true,
+                    onCheckedChange = { sameDay = !sameDay }
+                )
+            }
+            Row(
+                modifier = Modifier.padding(horizontal = 34.dp)
+            ) {
+                Column() {
+                    AnimatedVisibility( sameDay )
+                    {
+                        Text(text = "start")
+                    }
+                    Button(
+                        onClick = {},
+                    ){}
+                }
+                AnimatedVisibility( sameDay )
+                {
+                    Column() {
+                        Text(text = "end")
+                        Button(
+                            onClick = {},
+                        ){
+                        }
+                    }
+                }
+            }
+            Text(
+                modifier = Modifier.padding(horizontal = 34.dp),
+                text = stringResource(id = R.string.new_event_registration_date),
+                style = MaterialTheme.typography.titleLarge,
+                fontSize = 27.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Row() {
+                Text(
+                    modifier = Modifier.padding(horizontal = 34.dp),
+                    text = "same day",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Checkbox(
+                    checked = true,
+                    onCheckedChange = { registrationSameDay = !registrationSameDay }
+                )
+            }
+            Row(
+                modifier = Modifier.padding(horizontal = 34.dp)
+            ) {
+                Column() {
+                    AnimatedVisibility( sameDay )
+                    {
+                        Text(text = "start")
+                    }
+                    Button(
+                        onClick = {},
+                    ){}
+                }
+                Column() {
+                    AnimatedVisibility( sameDay )
+                    {
+                        Column() {
+                            Text(text = "end")
+                            Button(
+                                onClick = {},
+                            ){
+                            }
+                        }
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 modifier = Modifier.padding(horizontal = 34.dp),
@@ -122,31 +219,42 @@ fun CreateEventContent(
                 fontSize = 27.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
+
             var pressed = remember { mutableStateOf( 0 ) }
             Row(
-                modifier = Modifier.padding(horizontal = 34.dp)
+                modifier = Modifier.padding(horizontal = 34.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                Column() {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
                     Button(
                         onClick = { pressed.value = 0 },
-                        colors = if(pressed.value == 0){ ButtonDefaults.buttonColors(backgroundColor = Color.Gray)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)},
+                        modifier= Modifier.size(50.dp),
+                        elevation = ButtonDefaults.elevation( 9.dp ),
+                        colors = if(pressed.value == 0){ ButtonDefaults.buttonColors(backgroundColor = Color.Gray)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)},
+                        shape = CircleShape,
                     )
                     {
                         Image(
                             painter = painterResource(R.drawable.ic_category_none),
-                            contentDescription = "none"
+                            contentDescription = "none",
                         )
                     }
                     Text(
-                        text = "None",
-                        fontSize = 15.sp
+                        text = "None"
                     )
                 }
-                Column() {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
                     Button(
                         onClick = { pressed.value = 1 },
-                        colors = if(pressed.value == 1){ ButtonDefaults.buttonColors(backgroundColor = Color.Blue)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)},
-                       )
+                        modifier= Modifier.size(50.dp),
+                        elevation = ButtonDefaults.elevation( 9.dp ),
+                        colors = if(pressed.value == 1){ ButtonDefaults.buttonColors(backgroundColor = Color.Blue)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)},
+                        shape = CircleShape,
+                    )
                     {
                         Image(
                             painter = painterResource(R.drawable.ic_category_music),
@@ -154,16 +262,17 @@ fun CreateEventContent(
                         )
                     }
                     Text(
-                        text = "Music",
-                        fontSize = 15.sp
+                        text = "Music"
                     )
                 }
-                var color = remember { mutableStateOf( Color.White) }
-
-                Column() {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
                     Button(
                         onClick = { pressed.value = 2 },
-                        colors = if(pressed.value == 2){ ButtonDefaults.buttonColors(backgroundColor = Color.Cyan)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)},
+                        modifier= Modifier.size(50.dp),
+                        colors = if(pressed.value == 2){ ButtonDefaults.buttonColors(backgroundColor = Color.Cyan)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)},
+                        shape = CircleShape,
                     )
                     {
                         Image(
@@ -173,13 +282,17 @@ fun CreateEventContent(
                     }
                     Text(
                         text = "Art",
-                        fontSize = 15.sp
                     )
                 }
-                Column() {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
                     Button(
                         onClick = { pressed.value = 3 },
-                        colors = if(pressed.value == 3 ){ ButtonDefaults.buttonColors(backgroundColor = Color.Red)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)},
+                        modifier= Modifier.size(50.dp),
+                        elevation = ButtonDefaults.elevation( 9.dp ),
+                        colors = if(pressed.value == 3 ){ ButtonDefaults.buttonColors(backgroundColor = Color.Red)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)},
+                        shape = CircleShape,
                     )
                     {
 
@@ -191,14 +304,18 @@ fun CreateEventContent(
 
                     Text(
                         text = "Food",
-                        fontSize = 15.sp
                     )
 
                 }
-                Column() {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
                     Button(
                         onClick = { pressed.value = 4 },
-                        colors = if(pressed.value == 4){ ButtonDefaults.buttonColors(backgroundColor = Color.Yellow)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)},
+                        modifier= Modifier.size(50.dp),
+                        elevation = ButtonDefaults.elevation( 9.dp ),
+                        colors = if(pressed.value == 4){ ButtonDefaults.buttonColors(backgroundColor = Color.Yellow)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)},
+                        shape = CircleShape,
                     )
                     {
                         Image(
@@ -208,8 +325,6 @@ fun CreateEventContent(
                     }
                     Text(
                         text = "Sport",
-                        fontSize = 15.sp,
-                        textAlign = TextAlign.Center
                     )
                 }
 
@@ -222,21 +337,50 @@ fun CreateEventContent(
                 fontSize = 27.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            Row(
+
+            var activeTabIndex by remember { mutableStateOf(0) }
+
+            TabRow(
+                selectedTabIndex = activeTabIndex,
+                backgroundColor = Color.Transparent,
+                indicator = {
+                    Box(
+                        Modifier
+                            .tabIndicatorOffset(it[activeTabIndex])
+                            .fillMaxSize()
+                            .background(color = Color.Cyan)
+                            .zIndex(-1F)
+                    )
+                },
                 modifier = Modifier.padding(horizontal = 34.dp)
-            ) {
-                Button(onClick = { /*TODO*/ })
-                {
-
+            )
+            {
+                Tab(selected = activeTabIndex == 0, onClick = { activeTabIndex = 0 }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_type_invite_only),
+                        contentDescription = "InviteOnly",
+                        tint = Color.Black,
+                        modifier = Modifier.padding(vertical = 20.dp)
+                    )
                 }
-                Button(onClick = { /*TODO*/ })
-                {
-
+                Tab(selected = activeTabIndex == 1, onClick = { activeTabIndex = 1 }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_type_private),
+                        contentDescription = "Private",
+                        tint = Color.Black,
+                        modifier = Modifier.padding(vertical = 20.dp)
+                    )
                 }
-                Button(onClick = { /*TODO*/ })
-                {
+                Tab(selected = activeTabIndex == 2, onClick = { activeTabIndex = 2 }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_type_public),
+                        contentDescription = "Public",
+                        tint = Color.Black,
+                        modifier = Modifier.padding(vertical = 20.dp)
+                    )
                 }
             }
+
             CustomButtonSubmit(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(id = R.string.common_create),
@@ -259,6 +403,12 @@ fun CreateEventContentPreview() {
             location = location,
             category = EventCategory.NoCategory,
             type = EventType.InviteOnly,
+            onEventNameChange = {
+                name = it
+            },
+            onEventLocationChange = {
+                location = it
+            },
             onSubmit = {}
         )
     }

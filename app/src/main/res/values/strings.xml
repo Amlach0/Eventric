@@ -10,6 +10,7 @@
     <string name="new_event_location">Location</string>
     <string name="location_label">Via Roma 1234</string>
     <string name="new_event_date">Date</string>
+    <string name="new_event_registration_date">Registration date</string>
     <string name="new_event_category">Category</string>
     <string name="new_event_type">Type</string>
     <string name="common_create">Create</string>
