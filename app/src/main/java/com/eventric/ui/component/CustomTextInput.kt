@@ -10,7 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -46,19 +46,19 @@ fun CustomTextInput(
                     .fillMaxWidth()
                     .border(
                         width = 1.dp,
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colors.onBackground,
                         shape = MaterialTheme.shapes.small
                     ),
                 shape = MaterialTheme.shapes.small,
                 value = value,
                 onValueChange = onValueChange,
-                textStyle = MaterialTheme.typography.titleMedium,
+                textStyle = MaterialTheme.typography.body2,
                 singleLine = true,
                 placeholder = {
                     Text(
                         text = hint,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onBackground
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onBackground
                     )
                 },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -67,7 +67,7 @@ fun CustomTextInput(
                         Icon(
                             painter = painterResource(icon),
                             contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onBackground,
+                            tint = MaterialTheme.colors.onBackground,
                         )
                     }
 
@@ -81,15 +81,15 @@ fun CustomTextInput(
                                 R.drawable.ic_show_pwd
                             ),
                             contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onBackground,
+                            tint = MaterialTheme.colors.onBackground,
                         )
                     }
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                    cursorColor = MaterialTheme.colorScheme.onBackground,
-                    textColor = MaterialTheme.colorScheme.onBackground,
-                    backgroundColor = MaterialTheme.colorScheme.background,
+                    focusedLabelColor = MaterialTheme.colors.onPrimary,
+                    cursorColor = MaterialTheme.colors.onBackground,
+                    textColor = MaterialTheme.colors.onBackground,
+                    backgroundColor = MaterialTheme.colors.background,
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
                 ),
@@ -108,19 +108,19 @@ fun CustomTextInput(
                     .fillMaxWidth()
                     .border(
                         width = 1.dp,
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colors.onBackground,
                         shape = MaterialTheme.shapes.small
                     ),
                 shape = MaterialTheme.shapes.small,
                 value = value,
                 onValueChange = onValueChange,
-                textStyle = MaterialTheme.typography.titleMedium,
+                textStyle = MaterialTheme.typography.body2,
                 singleLine = true,
                 placeholder = {
                     Text(
                         text = hint,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onBackground
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onBackground
                     )
                 },
                 leadingIcon = {
@@ -128,17 +128,17 @@ fun CustomTextInput(
                         Icon(
                             painter = painterResource(icon),
                             contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onBackground,
+                            tint = MaterialTheme.colors.onBackground,
                         )
                     }
 
                 },
                 visualTransformation = VisualTransformation.None,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                    cursorColor = MaterialTheme.colorScheme.onBackground,
-                    textColor = MaterialTheme.colorScheme.onBackground,
-                    backgroundColor = MaterialTheme.colorScheme.background,
+                    focusedLabelColor = MaterialTheme.colors.onPrimary,
+                    cursorColor = MaterialTheme.colors.onBackground,
+                    textColor = MaterialTheme.colors.onBackground,
+                    backgroundColor = MaterialTheme.colors.background,
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
                 ),

@@ -1,13 +1,19 @@
 package com.eventric.ui.auth.login
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
 import com.eventric.BuildConfig
-import com.eventric.repo.ErrorOperation
-import com.eventric.repo.LoadingOperation
-import com.eventric.repo.SuccessOperation
 import com.eventric.ui.theme.EventricTheme
+import com.eventric.utils.ErrorOperation
+import com.eventric.utils.LoadingOperation
+import com.eventric.utils.SuccessOperation
 import kotlinx.coroutines.launch
 
 @Composable
@@ -19,7 +25,6 @@ fun LoginScreen(
     val loginState by loginViewModel.loginCodeResult.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
-    val navController = rememberNavController()
 
     var email by remember { mutableStateOf(BuildConfig.USERNAME) }
     var password by remember { mutableStateOf(BuildConfig.PASSWORD) }

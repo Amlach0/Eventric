@@ -3,7 +3,7 @@ package com.eventric.ui.dispatcher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +30,7 @@ fun DispatcherContent(
             else -> FullScreenLoader(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
+                    .background(MaterialTheme.colors.background),
             )
     }
 }

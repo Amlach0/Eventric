@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eventric.ui.auth.login.LoginScreen
 import com.eventric.ui.dispatcher.DispatcherScreen
+import com.eventric.ui.home.HomeScreen
 import com.eventric.ui.newEvent.CreateEventScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,15 +24,23 @@ class MainActivity : ComponentActivity() {
                 navController = navController,
                 startDestination = "dispatcher"
             ) {
-                composable("login") { LoginScreen(
-                    onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } }
-                ) }
-                composable("dispatcher") { DispatcherScreen(
-                    goToHome = { navController.navigate("newEvent") { popUpTo(0) } },
-                    //goToHome = { navController.navigate("home") { popUpTo(0) } },
-                    goToLogin = { navController.navigate("login") { popUpTo(0) } }
-                ) }
-                composable("newEvent") { CreateEventScreen() }
+                composable("login") {
+                    LoginScreen(
+                        onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } }
+                    )
+                }
+                composable("dispatcher") {
+                    DispatcherScreen(
+                        goToHome = { navController.navigate("home") { popUpTo(0) } },
+                        goToLogin = { navController.navigate("login") { popUpTo(0) } }
+                    )
+                }
+                composable("home") {
+                    HomeScreen()
+                }
+                composable("newEvent") {
+                    CreateEventScreen()
+                }
             }
         }
     }

@@ -1,10 +1,10 @@
 package com.eventric.ui.auth.login
 
 import androidx.lifecycle.ViewModel
-import com.eventric.repo.LoadingOperation
-import com.eventric.repo.Operation
+import com.eventric.utils.LoadingOperation
+import com.eventric.utils.Operation
 import com.eventric.repo.UserRepository
-import com.eventric.repo.tryOperation
+import com.eventric.utils.tryOperation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
