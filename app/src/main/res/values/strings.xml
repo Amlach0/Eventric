@@ -19,4 +19,5 @@
     <string name="category_sport">sport</string>
     <string name="new_event_type">Tipo evento</string>
     <string name="common_create">Crea</string>
+    <string name="error_new_event">Creazione fallita. Verifica i dati</string>
 </resources>

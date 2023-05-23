@@ -1,0 +1,18 @@
+package com.eventric.ui.auth.signin
+
+import androidx.lifecycle.ViewModel
+import com.eventric.utils.LoadingOperation
+import com.eventric.utils.Operation
+import com.eventric.repo.UserRepository
+import com.eventric.utils.tryOperation
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
+
+@HiltViewModel
+class SigninViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
+
+    var signinCodeResult = MutableStateFlow<Operation?>(null)
+}

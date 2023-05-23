@@ -25,7 +25,6 @@ fun CreateEventScreen(
     val createEventState by createEventViewModel.createEventCodeResult.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
-    val calendar = Calendar.getInstance()
 
     var name by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
@@ -106,6 +105,12 @@ fun CreateEventScreen(
     fun onSubmit() = coroutineScope.launch {
         if (createEventState !is LoadingOperation) {
             try {
+                if(sameDay)
+                    endDate = startDate
+                if(registrationSameDay){
+                    //startRegistrationDate = oggi
+                    endRegistrationDate = startDate
+                }
                 createEventViewModel.createEvent(name, location, category, type, startDate, endDate, startRegistrationDate, endRegistrationDate)
             } catch (e: Exception) {
                 errorBannerIsVisible = true;
