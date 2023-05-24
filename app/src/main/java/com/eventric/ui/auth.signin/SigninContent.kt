@@ -97,6 +97,16 @@ fun SigninContent(
                     )
                 }
             }
+
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1F),
+                painter = painterResource(R.drawable.ic_logo),
+                contentDescription = "logo",
+                contentScale = ContentScale.None,
+                alignment = Alignment.Center
+            )
             Text(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 text = stringResource(id = R.string.title_login),
@@ -225,7 +235,6 @@ fun SigninContent(
                 onClick = { onSubmit() }
             )
             //TODO login con google etc
-            //TODO registrarsi
         }
     }
 

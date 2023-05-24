@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
+    signin: () -> Unit,
     onSuccess: () -> Unit
 ) {
 
@@ -64,6 +65,10 @@ fun LoginScreen(
         }
     }
 
+    fun onSigninPressed(){
+        signin()
+    }
+
     EventricTheme {
         LoginContent(
             email = email,
@@ -74,6 +79,7 @@ fun LoginScreen(
             onEmailChange = ::onEmailChange,
             onPasswordChange = ::onPasswordChange,
             onSubmit = ::onSubmit,
+            onSigninPressed = ::onSigninPressed,
         )
     }
 

@@ -27,7 +27,8 @@ class MainActivity : ComponentActivity() {
             ) {
                 composable("login") {
                     LoginScreen(
-                        onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } }
+                        onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } },
+                        signin = { navController.navigate("signin") { popUpTo(0) } }
                     )
                 }
                 composable("signin") {
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("dispatcher") {
                     DispatcherScreen(
-                        goToHome = { navController.navigate("signin") { popUpTo(0) } },
+                        goToHome = { navController.navigate("login") { popUpTo(0) } },
                         goToLogin = { navController.navigate("login") { popUpTo(0) } }
                     )
                 }
