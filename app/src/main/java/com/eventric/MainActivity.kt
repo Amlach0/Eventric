@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eventric.ui.auth.login.LoginScreen
+import com.eventric.ui.auth.signin.SigninScreen
 import com.eventric.ui.dispatcher.DispatcherScreen
 import com.eventric.ui.newEvent.CreateEventScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,9 +30,12 @@ class MainActivity : ComponentActivity() {
                         onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } }
                     )
                 }
+                composable("signin") {
+                    SigninScreen()
+                }
                 composable("dispatcher") {
                     DispatcherScreen(
-                        goToHome = { navController.navigate("newEvent") { popUpTo(0) } },
+                        goToHome = { navController.navigate("signin") { popUpTo(0) } },
                         goToLogin = { navController.navigate("login") { popUpTo(0) } }
                     )
                 }

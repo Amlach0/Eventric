@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Eventric</string>
     <string name="error_login">Login fallito. Verifica i tuoi dati d\'accesso</string>
+    <string name="error_signin">Registrazione fallita. Verifica i dati</string>
+    <string name="error_new_event">Creazione fallita. Verifica i dati</string>
     <string name="title_login">Sign In</string>
     <string name="common_login">SIGN IN</string>
     <string name="pwd_label">Your Password</string>
@@ -19,5 +21,8 @@
     <string name="category_sport">sport</string>
     <string name="new_event_type">Tipo evento</string>
     <string name="common_create">Crea</string>
-    <string name="error_new_event">Creazione fallita. Verifica i dati</string>
+    <string name="mail_label">Nome evento</string>
+    <string name="name_label">Nome</string>
+    <string name="surname_label">Cognome</string>
+    <string name="confirm_pwd_label">Conferma password</string>
 </resources>
