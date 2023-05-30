@@ -25,12 +25,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,12 +56,7 @@ import com.eventric.ui.component.CustomTextInput
 import com.eventric.ui.theme.EventricTheme
 import com.eventric.vo.EventCategory
 import com.eventric.vo.EventType
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-
 
 @Composable
 fun CreateEventContent(
@@ -96,7 +91,7 @@ fun CreateEventContent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(androidx.compose.material.MaterialTheme.colors.primary)
+                .background(MaterialTheme.colors.primary)
                 .zIndex(12F),
             verticalAlignment = Alignment.CenterVertically,
         )
@@ -114,9 +109,9 @@ fun CreateEventContent(
             Text(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 text = "New Event",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.h4,
                 fontSize = 27.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colors.onBackground
             )
         }
         Column(
@@ -141,11 +136,11 @@ fun CreateEventContent(
                     Modifier
                         .fillMaxWidth()
                         .height(56.dp)
-                        .background(androidx.compose.material.MaterialTheme.colors.error)
+                        .background(MaterialTheme.colors.error)
                 ) {
                     Text(
                         text = stringResource(R.string.error_login),
-                        style = androidx.compose.material.MaterialTheme.typography.h3,
+                        style = MaterialTheme.typography.h3,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.align(Alignment.Center),
                         fontSize = 16.sp,
@@ -168,9 +163,9 @@ fun CreateEventContent(
             Text(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 text = stringResource(id = R.string.new_event_category),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.h2,
                 fontSize = 27.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colors.onBackground
             )
 
             //Row of buttons
@@ -282,9 +277,9 @@ fun CreateEventContent(
             Text(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 text = stringResource(id = R.string.new_event_location),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.h2,
                 fontSize = 27.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colors.onBackground
             )
             CustomTextInput(
                 modifier = Modifier.padding(horizontal = 34.dp),
@@ -308,29 +303,29 @@ fun CreateEventContent(
 
 
             //recupero l'ora attuale
-            val Hour = calendar[Calendar.HOUR_OF_DAY]
-            val Minute = calendar[Calendar.MINUTE]
+            val hour = calendar[Calendar.HOUR_OF_DAY]
+            val minute = calendar[Calendar.MINUTE]
 
             //creo il dialog per la selezione dell'orario
             val startTimePicker = TimePickerDialog(
                 context,
                 { _, selectedHour: Int, selectedMinute: Int ->
                     selectedStartTimeText = "$selectedHour:$selectedMinute"; onStartDateChanged(selectedStartDateText + " "+selectedStartTimeText)
-                }, Hour, Minute, false
+                }, hour, minute, false
             )
 
 
             // recupero la data attuale
-            val Year = calendar[Calendar.YEAR]
-            val Month = calendar[Calendar.MONTH]
-            val DayOfMonth = calendar[Calendar.DAY_OF_MONTH]
+            val year = calendar[Calendar.YEAR]
+            val month = calendar[Calendar.MONTH]
+            val dayOfMonth = calendar[Calendar.DAY_OF_MONTH]
 
             //creo il dialog per la selezione della data
             val startDatePicker = DatePickerDialog(
                 context,
                 { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
                     selectedStartDateText = "$selectedDayOfMonth/${selectedMonth + 1}/$selectedYear"; startTimePicker.show()
-                }, Year, Month, DayOfMonth
+                }, year, month, dayOfMonth
             )
             startDatePicker.datePicker.minDate = calendar.timeInMillis
 
@@ -343,8 +338,8 @@ fun CreateEventContent(
             val endTimePicker = TimePickerDialog(
                 context,
                 { _, selectedHour: Int, selectedMinute: Int ->
-                    selectedEndTimeText = "$selectedHour:$selectedMinute"; onEndDateChanged(selectedEndDateText+" "+selectedEndTimeText);
-                }, Hour, Minute, false
+                    selectedEndTimeText = "$selectedHour:$selectedMinute"; onEndDateChanged(selectedEndDateText+" "+selectedEndTimeText)
+                }, hour, minute, false
             )
 
             //creo il dialog per la selezione della data
@@ -352,7 +347,7 @@ fun CreateEventContent(
                 context,
                 { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
                     selectedEndDateText = "$selectedDayOfMonth/${selectedMonth + 1}/$selectedYear"; endTimePicker.show()
-                }, Year, Month, DayOfMonth
+                }, year, month, dayOfMonth
             )
 
             endDatePicker.datePicker.minDate = calendar.timeInMillis
@@ -370,7 +365,7 @@ fun CreateEventContent(
                 context,
                 { _, selectedHour: Int, selectedMinute: Int ->
                     selectedStartRegistrationTimeText = "$selectedHour:$selectedMinute"; onStartRegistrationDateChanged(selectedStartRegistrationDateText+" "+selectedStartRegistrationTimeText)
-                }, Hour, Minute, false
+                }, hour, minute, false
             )
 
             //creo il dialog per la selezione della data
@@ -378,7 +373,7 @@ fun CreateEventContent(
                 context,
                 { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
                     selectedStartRegistrationDateText = "$selectedDayOfMonth/${selectedMonth + 1}/$selectedYear"; startRegistrationTimePicker.show()
-                }, Year, Month, DayOfMonth
+                }, year, month, dayOfMonth
             )
             startRegistrationDatePicker.datePicker.minDate = calendar.timeInMillis
 
@@ -391,7 +386,7 @@ fun CreateEventContent(
                 context,
                 { _, selectedHour: Int, selectedMinute: Int ->
                     selectedEndRegistrationTimeText = "$selectedHour:$selectedMinute"; onEndRegistrationDateChanged(selectedEndRegistrationDateText+" "+selectedEndRegistrationTimeText)
-                }, Hour, Minute, false
+                }, hour, minute, false
             )
 
             //creo il dialog per la selezione della data
@@ -399,7 +394,7 @@ fun CreateEventContent(
                 context,
                 { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
                     selectedEndRegistrationDateText = "$selectedDayOfMonth/${selectedMonth + 1}/$selectedYear"; endRegistrationTimePicker.show()
-                }, Year, Month, DayOfMonth
+                }, year, month, dayOfMonth
             )
 
             endRegistrationDatePicker.datePicker.minDate = calendar.timeInMillis
@@ -416,9 +411,9 @@ fun CreateEventContent(
                     ) {
                         Text(
                             text = stringResource(id = R.string.new_event_date),
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.h2,
                             fontSize = 27.sp,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colors.onBackground
                         )
                         Checkbox(
                             checked = sameDay,
@@ -427,7 +422,7 @@ fun CreateEventContent(
                         )
                         Text(
                             text = "same",
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colors.onBackground
                         )
                     }
                     Text(text = "inizio")
@@ -504,9 +499,9 @@ fun CreateEventContent(
                     ) {
                         Text(
                             text = stringResource(id = R.string.new_event_date),
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.h2,
                             fontSize = 27.sp,
-                            color = MaterialTheme.colorScheme.onBackground,
+                            color = MaterialTheme.colors.onBackground,
                             textAlign = TextAlign.Left
                         )
                         Checkbox(
@@ -516,7 +511,7 @@ fun CreateEventContent(
                         )
                         Text(
                             text = "same",
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colors.onBackground
                         )
                     }
                     Text(
@@ -595,19 +590,19 @@ fun CreateEventContent(
             Text(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 text = stringResource(id = R.string.new_event_type),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.h2,
                 fontSize = 27.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colors.onBackground
             )
             TabRow(
                 selectedTabIndex = type.ordinal,
-                backgroundColor = Color.LightGray,
+                backgroundColor = MaterialTheme.colors.onSecondary,
                 indicator = {
                     Box(
                         Modifier
                             .tabIndicatorOffset(it[type.ordinal])
                             .fillMaxSize()
-                            .background(color = Color.White)
+                            .background(color = MaterialTheme.colors.background)
                             .clip(shape = RoundedCornerShape(20.dp))
                             .zIndex(-1F)
                     )
@@ -616,7 +611,7 @@ fun CreateEventContent(
                     .padding(horizontal = 34.dp)
                     .height(60.dp)
                     .clip(shape = RoundedCornerShape(20.dp))
-                    .border(5.dp, Color.LightGray, shape = RoundedCornerShape(20.dp)),
+                    .border(5.dp, MaterialTheme.colors.onSecondary, shape = RoundedCornerShape(20.dp)),
 
             )
             {
@@ -628,7 +623,7 @@ fun CreateEventContent(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_type_invite_only),
                             contentDescription = "InviteOnly",
-                            tint = Color.Black
+                            tint = MaterialTheme.colors.onBackground,
                         )
                         AnimatedVisibility(visible = (type == EventType.InviteOnly)) {
                             Text(text = "su invito")

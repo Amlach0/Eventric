@@ -45,7 +45,7 @@ fun LoginContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSubmit: () -> Unit,
-    onSigninPressed: () -> Unit,
+    onSignupPressed: () -> Unit,
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
@@ -137,7 +137,7 @@ fun LoginContent(
                 onClick = { onSubmit() }
             )
             //TODO login con google etc
-            Button(onClick = onSigninPressed) {
+            Button(onClick = onSignupPressed) {
                 Text(text = "registrati")
             }
         }
@@ -168,7 +168,7 @@ fun LoginContentPreview() {
                 password = it
             },
             onSubmit = {},
-            onSigninPressed = {}
+            onSignupPressed = {}
         )
     }
 }

@@ -11,8 +11,9 @@ private val DarkColors = darkColors(
     primary = Purple,
     onPrimary = White,
     secondary = LightPurple,
+    onSecondary = LightGray,
     background = Black,
-    onBackground = LightGray,
+    onBackground = White,
     error = Red
 )
 
@@ -20,8 +21,9 @@ private val LightColors = lightColors(
     primary = Purple,
     onPrimary = White,
     secondary = LightPurple,
+    onSecondary = LightGray,
     background = White,
-    onBackground = LightGray,
+    onBackground = Black,
     error = Red,
 
     /* Other default colors to override

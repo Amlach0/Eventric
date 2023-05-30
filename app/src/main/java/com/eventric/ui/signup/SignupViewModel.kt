@@ -1,4 +1,4 @@
-package com.eventric.ui.auth.signin
+package com.eventric.ui.signup
 
 import androidx.lifecycle.ViewModel
 import com.eventric.utils.LoadingOperation
@@ -11,18 +11,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class SigninViewModel @Inject constructor(
+class SignupViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    var signinCodeResult = MutableStateFlow<Operation?>(null)
+    var signupCodeResult = MutableStateFlow<Operation?>(null)
 
-    suspend fun signin(name:String, surname:String, email: String, password: String, confirmPassword: String, birthDate: String) {
-        signinCodeResult.value = LoadingOperation
+    suspend fun signup(name:String, surname:String, email: String, password: String, confirmPassword: String, birthDate: String) {
+        signupCodeResult.value = LoadingOperation
 
         var user: User = User(email, name, surname, null, birthDate)
 
-        signinCodeResult.value = tryOperation {
+        signupCodeResult.value = tryOperation {
             if(password.isNotEmpty() && password.equals(confirmPassword)){
                 userRepository.createAccount(user, password)
             }

@@ -7,11 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eventric.ui.auth.login.LoginScreen
-import com.eventric.ui.auth.signin.SigninScreen
 import com.eventric.ui.dispatcher.DispatcherScreen
 import com.eventric.ui.newEvent.CreateEventScreen
+import com.eventric.ui.signup.SignupScreen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.callbackFlow
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -28,11 +27,11 @@ class MainActivity : ComponentActivity() {
                 composable("login") {
                     LoginScreen(
                         onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } },
-                        signin = { navController.navigate("signin") { popUpTo(0) } }
+                        signin = { navController.navigate("signup") { popUpTo(0) } }
                     )
                 }
-                composable("signin") {
-                    SigninScreen()
+                composable("signup") {
+                    SignupScreen()
                 }
                 composable("dispatcher") {
                     DispatcherScreen(

@@ -1,7 +1,6 @@
-package com.eventric.ui.auth.signin
+package com.eventric.ui.signup
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,17 +8,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.eventric.BuildConfig
-import com.eventric.ui.auth.login.LoginViewModel
 import com.eventric.ui.theme.EventricTheme
 import com.eventric.utils.LoadingOperation
 import kotlinx.coroutines.launch
 
 @Composable
-fun SigninScreen(
-    signinViewModel: SigninViewModel = hiltViewModel(),
+fun SignupScreen(
+    signupViewModel: SignupViewModel = hiltViewModel(),
 ) {
-    val signinState by signinViewModel.signinCodeResult.collectAsState()
+    val signupState by signupViewModel.signupCodeResult.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -71,9 +68,9 @@ fun SigninScreen(
     }
 
     fun onSubmit() = coroutineScope.launch {
-        if (signinState !is LoadingOperation) {
+        if (signupState !is LoadingOperation) {
             try {
-                signinViewModel.signin(name, surname, email, password, confirmPassword, birthDate)
+                signupViewModel.signup(name, surname, email, password, confirmPassword, birthDate)
             } catch (e: Exception) {
                 // Nothing to do
             }
@@ -81,7 +78,7 @@ fun SigninScreen(
     }
 
     EventricTheme {
-        SigninContent(
+        SignupContent(
             errorBannerIsVisible = errorBannerIsVisible,
             name = name,
             surname = surname,
