@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.eventric.ui.auth.login.LoginScreen
 import com.eventric.ui.dispatcher.DispatcherScreen
 import com.eventric.ui.home.HomeScreen
+import com.eventric.ui.theme.EventricTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,24 +20,27 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
 
-            NavHost(
-                navController = navController,
-                startDestination = "dispatcher"
-            ) {
-                composable("login") {
-                    LoginScreen(
-                        onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } }
-                    )
+            EventricTheme {
+                NavHost(
+                    navController = navController,
+                    startDestination = "dispatcher"
+                ) {
+                    composable("login") {
+                        LoginScreen(
+                            onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } }
+                        )
+                    }
+                    composable("dispatcher") {
+                        DispatcherScreen(
+                            goToHome = { navController.navigate("home") { popUpTo(0) } },
+                            goToLogin = { navController.navigate("login") { popUpTo(0) } }
+                        )
+                    }
+                    composable("home") {
+                        HomeScreen()
+                    }
                 }
-                composable("dispatcher") {
-                    DispatcherScreen(
-                        goToHome = { navController.navigate("home") { popUpTo(0) } },
-                        goToLogin = { navController.navigate("login") { popUpTo(0) } }
-                    )
-                }
-                composable("home") {
-                    HomeScreen()
-                }
+
             }
         }
     }
