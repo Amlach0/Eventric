@@ -29,8 +29,16 @@ fun CreateEventScreen(
 
     var name by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf(EventCategory.NoCategory) }
-    var type by remember { mutableStateOf(EventType.InviteOnly) }
+    var categoryMap = remember {
+        mutableStateMapOf(
+            EventCategory.NoCategory to true,
+            EventCategory.Music to false,
+            EventCategory.Art to false,
+            EventCategory.Food to false,
+            EventCategory.Sport to false,
+        )
+    }.toMutableMap()
+    var type by remember { mutableStateOf<EventType>(EventType.InviteOnly) }
     var startDate by remember { mutableStateOf("") }
     var endDate by remember { mutableStateOf("") }
     var startRegistrationDate by remember { mutableStateOf("") }
@@ -56,25 +64,20 @@ fun CreateEventScreen(
         location = value
     }
 
-    fun onEventCategoryChange(value: Int) {
-        when(value) {
-            0 -> category = EventCategory.NoCategory
-            1 -> category = EventCategory.Music
-            2 -> category = EventCategory.Art
-            3 -> category = EventCategory.Food
-            4 -> category = EventCategory.Sport
-        }
+    fun onEventCategoryChange(value: EventCategory) {
+        categoryMap.replaceAll { _, _ -> false }
+        categoryMap[value] = true
     }
 
     fun onEventTypeChange(value: Int) {
-        when(value) {
+        when (value) {
             0 -> type = EventType.InviteOnly
             1 -> type = EventType.Private
             2 -> type = EventType.Public
         }
     }
 
-    fun onSameDayChecked(){
+    fun onSameDayChecked() {
         sameDay = !sameDay;
     }
 
@@ -94,11 +97,11 @@ fun CreateEventScreen(
         endRegistrationDate = value
     }
 
-    fun onRegistrationSameDayChecked(){
+    fun onRegistrationSameDayChecked() {
         registrationSameDay = !registrationSameDay;
     }
 
-    fun cancelOperation(){
+    fun cancelOperation() {
         back();
     }
 
@@ -106,7 +109,16 @@ fun CreateEventScreen(
     fun onSubmit() = coroutineScope.launch {
         if (createEventState !is LoadingOperation) {
             try {
-                createEventViewModel.createEvent(name, location, category, type, startDate, endDate, startRegistrationDate, endRegistrationDate)
+                createEventViewModel.createEvent(
+                    name,
+                    location,
+                    categoryMap.keys.first { categoryMap[it] == true },
+                    type,
+                    startDate,
+                    endDate,
+                    startRegistrationDate,
+                    endRegistrationDate
+                )
             } catch (e: Exception) {
                 errorBannerIsVisible = true;
             }
@@ -117,7 +129,7 @@ fun CreateEventScreen(
         CreateEventContent(
             name = name,
             location = location,
-            category = category,
+            categoryMap = categoryMap,
             type = type,
             startDate = startDate,
             endDate = endDate,

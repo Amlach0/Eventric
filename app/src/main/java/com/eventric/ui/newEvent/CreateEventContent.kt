@@ -16,21 +16,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,30 +43,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.eventric.R
 import com.eventric.ui.component.CustomButtonSubmit
 import com.eventric.ui.component.CustomTextInput
-import com.eventric.ui.theme.EventricTheme
 import com.eventric.vo.EventCategory
 import com.eventric.vo.EventType
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
 
 @Composable
 fun CreateEventContent(
     name: String,
     location: String,
-    category: EventCategory,
+    categoryMap: Map<EventCategory, Boolean>,
     type: EventType,
     startDate: String,
     endDate: String,
@@ -78,7 +70,7 @@ fun CreateEventContent(
     errorBannerIsVisible: Boolean,
     onEventNameChange: (String) -> Unit,
     onEventLocationChange: (String) -> Unit,
-    onEventCategoryChange: (Int) -> Unit,
+    onEventCategoryChange: (EventCategory) -> Unit,
     onEventTypeChange: (Int) -> Unit,
     onStartDateChanged: (String) -> Unit,
     onEndDateChanged: (String) -> Unit,
@@ -89,42 +81,45 @@ fun CreateEventContent(
     cancelOperation: () -> Unit,
     onSubmit: () -> Unit,
 ) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Transparent)
-) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(androidx.compose.material.MaterialTheme.colors.primary)
-                .zIndex(12F),
-            verticalAlignment = Alignment.CenterVertically,
-        )
-        {
-            Button(
-                onClick = cancelOperation,
-                colors = ButtonDefaults.buttonColors( backgroundColor = Color.Transparent ),
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_arrow_back),
-                    contentDescription = "back",
-                    tint = Color.Black,
+
+    Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(androidx.compose.material.MaterialTheme.colors.primary)
+                    .zIndex(12F),
+                verticalAlignment = Alignment.CenterVertically,
+            ){
+                Button(
+                    onClick = cancelOperation,
+                    colors = ButtonDefaults.buttonColors( backgroundColor = Color.Transparent ),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_arrow_back),
+                        contentDescription = "back",
+                        tint = Color.Black,
+                    )
+                }
+                Text(
+                    modifier = Modifier.padding(horizontal = 34.dp),
+                    text = "New Event",
+                    style = MaterialTheme.typography.h4,
+                    fontSize = 27.sp,
+                    color = MaterialTheme.colors.onBackground
                 )
             }
-            Text(
-                modifier = Modifier.padding(horizontal = 34.dp),
-                text = "New Event",
-                style = MaterialTheme.typography.titleLarge,
-                fontSize = 27.sp,
-                color = MaterialTheme.colorScheme.onBackground
-            )
         }
+    ) {
+
         Column(
             Modifier
                 .fillMaxSize()
+                .padding(it)
+                .padding(horizontal = 34.dp)
                 .verticalScroll(rememberScrollState())
-        )
-        {
+        ) {
+            // TODO da migliorare graficamente
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -134,27 +129,9 @@ fun CreateEventContent(
                 contentScale = ContentScale.Fit,
                 alignment = Alignment.Center
             )
-            AnimatedVisibility(
-                visible = errorBannerIsVisible,
-            ) {
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(androidx.compose.material.MaterialTheme.colors.error)
-                ) {
-                    Text(
-                        text = stringResource(R.string.error_login),
-                        style = androidx.compose.material.MaterialTheme.typography.h3,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.align(Alignment.Center),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Light,
-                    )
-                }
-            }
+
+
             CustomTextInput(
-                modifier = Modifier.padding(horizontal = 34.dp),
                 hint = stringResource(id = R.string.event_label),
                 isLastInput = false,
                 value = name,
@@ -166,118 +143,23 @@ fun CreateEventContent(
 
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                modifier = Modifier.padding(horizontal = 34.dp),
                 text = stringResource(id = R.string.new_event_category),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.subtitle1,
                 fontSize = 27.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colors.onBackground
             )
 
             //Row of buttons
-            Row(
-                modifier = Modifier.padding(horizontal = 34.dp),
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Button(
-                        onClick = { onEventCategoryChange(0) },
-                        modifier= Modifier.size(50.dp),
-                        colors = if(category == EventCategory.NoCategory){ ButtonDefaults.buttonColors(backgroundColor = Color.Gray)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.White)},
-                        shape = CircleShape,
-                    )
-                    {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_category_none),
-                            contentDescription = stringResource(id = R.string.category_none)
-                        )
-                    }
-                    Text(
-                        text = stringResource(id = R.string.category_none)
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Button(
-                        onClick = { onEventCategoryChange(1) },
-                        modifier= Modifier.size(50.dp),
-                        colors = if(category == EventCategory.Music){ ButtonDefaults.buttonColors(backgroundColor = Color.Blue)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.White)},
-                        shape = CircleShape,
-                    )
-                    {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_category_music),
-                            contentDescription = stringResource(id = R.string.category_music)
-                        )
-                    }
-                    Text(
-                        text = stringResource(id = R.string.category_music)
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Button(
-                        onClick = { onEventCategoryChange(2) },
-                        modifier= Modifier.size(50.dp),
-                        colors = if(category == EventCategory.Art){ ButtonDefaults.buttonColors(backgroundColor = Color.Cyan)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.White)},
-                        shape = CircleShape,
-                    )
-                    {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_category_art),
-                            contentDescription = stringResource(id = R.string.category_none)
-                        )
-                    }
-                    Text(
-                        text = stringResource(id = R.string.category_art),
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Button(
-                        onClick = { onEventCategoryChange(3) },
-                        modifier= Modifier.size(50.dp),
-                        colors = if(category == EventCategory.Food){ ButtonDefaults.buttonColors(backgroundColor = Color.Red)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.White)},
-                        shape = CircleShape,
-                    )
-                    {
-
-                        Icon(
-                            painter = painterResource(R.drawable.ic_category_food),
-                            contentDescription = stringResource(id = R.string.category_food)
-                        )
-                    }
-
-                    Text(
-                        text = stringResource(id = R.string.category_food),
-                    )
+                items(categoryMap) {
 
                 }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Button(
-                        onClick = { onEventCategoryChange(4) },
-                        modifier= Modifier.size(50.dp),
-                        colors = if(category == EventCategory.Sport){ ButtonDefaults.buttonColors(backgroundColor = Color.Yellow)}else{ ButtonDefaults.buttonColors(backgroundColor = Color.White)},
-                        shape = CircleShape,
-                    )
-                    {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_category_sport),
-                            contentDescription = stringResource(id = R.string.category_none),
-                        )
-                    }
-                    Text(
-                        text = stringResource(id = R.string.category_sport),
-                    )
-                }
-
             }
+
+
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 modifier = Modifier.padding(horizontal = 34.dp),
@@ -441,21 +323,21 @@ fun CreateEventContent(
                             text =
                             if(selectedStartDateText.isEmpty() && selectedStartTimeText.isEmpty()){
                                 "Seleziona data e ora"
-                                }else{
-                                    if(selectedStartDateText.isNotEmpty())
+                            }else{
+                                if(selectedStartDateText.isNotEmpty())
+                                {
+                                    if(selectedStartTimeText.isNotEmpty())
                                     {
-                                        if(selectedStartTimeText.isNotEmpty())
-                                        {
-                                            selectedStartDateText + " " +selectedStartTimeText
-                                        }
-                                        else
-                                        {
-                                            "Seleziona ora"
-                                        }
+                                        selectedStartDateText + " " +selectedStartTimeText
                                     }
-                                    else{
-                                        "Seleziona giorno"
+                                    else
+                                    {
+                                        "Seleziona ora"
                                     }
+                                }
+                                else{
+                                    "Seleziona giorno"
+                                }
                             }
                         )
                     }
@@ -522,18 +404,18 @@ fun CreateEventContent(
                     Text(
                         textAlign = TextAlign.Left,
                         text = if(registrationSameDay){
-                                    if(selectedStartDateText.isNotEmpty() && selectedStartTimeText.isNotEmpty()){
-                                        "L'iscrizione aprirà oggi e si chiuderà il $selectedStartDateText alle $selectedStartTimeText"
-                                    } else {
-                                        if (selectedStartDateText.isNotEmpty()) {
-                                            "L'iscrizione aprirà oggi e si chiuderà il $selectedStartDateText, seleziona l'oriario"
-                                        } else {
-                                            "L'iscrizione aprirà oggi, seleziona la data di inizio evento"
-                                        }
-                                    }
-                                }else{
-                                    "inizio"
-                                },
+                            if(selectedStartDateText.isNotEmpty() && selectedStartTimeText.isNotEmpty()){
+                                "L'iscrizione aprirà oggi e si chiuderà il $selectedStartDateText alle $selectedStartTimeText"
+                            } else {
+                                if (selectedStartDateText.isNotEmpty()) {
+                                    "L'iscrizione aprirà oggi e si chiuderà il $selectedStartDateText, seleziona l'oriario"
+                                } else {
+                                    "L'iscrizione aprirà oggi, seleziona la data di inizio evento"
+                                }
+                            }
+                        }else{
+                            "inizio"
+                        },
                     )
                     AnimatedVisibility(visible = !registrationSameDay) {
                         Button(
@@ -544,19 +426,19 @@ fun CreateEventContent(
                             Text(
                                 fontSize = 10.sp,
                                 text =
-                                    if (selectedStartRegistrationDateText.isEmpty() && selectedStartRegistrationTimeText.isEmpty()) {
-                                        "Seleziona data e ora"
-                                    } else {
-                                        if (selectedStartRegistrationDateText.isNotEmpty()) {
-                                            if (selectedStartRegistrationTimeText.isNotEmpty()) {
-                                                selectedStartRegistrationDateText + " " + selectedStartRegistrationTimeText
-                                            } else {
-                                                "Seleziona ora"
-                                            }
+                                if (selectedStartRegistrationDateText.isEmpty() && selectedStartRegistrationTimeText.isEmpty()) {
+                                    "Seleziona data e ora"
+                                } else {
+                                    if (selectedStartRegistrationDateText.isNotEmpty()) {
+                                        if (selectedStartRegistrationTimeText.isNotEmpty()) {
+                                            selectedStartRegistrationDateText + " " + selectedStartRegistrationTimeText
                                         } else {
-                                            "Seleziona giorno"
+                                            "Seleziona ora"
                                         }
+                                    } else {
+                                        "Seleziona giorno"
                                     }
+                                }
                             )
                         }
                     }
@@ -618,7 +500,7 @@ fun CreateEventContent(
                     .clip(shape = RoundedCornerShape(20.dp))
                     .border(5.dp, Color.LightGray, shape = RoundedCornerShape(20.dp)),
 
-            )
+                )
             {
                 Tab(selected = type == EventType.InviteOnly, onClick = { onEventTypeChange(0) }) {
                     Column(
@@ -673,53 +555,5 @@ fun CreateEventContent(
                 onClick = { onSubmit() }
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CreateEventContentPreview() {
-
-    var name by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf(EventCategory.NoCategory) }
-    var type by remember { mutableStateOf(EventType.InviteOnly)}
-
-    var startDate by remember { mutableStateOf("")}
-    var endDate by remember { mutableStateOf("")}
-    var startRegistrationDate by remember { mutableStateOf("")}
-    var endRegistrationDate by remember { mutableStateOf("")}
-
-
-    EventricTheme {
-        CreateEventContent(
-            name = name,
-            location = location,
-            category = category,
-            type = type,
-            startDate = startDate,
-            endDate = endDate,
-            sameDay = false,
-            startRegistrationDate = startRegistrationDate,
-            endRegistrationDate = endRegistrationDate,
-            registrationSameDay = false,
-            errorBannerIsVisible = false,
-            onEventNameChange = {
-                name = it
-            },
-            onEventLocationChange = {
-                location = it
-            },
-            onEventCategoryChange = {},
-            onEventTypeChange = {},
-            onStartDateChanged = {},
-            onEndDateChanged = {},
-            onStartRegistrationDateChanged = {},
-            onEndRegistrationDateChanged = {},
-            onSameDayChecked = {},
-            onRegistrationSameDayChecked = {},
-            cancelOperation = {},
-            onSubmit = {}
-        )
     }
 }
