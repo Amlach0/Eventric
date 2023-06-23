@@ -1,13 +1,11 @@
 package com.eventric.ui.theme
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF333333)
 val DarkGray = Color(0xFF868E96)
-val LightGray = Color(0xFF807A7A)
+val LightGray = Color(0xFF9C9595)
 val Blue = Color(0xFF441AFF)
 val LightBlue = Color(0xFF03D1FF)
 val DarkGreen = Color(0xFF00454F)

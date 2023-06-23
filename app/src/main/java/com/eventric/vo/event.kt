@@ -1,6 +1,5 @@
 package com.eventric.vo
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import com.eventric.R
 
@@ -39,7 +38,7 @@ sealed class EventCategory(var title: String, var icon: Int, var color: Color, v
 }
 
 sealed class EventType(var title: String, var icon: Int, var dbString: String) {
-    object InviteOnly: EventType("Invite only", R.drawable.ic_type_invite_only, "invite_only")
+    object InviteOnly: EventType("Invite only", R.drawable.ic_type_invite, "invite_only")
     object Private: EventType("Private", R.drawable.ic_type_private, "private")
     object Public: EventType("Public", R.drawable.ic_type_public, "public")
 
