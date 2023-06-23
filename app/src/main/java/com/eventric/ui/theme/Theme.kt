@@ -5,10 +5,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.datastore.preferences.SharedPreferencesMigration
 
 private val DarkColors = darkColors(
-    primary = Blue,
-    secondary = DarkGreen,
+    primary = Purple,
+    onPrimary = White,
+    secondary = LightPurple,
+    background = Black,
+    onBackground = LightGray,
+    error = Red
 )
 
 private val LightColors = lightColors(
@@ -17,7 +22,7 @@ private val LightColors = lightColors(
     secondary = LightPurple,
     background = White,
     onBackground = LightGray,
-    error = Red
+    error = Red,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

@@ -13,10 +13,11 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import java.lang.Error
 import javax.inject.Inject
 import javax.inject.Singleton
 
-const val E_TAG = "UserRepository"
+const val E_TAG = "EventRepository"
 
 @Singleton
 class EventRepository @Inject constructor() {

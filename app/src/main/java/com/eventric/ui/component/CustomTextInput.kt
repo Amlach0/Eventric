@@ -62,8 +62,8 @@ fun CustomTextInput(
                     )
                 },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                leadingIcon = {
-                    if (icon != null) {
+                leadingIcon = if (icon != null) {
+                    {
                         Icon(
                             painter = painterResource(icon),
                             contentDescription = "",
@@ -71,7 +71,7 @@ fun CustomTextInput(
                         )
                     }
 
-                },
+                } else null,
                 trailingIcon = {
                     IconButton(
                         onClick = { onPasswordVisibleChange(!passwordVisible) }
@@ -123,8 +123,8 @@ fun CustomTextInput(
                         color = MaterialTheme.colors.onBackground
                     )
                 },
-                leadingIcon = {
-                    if (icon != null) {
+                leadingIcon = if (icon != null) {
+                    {
                         Icon(
                             painter = painterResource(icon),
                             contentDescription = "",
@@ -132,7 +132,7 @@ fun CustomTextInput(
                         )
                     }
 
-                },
+                } else null,
                 visualTransformation = VisualTransformation.None,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedLabelColor = MaterialTheme.colors.onPrimary,

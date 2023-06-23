@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eventric.R
-import com.eventric.ui.component.CustomButtonSubmit
+import com.eventric.ui.component.CustomButtonPrimary
 import com.eventric.ui.component.CustomTextInput
 import com.eventric.ui.theme.EventricTheme
 
@@ -126,7 +126,7 @@ fun LoginContent(
             Spacer(Modifier.weight(1F))
             //TODO Remember me
             //TODO Forgot pwd
-            CustomButtonSubmit(
+            CustomButtonPrimary(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(57.dp)

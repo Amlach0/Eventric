@@ -8,9 +8,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eventric.ui.auth.login.LoginScreen
 import com.eventric.ui.dispatcher.DispatcherScreen
+import com.eventric.ui.newEvent.CreateEventScreen
 import com.eventric.ui.home.HomeScreen
 import com.eventric.ui.theme.EventricTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.callbackFlow
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -18,7 +20,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-
 
             EventricTheme {
                 NavHost(
@@ -39,8 +40,10 @@ class MainActivity : ComponentActivity() {
                     composable("home") {
                         HomeScreen()
                     }
+                    composable("newEvent") {
+                      CreateEventScreen()
+                    }
                 }
-
             }
         }
     }
