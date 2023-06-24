@@ -15,9 +15,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -29,15 +26,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import com.eventric.R
+import com.eventric.ui.component.BrandTopBar
 import com.eventric.ui.component.CustomButtonPrimary
 import com.eventric.ui.component.CustomButtonSelector
 import com.eventric.ui.component.CustomTextInput
@@ -51,6 +47,7 @@ import com.eventric.vo.EventType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateEventContent(
+    navController: NavController,
     name: String,
     location: String,
     categoryList: List<EventCategory>,
@@ -70,7 +67,6 @@ fun CreateEventContent(
     onEndDateChanged: (String) -> Unit,
     onStartRegistrationDateChanged: (String) -> Unit,
     onEndRegistrationDateChanged: (String) -> Unit,
-    cancelOperation: () -> Unit,
     onSubmit: () -> Unit,
 ) {
     var openDateDialog by remember { mutableStateOf(false) }
@@ -106,31 +102,20 @@ fun CreateEventContent(
 
     Scaffold(
         topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colors.primary)
-                    .zIndex(12F),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Button(
-                    onClick = cancelOperation,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_arrow_back),
-                        contentDescription = "back",
-                        tint = Color.Black,
+            BrandTopBar(
+                left = {
+                    Back(
+                        navController = navController,
+                        tint = MaterialTheme.colors.onBackground
                     )
-                }
-                Text(
-                    modifier = Modifier.padding(horizontal = 34.dp),
-                    text = "New Event",
-                    style = MaterialTheme.typography.h4,
-                    fontSize = 27.sp,
-                    color = MaterialTheme.colors.onBackground
-                )
-            }
+                    Title(
+                        modifier = Modifier.padding(horizontal = 11.dp),
+                        title = stringResource(R.string.create_event),
+                        color = MaterialTheme.colors.onBackground,
+                        textAlign = TextAlign.Left
+                    )
+                },
+            )
         }
     ) {
 

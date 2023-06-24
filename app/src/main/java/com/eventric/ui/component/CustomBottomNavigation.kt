@@ -21,7 +21,7 @@ sealed class BottomNavItem(var title: String, var icon: Int, var screen_route: S
     object Search : BottomNavItem("Search", R.drawable.ic_search, "search")
     object Events : BottomNavItem("Events", R.drawable.ic_events, "events")
     object Profile : BottomNavItem("Profile", R.drawable.ic_profile, "profile")
-    object FabAdd : BottomNavItem("Add Event", R.drawable.ic_add, "add_event")
+    object FabAdd : BottomNavItem("Add Event", R.drawable.ic_add, "new_event")
 }
 
 @Composable

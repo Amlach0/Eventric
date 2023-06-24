@@ -5,8 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,19 +34,24 @@ fun BrandTopBar(
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.Transparent,
     paddingValues: PaddingValues = PaddingValues(horizontal = 24.dp, vertical = 5.dp),
-    left: @Composable TopBarScope.() -> Unit,
-    center: @Composable TopBarScope.() -> Unit,
-    right: @Composable TopBarScope.() -> Unit,
+    left: @Composable TopBarScope.() -> Unit = {},
+    center: @Composable TopBarScope.() -> Unit = {},
+    right: @Composable TopBarScope.() -> Unit = {},
 ) {
-    Box(
+    Row(
         modifier = modifier
             .fillMaxWidth()
             .background(backgroundColor)
-            .padding(paddingValues)
+            .padding(paddingValues),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(Modifier.align(Alignment.CenterStart)) { TopBarScopeInstance.left() }
-        Box(Modifier.align(Alignment.Center)) { TopBarScopeInstance.center() }
-        Box(Modifier.align(Alignment.CenterEnd)) { TopBarScopeInstance.right() }
+        Row(verticalAlignment = Alignment.CenterVertically) { TopBarScopeInstance.left() }
+        Row(
+            Modifier.weight(1f),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) { TopBarScopeInstance.center() }
+        Row(verticalAlignment = Alignment.CenterVertically) { TopBarScopeInstance.right() }
     }
 }
 
@@ -81,13 +86,13 @@ interface TopBarScope {
         modifier: Modifier = Modifier,
         title: String,
         color: Color = MaterialTheme.colors.onPrimary,
-        textAlign: TextAlign,
+        textAlign: TextAlign = TextAlign.Center,
     ) {
         Text(
             modifier = modifier,
             text = title,
             color = color,
-            style = MaterialTheme.typography.h1,
+            style = MaterialTheme.typography.h4,
             textAlign = textAlign
         )
     }
@@ -109,8 +114,8 @@ interface TopBarScope {
                         bounded = false
                     )
                 ) { if (onClick != null) onClick() else navController.popBackStack() }
-                .graphicsLayer { rotationX = 180f },
-            painter = painterResource(R.drawable.ic_arrow),
+                .size(22.dp),
+            painter = painterResource(R.drawable.ic_back),
             colorFilter = ColorFilter.tint(tint),
             contentDescription = "action_icon",
         )

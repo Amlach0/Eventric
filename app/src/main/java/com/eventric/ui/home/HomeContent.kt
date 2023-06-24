@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -22,7 +23,7 @@ import com.eventric.ui.explore.ExploreTopBar
 
 @Composable
 fun HomeContent(
-
+    mainNavController: NavController
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -49,7 +50,7 @@ fun HomeContent(
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = MaterialTheme.colors.onPrimary,
                 onClick = {
-                    navController.navigate(BottomNavItem.FabAdd.screen_route)
+                    mainNavController.navigate(BottomNavItem.FabAdd.screen_route)
                 }
             ) {
                 Icon(

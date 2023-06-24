@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
-    onSuccess: () -> Unit
+    onSuccess: () -> Unit,
 ) {
 
     val loginState by loginViewModel.loginCodeResult.collectAsState()
@@ -55,13 +55,8 @@ fun LoginScreen(
     }
 
     fun onSubmit() = coroutineScope.launch {
-        if (loginState !is LoadingOperation) {
-            try {
-                loginViewModel.login(email, password)
-            } catch (e: Exception) {
-                // Nothing to do
-            }
-        }
+        if (loginState !is LoadingOperation)
+            loginViewModel.login(email, password)
     }
 
     EventricTheme {

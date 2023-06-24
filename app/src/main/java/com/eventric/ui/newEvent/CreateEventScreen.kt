@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.eventric.ui.theme.EventricTheme
 import com.eventric.utils.ErrorOperation
 import com.eventric.utils.LoadingOperation
@@ -18,8 +19,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CreateEventScreen(
+    navController: NavController,
     createEventViewModel: CreateEventViewModel = hiltViewModel(),
-    back: () -> Unit,
 ) {
 
     val createEventState by createEventViewModel.createEventCodeResult.collectAsState()
@@ -92,11 +93,6 @@ fun CreateEventScreen(
     }
 
 
-    fun cancelOperation() {
-        back()
-    }
-
-
     fun onSubmit() = coroutineScope.launch {
         if (createEventState !is LoadingOperation) {
             createEventViewModel.createEvent(
@@ -114,6 +110,7 @@ fun CreateEventScreen(
 
     EventricTheme {
         CreateEventContent(
+            navController = navController,
             name = name,
             location = location,
             categoryList = categoryList,
@@ -133,7 +130,6 @@ fun CreateEventScreen(
             onEndDateChanged = ::onEndDateChanged,
             onStartRegistrationDateChanged = ::onStartRegistrationDateChanged,
             onEndRegistrationDateChanged = ::onEndRegistrationDate,
-            cancelOperation = ::cancelOperation,
             onSubmit = ::onSubmit,
         )
     }
