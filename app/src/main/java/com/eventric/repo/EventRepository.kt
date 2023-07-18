@@ -45,6 +45,13 @@ class EventRepository @Inject constructor() {
         flowOf()
     }
 
+    fun subscribe(eventId:String, userId: String) = try {
+
+    }catch (e: Exception)
+    {
+
+    }
+
     fun getAllEvents(
         filter: Filter = Filter(),
         order: String = "name"

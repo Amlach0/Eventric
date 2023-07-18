@@ -65,7 +65,7 @@ fun LoginScreen(
         }
     }
 
-    fun onSigninPressed(){
+    fun onSignupPressed(){
         signin()
     }
 
@@ -79,7 +79,7 @@ fun LoginScreen(
             onEmailChange = ::onEmailChange,
             onPasswordChange = ::onPasswordChange,
             onSubmit = ::onSubmit,
-            onSigninPressed = ::onSigninPressed,
+            onSignupPressed = ::onSignupPressed,
         )
     }
 

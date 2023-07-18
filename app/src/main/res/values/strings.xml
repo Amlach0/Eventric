@@ -25,4 +25,5 @@
     <string name="name_label">Nome</string>
     <string name="surname_label">Cognome</string>
     <string name="confirm_pwd_label">Conferma password</string>
+    <string name="common_subscribe">Subscribe</string>
 </resources>
