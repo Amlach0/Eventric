@@ -1,11 +1,15 @@
 <resources>
     <string name="app_name">Eventric</string>
     <string name="error_login">Login fallito. Verifica i tuoi dati d\'accesso</string>
+    <string name="error_signup">Login fallito. Verifica i tuoi dati d\'accesso</string>
     <string name="error_new_event">Creazione evento fallita. Ripovare</string>
     <string name="title_login">Sign In</string>
     <string name="common_login">SIGN IN</string>
     <string name="pwd_label">Your Password</string>
     <string name="username_label">abc@email.com</string>
+    <string name="name_label">abc@email.com</string>
+    <string name="surname_label">abc@email.com</string>
+    <string name="confirm_pwd_label">abc@email.com</string>
     <string name="new_event_name">Nome evento</string>
     <string name="event_label">Nome Evento</string>
     <string name="new_event_location">Luogo</string>
