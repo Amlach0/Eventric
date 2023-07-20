@@ -26,6 +26,8 @@ fun SignupScreen(
 
     var errorBannerIsVisible by remember { mutableStateOf(false) }
 
+    var errorBannerConfermationIsVisible by remember { mutableStateOf(false) }
+
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
 
@@ -62,6 +64,7 @@ fun SignupScreen(
 
     fun onPasswordChange(value: String) {
         password = value
+        errorBannerConfermationIsVisible = (password != confirmPassword)
     }
 
     fun onConfirmPasswordVisibleChange(value: Boolean) {
@@ -70,18 +73,28 @@ fun SignupScreen(
 
     fun onConfirmPasswordChange(value: String) {
         confirmPassword = value
+        errorBannerConfermationIsVisible = (password != confirmPassword)
     }
 
-    fun onBirthDateSelected(value: String){
+    fun onBirthDateSelected(value: String) {
         birthDate = value
     }
 
     fun onSubmit() = coroutineScope.launch {
-        if (signupState !is LoadingOperation) {
-            try {
-                signupViewModel.signup(name, surname, email, password, confirmPassword, birthDate)
-            } catch (e: Exception) {
-                // Nothing to do
+        if (password == confirmPassword) {
+            if (signupState !is LoadingOperation) {
+                try {
+                    signupViewModel.signup(
+                        name,
+                        surname,
+                        email,
+                        password,
+                        confirmPassword,
+                        birthDate
+                    )
+                } catch (e: Exception) {
+                    // Nothing to do
+                }
             }
         }
     }
@@ -89,6 +102,7 @@ fun SignupScreen(
     EventricTheme {
         SignupContent(
             errorBannerIsVisible = errorBannerIsVisible,
+            errorBannerConfermationIsVisible = errorBannerConfermationIsVisible,
             name = name,
             surname = surname,
             email = email,

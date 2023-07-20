@@ -46,6 +46,7 @@ import java.util.Calendar
 @Composable
 fun SignupContent(
     errorBannerIsVisible: Boolean,
+    errorBannerConfermationIsVisible: Boolean,
     name: String,
     surname: String,
     email: String,
@@ -85,6 +86,25 @@ fun SignupContent(
                 ) {
                     Text(
                         text = stringResource(R.string.error_signup),
+                        style = MaterialTheme.typography.h3,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.align(Alignment.Center),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Light,
+                    )
+                }
+            }
+            AnimatedVisibility(
+                visible = errorBannerConfermationIsVisible,
+            ) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .background(MaterialTheme.colors.error)
+                ) {
+                    Text(
+                        text = stringResource(R.string.error_confirmation_psw),
                         style = MaterialTheme.typography.h3,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.align(Alignment.Center),
@@ -253,6 +273,7 @@ fun SignupContentPreview() {
             confirmPassword = confirmPassword,
             confirmPasswordVisible = confirmPasswordVisible,
             errorBannerIsVisible = false,
+            errorBannerConfermationIsVisible = false,
             birthDate = birthDate,
             onNameChange = {
                 name = it

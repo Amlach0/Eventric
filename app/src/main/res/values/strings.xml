@@ -2,6 +2,7 @@
     <string name="app_name">Eventric</string>
     <string name="error_login">Login fallito. Verifica i tuoi dati d\'accesso</string>
     <string name="error_signup">Login fallito. Verifica i tuoi dati d\'accesso</string>
+    <string name="error_confirmation_psw">Password e conferma password non corrispondono</string>
     <string name="error_new_event">Creazione evento fallita. Ripovare</string>
     <string name="title_login">Sign In</string>
     <string name="common_login">SIGN IN</string>
