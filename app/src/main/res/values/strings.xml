@@ -29,4 +29,6 @@
     <string name="select_time_start_date">Seleziona l\'orario di inizio per il </string>
     <string name="select_time_end_date">Seleziona l\'orario di fine per il </string>
     <string name="create_event">Crea Evento</string>
+    <string name="info_event">Dettagli Evento</string>
+    <string name="common_subscribe">Iscriviti</string>
 </resources>
