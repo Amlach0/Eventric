@@ -8,7 +8,6 @@ import com.eventric.repo.UserRepository
 import com.eventric.utils.tryOperation
 import com.eventric.vo.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
@@ -20,15 +19,15 @@ class InfoEventViewModel @Inject constructor(
 
     var infoEventCodeResult = MutableStateFlow<Operation?>(null)
 
-    /*suspend fun get(id: String): Flow<Pair<String, Event?>> {
+    suspend fun get(id: String): Event? {
         infoEventCodeResult.value = LoadingOperation
 
-        var event: Flow<Pair<String, Event?>>
+        var event: Event? = null
         infoEventCodeResult.value = tryOperation {
-            event = eventRepository.getEvent(id)
+            eventRepository.getEvent(id).collect() { flow -> event = flow.second }
         }
         return event
-    }*/
+    }
 
     suspend fun subscribe()
     {

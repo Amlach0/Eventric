@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             EventricTheme {
                 NavHost(
                     navController = navController,
-                    startDestination = "home"
+                    startDestination = "info_event"
                 ) {
                     composable("login") {
                         LoginScreen(
