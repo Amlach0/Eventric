@@ -29,4 +29,8 @@
     <string name="select_time_start_date">Seleziona l\'orario di inizio per il </string>
     <string name="select_time_end_date">Seleziona l\'orario di fine per il </string>
     <string name="create_event">Crea Evento</string>
+    <string name="profile">Profilo</string>
+    <string name="followed">seguiti</string>
+    <string name="followers">seguaci</string>
+    <string name="bio">Bio</string>
 </resources>

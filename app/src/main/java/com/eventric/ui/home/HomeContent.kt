@@ -20,6 +20,7 @@ import com.eventric.ui.component.BottomNavItem
 import com.eventric.ui.component.CustomBottomNavigation
 import com.eventric.ui.explore.ExploreScreen
 import com.eventric.ui.explore.ExploreTopBar
+import com.eventric.ui.profile.ProfileScreen
 
 @Composable
 fun HomeContent(
@@ -63,11 +64,11 @@ fun HomeContent(
         NavHost(
             modifier = Modifier.padding(paddingValues),
             navController = navController,
-            startDestination = BottomNavItem.Explore.screen_route
+            startDestination = BottomNavItem.Profile.screen_route
         ) {
 
-            composable(BottomNavItem.Explore.screen_route) {
-                ExploreScreen()
+            composable(BottomNavItem.Profile.screen_route) {
+                ProfileScreen()
             }
         }
     }

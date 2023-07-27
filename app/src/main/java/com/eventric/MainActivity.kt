@@ -10,6 +10,7 @@ import com.eventric.ui.auth.login.LoginScreen
 import com.eventric.ui.dispatcher.DispatcherScreen
 import com.eventric.ui.home.HomeScreen
 import com.eventric.ui.newEvent.CreateEventScreen
+import com.eventric.ui.profile.ProfileScreen
 import com.eventric.ui.theme.EventricTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,6 +46,9 @@ class MainActivity : ComponentActivity() {
                       CreateEventScreen(
                           navController = navController
                       )
+                    }
+                    composable("profile") {
+                        ProfileScreen()
                     }
                 }
             }
