@@ -89,7 +89,7 @@ fun CreateEventContent(
     if (openRegistrationDateDialog) {
         DateAndTimeRangePickerDialog(
             onDismiss = {
-                openDateDialog = false
+                openRegistrationDateDialog = false
             },
             onStartDateSelected = {
                 onStartRegistrationDateChanged(it)

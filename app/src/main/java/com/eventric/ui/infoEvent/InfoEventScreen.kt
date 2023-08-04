@@ -1,73 +1,39 @@
 package com.eventric.ui.infoEvent
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.eventric.ui.theme.EventricTheme
-import com.eventric.utils.LoadingOperation
-import com.eventric.vo.Event
+import com.eventric.utils.getMilliFromDate
+import java.util.Calendar
 
 @Composable
 fun InfoEventScreen(
+    eventId: String,
     navController: NavController,
     infoEventViewModel: InfoEventViewModel = hiltViewModel()
 ) {
-    val infoEventState by infoEventViewModel.infoEventCodeResult.collectAsState()
 
-    var event: Event? = null
-    var name by remember { mutableStateOf("Nome evento") }
-    var location by remember { mutableStateOf("Luogo evento") }
-    var organizer by remember { mutableStateOf("Organizzatore") }
-    var dateStart by remember { mutableStateOf("Data inizio") }
-    var dateEnd by remember { mutableStateOf("Data fine") }
-    var dateRegistrationStart by remember { mutableStateOf("Data inizio registrazione") }
-    var dateRegistrationEnd by remember { mutableStateOf("Data fine registrazione") }
-    var info by remember { mutableStateOf("blablabla") }
-    var bookmark by remember { mutableStateOf(false) }
+    val userPair by infoEventViewModel.userFlow.collectAsStateWithLifecycle(null)
+    val user = userPair?.second
+    val event by infoEventViewModel.getEventFlow(eventId).collectAsStateWithLifecycle(null)
 
-    var openRegistration by remember { mutableStateOf(true) }
-    var RegistrationText = "Dal "+dateRegistrationStart+" al "+dateRegistrationEnd
+    val name = event?.name ?: "Loading..."
+    val location = event?.location ?: ""
+    val organizer = event?.organizer ?: ""
+    val dateStart = event?.date?.start ?: ""
+    val dateEnd = event?.date?.end ?: ""
+    val dateRegistrationStart = event?.dateRegistration?.start ?: ""
+    val dateRegistrationEnd = event?.dateRegistration?.end ?: ""
+    val info = event?.name ?: ""
+    var bookmark = user?.favoriteEvents?.contains(eventId) ?: false
 
-    LaunchedEffect(infoEventState) {
-        if (infoEventState !is LoadingOperation) {
-            try {
-                //TODO get all infos
-                event = infoEventViewModel.get("W61Dz5reAUvpxuzqJ8rc")
-                name = event!!.name.toString()
-                location = event!!.location.toString()
+    val currentTime = Calendar.getInstance().time.time
+    val openRegistration = currentTime in getMilliFromDate(dateRegistrationStart, "dd/MM/yyyy hh:mm")..getMilliFromDate(dateRegistrationEnd, "dd/MM/yyyy hh:mm")
+    val registrationText = "Dal $dateRegistrationStart al $dateRegistrationEnd"
 
-
-                //TODO check if
-                if(dateRegistrationEnd>"dataora")
-                {
-                    openRegistration = false
-                    RegistrationText = "Le iscrizioni sono scadute: "+dateRegistrationEnd
-                }
-                else{
-                    if(dateRegistrationStart<"dataora")
-                    {
-                        openRegistration = false
-                        RegistrationText = "Le iscrizioni apriranno: "+dateRegistrationStart
-                    }
-                    else
-                    {
-                        openRegistration = true
-                        RegistrationText="Hai tempo per iscriverti dal "+dateRegistrationStart+" al "+dateRegistrationEnd
-                    }
-                }
-
-            } catch (e: Exception) {
-                event = infoEventViewModel.get("W61Dz5reAUvpxuzqJ8rc")
-                name = event!!.name.toString()
-            }
-        }
-    }
 
     fun onBookmarkChange(){
         bookmark = !bookmark
@@ -81,7 +47,7 @@ fun InfoEventScreen(
             organizer = organizer,
             dateStart = dateStart,
             dateEnd = dateEnd,
-            RegistrationText = RegistrationText,
+            RegistrationText = registrationText,
             info = info,
             bookmarked = bookmark,
             openRegistration = openRegistration,

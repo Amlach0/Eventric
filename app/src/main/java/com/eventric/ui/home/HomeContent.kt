@@ -67,7 +67,7 @@ fun HomeContent(
         ) {
 
             composable(BottomNavItem.Explore.screen_route) {
-                ExploreScreen(navController)
+                ExploreScreen(mainNavController)
             }
         }
     }

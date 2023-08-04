@@ -1,8 +1,8 @@
 package com.eventric.ui.newEvent
 
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
+import com.eventric.repo.UserRepository
 import com.eventric.utils.LoadingOperation
 import com.eventric.utils.Operation
 import com.eventric.utils.tryOperation
@@ -12,22 +12,29 @@ import com.eventric.vo.EventCategory
 import com.eventric.vo.EventType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 
 @HiltViewModel
 class CreateEventViewModel @Inject constructor(
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     var createEventCodeResult = MutableStateFlow<Operation?>(null)
 
-    suspend fun createEvent(name: String, location: String, category: EventCategory, type: EventType, startDate: String, endDate: String, startRegistrationDate: String, endRegistrationDate: String) {
-        createEventCodeResult.value = LoadingOperation;
+    private val user = userRepository.user
 
-        var date: DateRange = DateRange(startDate, endDate)
-        var registrationDate: DateRange = DateRange(startRegistrationDate, endRegistrationDate)
-        var event: Event = Event(name, location, category, type, date, registrationDate)
+    //TODO adding info
+    suspend fun createEvent(name: String, location: String, category: EventCategory, type: EventType, startDate: String, endDate: String, startRegistrationDate: String, endRegistrationDate: String) {
+        createEventCodeResult.value = LoadingOperation
+
+        val organizer = user.first().first
+
+        val date = DateRange(startDate, endDate)
+        val registrationDate = DateRange(startRegistrationDate, endRegistrationDate)
+        val event = Event(name, location, category, type, date, registrationDate, organizer)
 
         createEventCodeResult.value = tryOperation {
             eventRepository.createEvent(event)

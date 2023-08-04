@@ -2,13 +2,9 @@ package com.eventric.ui.infoEvent
 
 import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
-import com.eventric.utils.LoadingOperation
-import com.eventric.utils.Operation
 import com.eventric.repo.UserRepository
-import com.eventric.utils.tryOperation
-import com.eventric.vo.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,25 +12,13 @@ class InfoEventViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val eventRepository: EventRepository
 ) : ViewModel() {
+    val userFlow = userRepository.user
 
-    var infoEventCodeResult = MutableStateFlow<Operation?>(null)
+    fun getEventFlow(id: String) = eventRepository.getEvent(id).map { it.second }
 
-    suspend fun get(id: String): Event? {
-        infoEventCodeResult.value = LoadingOperation
-
-        var event: Event? = null
-        infoEventCodeResult.value = tryOperation {
-            eventRepository.getEvent(id).collect() { flow -> event = flow.second }
-        }
-        return event
-    }
 
     suspend fun subscribe()
     {
-        infoEventCodeResult.value = LoadingOperation
 
-        infoEventCodeResult.value = tryOperation {
-            //eventRepository.subscribe(EventId, UserId)
-        }
     }
 }

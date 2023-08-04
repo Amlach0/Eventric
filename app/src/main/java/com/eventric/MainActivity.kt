@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             EventricTheme {
                 NavHost(
                     navController = navController,
-                    startDestination = "info_event"
+                    startDestination = "dispatcher"
                 ) {
                     composable("login") {
                         LoginScreen(
@@ -47,8 +47,10 @@ class MainActivity : ComponentActivity() {
                           navController = navController
                       )
                     }
-                    composable("info_event") {
+                    composable("info_event?eventId={eventId}") { navBackStackEntry ->
                         InfoEventScreen(
+                            eventId = navBackStackEntry.arguments?.getString("eventId")
+                                ?: throw IllegalStateException("missing event id arguments"),
                             navController = navController
                         )
                     }
