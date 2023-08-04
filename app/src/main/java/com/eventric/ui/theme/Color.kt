@@ -3,6 +3,7 @@ package com.eventric.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val White = Color(0xFFFFFFFF)
+val White70 = Color(0xB3FFFFFF)
 val Black = Color(0xFF333333)
 val DarkGray = Color(0xFF868E96)
 val LightGray = Color(0xFF9C9595)

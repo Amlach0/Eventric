@@ -1,5 +1,18 @@
 package com.eventric.ui.explore
 
-class ExploreViewModel {
+import androidx.lifecycle.ViewModel
+import com.eventric.repo.EventRepository
+import com.eventric.repo.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class ExploreViewModel @Inject constructor(
+    private val eventRepository: EventRepository,
+    private val userRepository: UserRepository
+): ViewModel() {
+
+    private val userFlow = userRepository.user
+
 
 }
