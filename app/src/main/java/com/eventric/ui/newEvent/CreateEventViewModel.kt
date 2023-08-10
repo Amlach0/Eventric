@@ -31,7 +31,7 @@ class CreateEventViewModel @Inject constructor(
 
         val date = DateRange(startDate, endDate)
         val registrationDate = DateRange(startRegistrationDate, endRegistrationDate)
-        val event = Event(name, location, category, type, date, registrationDate, userId)
+        val event = Event(name, location, category.dbString, type.dbString, date, registrationDate, userId)
 
         createEventCodeResult.value = tryOperation {
             eventRepository.createEvent(event)

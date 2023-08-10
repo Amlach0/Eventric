@@ -17,7 +17,7 @@ data class Event(
     val subscribed: List<String?>,
 ){
     constructor(): this(null, null, null, null, null, null, EventCategory.NoCategory.dbString, EventType.Private.dbString, null, listOf())
-    constructor(name: String, location: String?, category: EventCategory, type: EventType, date: DateRange?, registrationDate: DateRange?, organizer: String?): this(name, null, null, location, date, registrationDate, category.dbString, type.dbString, organizer, listOf())
+    constructor(name: String, location: String?, category: String, type: String, date: DateRange?, registrationDate: DateRange?, organizer: String?): this(name, null, null, location, date, registrationDate, category, type, organizer, listOf())
 }
 
 data class DateRange(

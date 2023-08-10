@@ -3,7 +3,6 @@ package com.eventric.repo
 import android.util.Log
 import com.eventric.vo.Event
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.snapshots
@@ -13,7 +12,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import java.lang.Error
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,11 +44,9 @@ class EventRepository @Inject constructor() {
     }
 
     fun getAllEvents(
-        filter: Filter = Filter(),
         order: String = "name"
     ) = try {
         events
-            .where(filter)
             .orderBy(order)
             .snapshots().map { query: QuerySnapshot ->
                 var docList = listOf<Pair<String, Event>>()

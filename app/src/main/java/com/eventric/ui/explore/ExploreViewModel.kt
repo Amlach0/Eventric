@@ -4,15 +4,34 @@ import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
 import com.eventric.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
     private val eventRepository: EventRepository,
-    private val userRepository: UserRepository
-): ViewModel() {
+    private val userRepository: UserRepository,
+) : ViewModel() {
 
     private val userFlow = userRepository.user
+
+
+    fun getEvents() = combine(
+        eventRepository.getAllEvents(),
+        userRepository.getAllUsers(),
+        userFlow
+    ) { events, users, currentUser ->
+        events.map { (id, event) ->
+            val organizerUser = users.find { it.first == event.organizer }?.second
+            Pair(
+                currentUser.second.favoriteEvents.contains(id),
+                event.copy(
+                    organizer = "${organizerUser?.name} ${organizerUser?.surname}"
+                )
+            )
+        }
+    }
+
 
 
 }
