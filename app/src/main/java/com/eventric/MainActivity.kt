@@ -43,7 +43,8 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("new_event") {
                       CreateEventScreen(
-                          navController = navController
+                          navController = navController,
+                          onSubmit = { navController.navigate("home") { popUpTo(0) } }
                       )
                     }
                 }

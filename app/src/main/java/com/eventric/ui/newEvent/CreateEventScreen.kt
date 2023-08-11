@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 fun CreateEventScreen(
     navController: NavController,
     createEventViewModel: CreateEventViewModel = hiltViewModel(),
+    onSubmit: () -> Unit
 ) {
 
     val createEventState by createEventViewModel.createEventCodeResult.collectAsState()
@@ -93,7 +94,7 @@ fun CreateEventScreen(
     }
 
 
-    fun onSubmit() = coroutineScope.launch {
+    fun onCreateSubmit() = coroutineScope.launch {
         if (createEventState !is LoadingOperation) {
             createEventViewModel.createEvent(
                 name,
@@ -105,6 +106,7 @@ fun CreateEventScreen(
                 startRegistrationDate,
                 endRegistrationDate
             )
+            onSubmit()
         }
     }
 
@@ -130,7 +132,7 @@ fun CreateEventScreen(
             onEndDateChanged = ::onEndDateChanged,
             onStartRegistrationDateChanged = ::onStartRegistrationDateChanged,
             onEndRegistrationDateChanged = ::onEndRegistrationDate,
-            onSubmit = ::onSubmit,
+            onSubmit = ::onCreateSubmit,
         )
     }
 }

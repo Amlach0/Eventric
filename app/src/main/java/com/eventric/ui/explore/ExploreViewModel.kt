@@ -23,7 +23,8 @@ class ExploreViewModel @Inject constructor(
     ) { events, users, currentUser ->
         events.map { (id, event) ->
             val organizerUser = users.find { it.first == event.organizer }?.second
-            Pair(
+            Triple(
+                id,
                 currentUser.second.favoriteEvents.contains(id),
                 event.copy(
                     organizer = "${organizerUser?.name} ${organizerUser?.surname}"

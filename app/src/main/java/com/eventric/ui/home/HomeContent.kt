@@ -23,7 +23,7 @@ import com.eventric.ui.explore.ExploreTopBar
 
 @Composable
 fun HomeContent(
-    mainNavController: NavController
+    mainNavController: NavController,
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()

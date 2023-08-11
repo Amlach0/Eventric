@@ -25,7 +25,7 @@ import com.eventric.vo.Event
 
 @Composable
 fun ExploreContent(
-    events: List<Pair<Boolean, Event>>,
+    events: List<Triple<String,Boolean, Event>>,
 ) {
 
     LazyColumn(
@@ -34,11 +34,12 @@ fun ExploreContent(
         contentPadding = PaddingValues(vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ){
-        items(events){ (isFavourite, event) ->
+        items(events){ (id, isFavourite, event) ->
             EventCardItem(
                 event = event,
                 organaserName = event.organizer.toString(),
-                isFavorite = isFavourite
+                isFavorite = isFavourite,
+                onClick = {}
             )
         }
     }

@@ -1,6 +1,7 @@
 package com.eventric.ui.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,9 +37,10 @@ fun EventCardItem(
     event: Event,
     organaserName: String,
     isFavorite: Boolean,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.clickable { onClick() },
         shape = MaterialTheme.shapes.medium,
         backgroundColor = MaterialTheme.colors.background
     ) {
@@ -111,15 +113,16 @@ fun EventCardItemPreview() {
             event = Event(
                 "test",
                 "via T",
-                EventCategory.Music,
-                EventType.Private,
+                EventCategory.Music.dbString,
+                EventType.Private.dbString,
                 DateRange("10/05", "20/11"),
                 DateRange(),
                 "\n" +
                         "admin@admin.com"
             ),
             organaserName = "Carlo Santini",
-            isFavorite = true
+            isFavorite = true,
+            onClick = {}
         )
     }
 }
