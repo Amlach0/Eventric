@@ -26,10 +26,10 @@ class EventRepository @Inject constructor() {
         try {
             val refDoc = events.add(event).await()
             Log.d(E_TAG, "Event written with ID: ${refDoc.id}")
-        } catch (ce: CancellationException) {
-            throw ce
-        } catch (e: Exception) {
+        }
+        catch (e: Exception) {
             Log.w(E_TAG, "Error adding Event", e)
+            throw e
         }
     }
 
@@ -45,9 +45,12 @@ class EventRepository @Inject constructor() {
         flowOf()
     }
 
-    fun getAllEvents() = try {
+    fun getAllEvents(
+        order: String = "name"
+    ) = try {
         Log.d("test", "start get all events")
         events
+            .orderBy(order)
             .snapshots().map { query: QuerySnapshot ->
                 var docList = listOf<Pair<String, Event>>()
                 for (doc in query) {

@@ -40,10 +40,10 @@ class UserRepository @Inject constructor() {
             auth.signInWithEmailAndPassword(email, password).await()
             refreshLoggedUser()
             Log.d(U_TAG, "signInWithEmail:success")
-        } catch (ce: CancellationException) { throw ce }
+        }
         catch (e: Exception) {
             Log.w(U_TAG, "signInWithEmail:failure", e)
-            throw IllegalStateException("User not found")
+            throw e
         }
     }
 
@@ -108,12 +108,6 @@ class UserRepository @Inject constructor() {
     catch (e: Exception) {
         Log.w(U_TAG, "Error reading Users", e)
         flowOf()
-    }
-
-
-
-    fun getIsFavorite(eventId: String) = user.map { (_, profile) ->
-        profile.favoriteEvents.contains(eventId)
     }
 }
 
