@@ -5,7 +5,6 @@ import com.eventric.vo.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.snapshots
@@ -108,11 +107,9 @@ class UserRepository @Inject constructor() {
     }
 
     fun getAllUsers(
-        filter: Filter = Filter(),
         order: String = "name",
     ) = try {
         users
-            .where(filter)
             .orderBy(order)
             .snapshots().map { query: QuerySnapshot ->
                 var docList = listOf<Pair<String, User>>()

@@ -3,7 +3,6 @@ package com.eventric.repo
 import android.util.Log
 import com.eventric.vo.Event
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.snapshots
@@ -13,7 +12,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import java.lang.Error
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,9 +26,10 @@ class EventRepository @Inject constructor() {
         try {
             val refDoc = events.add(event).await()
             Log.d(E_TAG, "Event written with ID: ${refDoc.id}")
-        } catch (ce: CancellationException) { throw ce }
+        }
         catch (e: Exception) {
             Log.w(E_TAG, "Error adding Event", e)
+            throw e
         }
     }
 
@@ -39,28 +38,31 @@ class EventRepository @Inject constructor() {
             .snapshots().map { document: DocumentSnapshot ->
                 Pair(document.id, document.toObject<Event>())
             }
-    } catch (ce: CancellationException) { throw ce }
-    catch (e: Exception) {
+    } catch (ce: CancellationException) {
+        throw ce
+    } catch (e: Exception) {
         Log.w(E_TAG, "Error reading Event", e)
         flowOf()
     }
 
     fun getAllEvents(
-        filter: Filter = Filter(),
         order: String = "name"
     ) = try {
+        Log.d("test", "start get all events")
         events
-            .where(filter)
             .orderBy(order)
             .snapshots().map { query: QuerySnapshot ->
                 var docList = listOf<Pair<String, Event>>()
                 for (doc in query) {
-                    docList = docList + Pair(doc.id, doc.toObject())
+                    Log.d("test", "${doc.id} || ${doc.data}")
+                        docList = docList + Pair(doc.id, doc.toObject())
                 }
+                Log.d("test", "end get all events ${docList.size}")
                 docList
             }
-    } catch (ce: CancellationException) { throw ce }
-    catch (e: Exception) {
+    } catch (ce: CancellationException) {
+        throw ce
+    } catch (e: Exception) {
         Log.w(E_TAG, "Error reading Events", e)
         flowOf()
     }

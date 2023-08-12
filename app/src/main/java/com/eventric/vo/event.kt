@@ -7,22 +7,25 @@ import com.eventric.R
 data class Event(
     val name: String?,
     val image: String?,
+    val info: String?,
     val location: String?,
     val date: DateRange?,
     val dateRegistration: DateRange?,
-    val category: EventCategory?,
-    val type: EventType?,
-    val organizers: List<String?>,
+    val category: String?,
+    val type: String?,
+    val organizer: String?,
     val subscribed: List<String?>,
 ){
-    constructor(): this(null, null, null, null, null, EventCategory.NoCategory, null, listOf(), listOf())
-    constructor(name: String, location: String?, category: EventCategory, type: EventType, date: DateRange?, registrationDate: DateRange?): this(name, null, location, date, registrationDate, category, type, listOf(), listOf())
+    constructor(): this(null, null, null, null, null, null, EventCategory.NoCategory.dbString, EventType.Private.dbString, null, listOf())
+    constructor(name: String, location: String?, category: String, type: String, date: DateRange?, registrationDate: DateRange?, organizer: String?): this(name, null, null, location, date, registrationDate, category, type, organizer, listOf())
 }
 
 data class DateRange(
-    val start: String,
-    val end: String,
-)
+    val start: String?,
+    val end: String?,
+) {
+    constructor(): this(null, null)
+}
 
 
 sealed class EventCategory(var title: String, var icon: Int, var color: Color, var dbString: String) {
@@ -32,9 +35,7 @@ sealed class EventCategory(var title: String, var icon: Int, var color: Color, v
     object Food : EventCategory("Food", R.drawable.ic_category_food, Color(0xFF29D697), "food")
     object Sport : EventCategory("Sport", R.drawable.ic_category_sport, Color(0xFFEE544A), "sport")
 
-    override fun toString(): String {
-        return this.dbString
-    }
+
 }
 
 sealed class EventType(var title: String, var icon: Int, var dbString: String) {
@@ -42,7 +43,5 @@ sealed class EventType(var title: String, var icon: Int, var dbString: String) {
     object Private: EventType("Private", R.drawable.ic_type_private, "private")
     object Public: EventType("Public", R.drawable.ic_type_public, "public")
 
-    override fun toString(): String {
-        return this.dbString
-    }
+
 }

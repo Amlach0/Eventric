@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -18,12 +20,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.eventric.R
 import com.eventric.ui.component.BrandTopBar
+import com.eventric.ui.component.EventCardItem
+import com.eventric.vo.Event
 
 @Composable
 fun ExploreContent(
-
+    events: List<Triple<String,Boolean, Event>>,
 ) {
-    Text(text = "Questa è explore")
+
+    LazyColumn(
+        modifier = Modifier
+            .padding(horizontal = 24.dp),
+        contentPadding = PaddingValues(vertical = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+    ){
+        items(events){ (id, isFavourite, event) ->
+            EventCardItem(
+                event = event,
+                organaserName = event.organizer.toString(),
+                isFavorite = isFavourite,
+                onClick = {}
+            )
+        }
+    }
 }
 
 @Composable

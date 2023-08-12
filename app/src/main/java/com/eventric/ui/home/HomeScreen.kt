@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun HomeScreen (
-    mainNavController: NavController
+    mainNavController: NavController,
 ) {
     HomeContent(
         mainNavController = mainNavController

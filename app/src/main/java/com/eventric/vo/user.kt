@@ -1,7 +1,5 @@
 package com.eventric.vo
 
-import com.google.type.Date
-
 
 data class User(
     val email: String,
