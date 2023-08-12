@@ -26,8 +26,9 @@ class EventRepository @Inject constructor() {
         try {
             val refDoc = events.add(event).await()
             Log.d(E_TAG, "Event written with ID: ${refDoc.id}")
-        } catch (ce: CancellationException) { throw ce }
-        catch (e: Exception) {
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
             Log.w(E_TAG, "Error adding Event", e)
         }
     }
@@ -37,26 +38,28 @@ class EventRepository @Inject constructor() {
             .snapshots().map { document: DocumentSnapshot ->
                 Pair(document.id, document.toObject<Event>())
             }
-    } catch (ce: CancellationException) { throw ce }
-    catch (e: Exception) {
+    } catch (ce: CancellationException) {
+        throw ce
+    } catch (e: Exception) {
         Log.w(E_TAG, "Error reading Event", e)
         flowOf()
     }
 
-    fun getAllEvents(
-        order: String = "name"
-    ) = try {
+    fun getAllEvents() = try {
+        Log.d("test", "start get all events")
         events
-            .orderBy(order)
             .snapshots().map { query: QuerySnapshot ->
                 var docList = listOf<Pair<String, Event>>()
                 for (doc in query) {
-                    docList = docList + Pair(doc.id, doc.toObject())
+                    Log.d("test", "${doc.id} || ${doc.data}")
+                        docList = docList + Pair(doc.id, doc.toObject())
                 }
+                Log.d("test", "end get all events ${docList.size}")
                 docList
             }
-    } catch (ce: CancellationException) { throw ce }
-    catch (e: Exception) {
+    } catch (ce: CancellationException) {
+        throw ce
+    } catch (e: Exception) {
         Log.w(E_TAG, "Error reading Events", e)
         flowOf()
     }

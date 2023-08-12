@@ -1,7 +1,5 @@
 package com.eventric.vo
 
-import com.google.type.Date
-
 
 data class User(
     val email: String,
@@ -9,7 +7,7 @@ data class User(
     val surname: String?,
     val image: String?,
     val bio: String?,
-    val birthDate: Date?,
+    val birthDate: String?,
     val organizedEvents: List<String?>,
     val subscribedEvents: List<String?>,
     val favoriteEvents: List<String?>,

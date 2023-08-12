@@ -35,11 +35,7 @@ sealed class EventCategory(var title: String, var icon: Int, var color: Color, v
     object Food : EventCategory("Food", R.drawable.ic_category_food, Color(0xFF29D697), "food")
     object Sport : EventCategory("Sport", R.drawable.ic_category_sport, Color(0xFFEE544A), "sport")
 
-    override fun toString(): String {
-        return this.dbString
-    }
 
-    constructor(): this("", 0, Color.Black, "")
 }
 
 sealed class EventType(var title: String, var icon: Int, var dbString: String) {
@@ -47,9 +43,5 @@ sealed class EventType(var title: String, var icon: Int, var dbString: String) {
     object Private: EventType("Private", R.drawable.ic_type_private, "private")
     object Public: EventType("Public", R.drawable.ic_type_public, "public")
 
-    override fun toString(): String {
-        return this.dbString
-    }
 
-    constructor(): this("", 0, "")
 }
