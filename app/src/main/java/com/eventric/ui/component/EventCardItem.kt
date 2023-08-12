@@ -42,6 +42,7 @@ fun EventCardItem(
     Card(
         modifier = modifier.clickable { onClick() },
         shape = MaterialTheme.shapes.medium,
+        elevation = 4.dp,
         backgroundColor = MaterialTheme.colors.background
     ) {
         Column(
