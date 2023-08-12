@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eventric.R
 import com.eventric.ui.component.CustomButtonPrimary
+import com.eventric.ui.component.CustomButtonSecondary
 import com.eventric.ui.component.CustomTextInput
 import com.eventric.ui.theme.EventricTheme
 
@@ -44,6 +45,7 @@ fun LoginContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSubmit: () -> Unit,
+    onSignupPressed: () -> Unit,
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
@@ -126,16 +128,23 @@ fun LoginContent(
             Spacer(Modifier.weight(1F))
             //TODO Remember me
             //TODO Forgot pwd
-            CustomButtonPrimary(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(57.dp)
-                ,
-                text = stringResource(id = R.string.common_login),
-                onClick = { onSubmit() }
-            )
-            //TODO login con google etc
-            //TODO registrarsi
+            ) {
+                CustomButtonPrimary(
+                    text = stringResource(id = R.string.common_login),
+                    onClick = { onSubmit() }
+                )
+
+                Spacer(Modifier.height(17.dp))
+                //TODO login con google etc
+                CustomButtonSecondary(
+                    text = stringResource(id = R.string.common_signup),
+                    onClick = { onSignupPressed() }
+                )
+            }
         }
     }
 
@@ -162,9 +171,9 @@ fun LoginContentPreview() {
             },
             onPasswordChange = {
                 password = it
-            }
-        ) {
-
-        }
+            },
+            onSubmit = {},
+            onSignupPressed = {}
+        )
     }
 }

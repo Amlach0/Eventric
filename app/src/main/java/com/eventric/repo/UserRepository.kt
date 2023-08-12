@@ -30,8 +30,14 @@ class UserRepository @Inject constructor() {
 
     private val currentUserFlow = MutableStateFlow(auth.currentUser)
     val user = currentUserFlow.flatMapLatest { currentUser ->
-        Log.d(U_TAG, "User already logged -> currentUser : ${currentUserFlow.value?.email}")
-        getUser(currentUser?.email.toString())
+        if (currentUser != null) {
+            Log.d(U_TAG, "User already logged -> currentUser : ${currentUserFlow.value?.email}")
+            getUser(currentUser.email.toString())
+        }
+        else{
+            Log.d(U_TAG, "User not logged")
+            flowOf(Pair("",User.EMPTY_USER))
+        }
     }
 
 
@@ -41,15 +47,21 @@ class UserRepository @Inject constructor() {
             auth.signInWithEmailAndPassword(email, password).await()
             refreshLoggedUser()
             Log.d(U_TAG, "signInWithEmail:success")
-        } catch (ce: CancellationException) { throw ce }
+        }
         catch (e: Exception) {
             Log.w(U_TAG, "signInWithEmail:failure", e)
-            throw IllegalStateException("User not found")
+            throw e
         }
     }
 
-    fun logout() {
+    fun logout() = try {
         auth.signOut()
+        refreshLoggedUser()
+        Log.d(U_TAG, "signOut:success")
+    }
+    catch (e: Exception) {
+        Log.w(U_TAG, "signOut:failure", e)
+        throw e
     }
 
     private fun refreshLoggedUser() {
@@ -64,9 +76,10 @@ class UserRepository @Inject constructor() {
             Log.d(U_TAG, "createUserWithEmail:success")
             createUser(user)
             refreshLoggedUser()
-        } catch (ce: CancellationException) { throw ce }
+        }
         catch (e: Exception) {
             Log.w(U_TAG, "createUserWithEmail:failure", e)
+            throw e
         }
 
     }
@@ -79,6 +92,7 @@ class UserRepository @Inject constructor() {
         } catch (ce: CancellationException) { throw ce }
         catch (e: Exception) {
             Log.w(U_TAG, "Error adding User", e)
+            throw e
         }
     }
 
