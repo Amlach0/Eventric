@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     composable("login") {
                         LoginScreen(
                             onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } },
-                            signup = { navController.navigate("signup") { popUpTo(0) } }
+                            goToSignup = { navController.navigate("signup") { popUpTo(0) } }
                         )
                     }
                     composable("signup"){

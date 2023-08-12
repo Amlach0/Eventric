@@ -13,9 +13,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -36,9 +38,87 @@ import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+fun DatePickerDialog(
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit = {},
+    onDateSelected: (String) -> Unit,
+) {
+    val dateState = rememberDatePickerState()
+
+    val date: String = getDate(dateState.selectedDateMillis ?: 0, "dd/MM/yyyy")
+
+
+    Dialog(
+        onDismissRequest = { onDismiss() },
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true,
+            usePlatformDefaultWidth = false,
+        ),
+
+        ) {
+        Card(
+            shape = RoundedCornerShape(10.dp),
+            modifier = modifier
+                .size(600.dp, 510.dp)
+                .padding(8.dp),
+            elevation = 8.dp
+        ) {
+            Column(
+                Modifier
+                    .background(Color.White)
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.select_date),
+                    style = MaterialTheme.typography.subtitle1,
+                    color = MaterialTheme.colors.onBackground
+                )
+                Column(
+                    Modifier
+                        .height(410.dp)
+                        .padding(vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Spacer(modifier = Modifier.weight(1F))
+                    DatePicker(state = dateState, title = {})
+                    Spacer(modifier = Modifier.weight(1F))
+                }
+
+
+                Row {
+                    CustomButtonSecondary(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(end = 8.dp)
+                            .weight(1F),
+                        text = stringResource(R.string.cancel),
+                        onClick = { onDismiss() }
+                    )
+
+
+                    CustomButtonPrimary(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1F),
+                        text = stringResource(R.string.done),
+                        onClick = {
+                            onDateSelected(date)
+                            onDismiss()
+                        },
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun DateAndTimeRangePickerDialog(
     modifier: Modifier = Modifier,
-    onDismiss: () -> Unit,
+    onDismiss: () -> Unit = {},
     onStartDateSelected: (String) -> Unit,
     onEndDateSelected: (String) -> Unit,
 ) {
@@ -122,7 +202,7 @@ fun DateAndTimeRangePickerDialog(
                         modifier = Modifier
                             .fillMaxHeight()
                             .weight(1F),
-                        text = stringResource(if (pageState == 2) R.string.ok else R.string.forward),
+                        text = stringResource(if (pageState == 2) R.string.done else R.string.forward),
                         onClick = {
                             if (pageState == 2) {
                                 onStartDateSelected("$startDate $startTime")

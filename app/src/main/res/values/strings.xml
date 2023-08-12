@@ -1,16 +1,17 @@
 <resources>
     <string name="app_name">Eventric</string>
     <string name="error_login">Login fallito. Verifica i tuoi dati d\'accesso</string>
-    <string name="error_signup">Login fallito. Verifica i tuoi dati d\'accesso</string>
+    <string name="error_signup">Registrazione fallita. Verifica i tuoi dati</string>
     <string name="error_confirmation_psw">Password e conferma password non corrispondono</string>
     <string name="error_new_event">Creazione evento fallita. Ripovare</string>
-    <string name="title_login">Sign In</string>
-    <string name="common_login">SIGN IN</string>
+    <string name="title_login">Log In</string>
+    <string name="common_login">LOG IN</string>
+    <string name="common_signup">SIGN UP</string>
     <string name="pwd_label">Your Password</string>
-    <string name="username_label">abc@email.com</string>
-    <string name="name_label">abc@email.com</string>
-    <string name="surname_label">abc@email.com</string>
-    <string name="confirm_pwd_label">abc@email.com</string>
+    <string name="username_label">Email</string>
+    <string name="name_label">Name</string>
+    <string name="surname_label">Surname</string>
+    <string name="confirm_pwd_label">Confirm Your Password</string>
     <string name="new_event_name">Nome evento</string>
     <string name="event_label">Nome Evento</string>
     <string name="new_event_location">Luogo</string>
@@ -27,7 +28,7 @@
     <string name="common_create">Crea</string>
     <string name="cancel">Chiudi</string>
     <string name="back">Indietro</string>
-    <string name="ok">OK</string>
+    <string name="done">Fatto</string>
     <string name="forward">Avanti</string>
     <string name="select_date">Seleziona la data</string>
     <string name="select_dates">Seleziona la data di inizio e fine</string>

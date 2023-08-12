@@ -1,13 +1,10 @@
 package com.eventric.ui.auth.signup
 
-import android.app.DatePickerDialog
-import android.widget.DatePicker
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,9 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,15 +31,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eventric.R
 import com.eventric.ui.component.CustomButtonPrimary
+import com.eventric.ui.component.CustomButtonSecondary
+import com.eventric.ui.component.CustomButtonSelector
 import com.eventric.ui.component.CustomTextInput
+import com.eventric.ui.component.DatePickerDialog
 import com.eventric.ui.theme.EventricTheme
-import java.util.Calendar
 
 
 @Composable
 fun SignupContent(
     errorBannerIsVisible: Boolean,
-    errorBannerConfermationIsVisible: Boolean,
+    errorBannerConfirmationIsVisible: Boolean,
     name: String,
     surname: String,
     email: String,
@@ -64,7 +59,21 @@ fun SignupContent(
     onConfirmPasswordChange: (String) -> Unit,
     onBirthDateSelected: (String) -> Unit,
     onSubmit: () -> Unit,
+    onLoginPressed: () -> Unit
 ) {
+    var openDateDialog by remember { mutableStateOf(false) }
+
+    if (openDateDialog) {
+        DatePickerDialog(
+            onDismiss = {
+                openDateDialog = false
+            },
+            onDateSelected = {
+                onBirthDateSelected(it)
+            }
+        )
+    }
+
     Box(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colors.background)
@@ -95,7 +104,7 @@ fun SignupContent(
                 }
             }
             AnimatedVisibility(
-                visible = errorBannerConfermationIsVisible,
+                visible = errorBannerConfirmationIsVisible,
             ) {
                 Box(
                     Modifier
@@ -189,64 +198,32 @@ fun SignupContent(
                 isLastInput = true,
             )
 
-            // DATA
-
-            val context = LocalContext.current
-            val calendar = Calendar.getInstance()
-
-            // data inizio
-
-            var selectedDateText by remember { mutableStateOf("") }
-
-            // recupero la data attuale
-            val Year = calendar[Calendar.YEAR]
-            val Month = calendar[Calendar.MONTH]
-            val DayOfMonth = calendar[Calendar.DAY_OF_MONTH]
-
-            //creo il dialog per la selezione della data
-            val startDatePicker = DatePickerDialog(
-                context,
-                { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
-                    selectedDateText = "$selectedDayOfMonth/${selectedMonth + 1}/$selectedYear"; onBirthDateSelected(selectedDateText)
-                }, Year, Month, DayOfMonth
-            )
-            startDatePicker.datePicker.maxDate = calendar.timeInMillis
-
-            Button(
+            CustomButtonSelector(
                 modifier = Modifier
                     .padding(horizontal = 34.dp)
-                    .padding(top = 18.dp)
-                    .fillMaxWidth()
-                    .height(50.dp),
-                onClick = { startDatePicker.show() },
-                colors = ButtonDefaults.buttonColors( backgroundColor =  MaterialTheme.colors.onBackground)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    Icon(
-                        modifier = Modifier
-                            .padding(8.dp),
-                        painter = painterResource(R.drawable.ic_calendar),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.background
-                    )
-                    Text(
-                        text = if(selectedDateText.isEmpty()){ "Data di nascita" } else { selectedDateText },
-                        color = MaterialTheme.colors.background,
-                        modifier = Modifier.padding(start = 5.dp),
-                        fontSize = 15.sp,
-                    )
-                }
-            }
-            CustomButtonPrimary(
+                    .padding(top = 18.dp),
+                text = if (birthDate == "") stringResource(R.string.select_date) else birthDate,
+                iconId = R.drawable.ic_calendar,
+                onClick = { openDateDialog = true }
+            )
+
+            Spacer(Modifier.weight(1F))
+
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(57.dp)
-                ,
-                text = stringResource(id = R.string.common_login),
-                onClick = { onSubmit() }
-            )
+            ) {
+                CustomButtonPrimary(
+                    text = stringResource(id = R.string.common_signup),
+                    onClick = { onSubmit() }
+                )
+                Spacer(Modifier.height(17.dp))
+                CustomButtonSecondary(
+                    text = stringResource(id = R.string.common_login),
+                    onClick = { onLoginPressed() }
+                )
+            }
         }
     }
 
@@ -273,7 +250,7 @@ fun SignupContentPreview() {
             confirmPassword = confirmPassword,
             confirmPasswordVisible = confirmPasswordVisible,
             errorBannerIsVisible = false,
-            errorBannerConfermationIsVisible = false,
+            errorBannerConfirmationIsVisible = false,
             birthDate = birthDate,
             onNameChange = {
                 name = it
@@ -299,7 +276,8 @@ fun SignupContentPreview() {
             onBirthDateSelected = {
                 birthDate = it
             },
-            onSubmit = {}
+            onSubmit = {},
+            onLoginPressed = {}
         )
     }
 }

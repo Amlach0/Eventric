@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
-    signup: () -> Unit,
+    goToSignup: () -> Unit,
     onSuccess: () -> Unit,
 ) {
 
@@ -61,7 +61,7 @@ fun LoginScreen(
     }
 
     fun onSignupPressed(){
-        signup()
+        goToSignup()
     }
 
     EventricTheme {

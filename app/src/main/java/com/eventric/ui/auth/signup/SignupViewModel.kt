@@ -23,7 +23,7 @@ class SignupViewModel @Inject constructor(
         val user = User(email, name, surname, null, birthDate)
 
         signupCodeResult.value = tryOperation {
-            if(password.isNotEmpty() && password.equals(confirmPassword)){
+            if(password.isNotEmpty() && password == confirmPassword){
                 userRepository.createAccount(user, password)
             }
         }

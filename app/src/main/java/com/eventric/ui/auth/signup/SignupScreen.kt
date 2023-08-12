@@ -99,10 +99,14 @@ fun SignupScreen(
         }
     }
 
+    fun onLoginPressed() {
+        onSuccess()
+    }
+
     EventricTheme {
         SignupContent(
             errorBannerIsVisible = errorBannerIsVisible,
-            errorBannerConfermationIsVisible = errorBannerConfermationIsVisible,
+            errorBannerConfirmationIsVisible = errorBannerConfermationIsVisible,
             name = name,
             surname = surname,
             email = email,
@@ -120,6 +124,7 @@ fun SignupScreen(
             onConfirmPasswordChange = ::onConfirmPasswordChange,
             onBirthDateSelected = ::onBirthDateSelected,
             onSubmit = ::onSubmit,
+            onLoginPressed = ::onLoginPressed,
         )
     }
 }

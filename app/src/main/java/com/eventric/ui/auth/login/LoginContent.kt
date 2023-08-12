@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -32,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eventric.R
 import com.eventric.ui.component.CustomButtonPrimary
+import com.eventric.ui.component.CustomButtonSecondary
 import com.eventric.ui.component.CustomTextInput
 import com.eventric.ui.theme.EventricTheme
 
@@ -128,17 +128,22 @@ fun LoginContent(
             Spacer(Modifier.weight(1F))
             //TODO Remember me
             //TODO Forgot pwd
-            CustomButtonPrimary(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(57.dp)
-                ,
-                text = stringResource(id = R.string.common_login),
-                onClick = { onSubmit() }
-            )
-            //TODO login con google etc
-            Button(onClick = onSignupPressed) {
-                Text(text = "registrati")
+            ) {
+                CustomButtonPrimary(
+                    text = stringResource(id = R.string.common_login),
+                    onClick = { onSubmit() }
+                )
+
+                Spacer(Modifier.height(17.dp))
+                //TODO login con google etc
+                CustomButtonSecondary(
+                    text = stringResource(id = R.string.common_signup),
+                    onClick = { onSignupPressed() }
+                )
             }
         }
     }
