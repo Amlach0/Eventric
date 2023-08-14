@@ -26,6 +26,13 @@ val EventricTypography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
+    h6 = TextStyle(
+        fontFamily = airBnbCereal,
+        fontWeight = FontWeight.Normal,
+        fontSize = 35.sp,
+        lineHeight = 32.sp,
+        letterSpacing = 0.sp
+    ),
     h5 = TextStyle(
         fontFamily = airBnbCereal,
         fontWeight = FontWeight.Medium,
@@ -45,6 +52,20 @@ val EventricTypography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         lineHeight = 21.sp,
+        letterSpacing = 0.sp
+    ),
+    h2 = TextStyle(
+        fontFamily = airBnbCereal,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        lineHeight = 4.sp,
+        letterSpacing = 0.sp
+    ),
+    h1 = TextStyle(
+        fontFamily = airBnbCereal,
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp,
+        lineHeight = 4.sp,
         letterSpacing = 0.sp
     ),
     body1 = TextStyle(

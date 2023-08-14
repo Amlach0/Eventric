@@ -8,12 +8,11 @@ fun ExploreScreen (
     navController: NavController
 ) {
     fun openInfo(){
-        val id = "We4P0pDw1cQspkX2uSs4"
+        val id = "zGsw8S6v9ljTtJfQxTaC"
         navController.navigate("info_event?eventId=$id")
     }
 
     ExploreContent(
-        navController = navController,
         openInfo = ::openInfo
     )
 }

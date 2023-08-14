@@ -112,5 +112,19 @@ class UserRepository @Inject constructor() {
         Log.w(U_TAG, "Error reading Users", e)
         flowOf()
     }
+
+    suspend fun updateUser(
+        userId: String,
+        mapFieldValue: Map<String, Any>
+    ) {
+        try {
+            users.document(userId).update(mapFieldValue).await()
+            Log.d(E_TAG, "User $userId updated with this updates : \n $mapFieldValue")
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
+            Log.w(E_TAG, "Error updating Event", e)
+        }
+    }
 }
 

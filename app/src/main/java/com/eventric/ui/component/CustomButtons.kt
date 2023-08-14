@@ -32,13 +32,14 @@ fun CustomButtonPrimary(
     text: String,
     @DrawableRes iconId: Int? = null,
     showArrowIcon: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(12.dp),
     onClick: () -> Unit,
 ) {
     Button(
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
         shape = MaterialTheme.shapes.medium,
-        contentPadding = PaddingValues(12.dp),
+        contentPadding = contentPadding,
         onClick = { onClick() },
     ) {
         Row(
@@ -81,15 +82,19 @@ fun CustomButtonPrimary(
 fun CustomButtonSecondary(
     modifier: Modifier = Modifier,
     text: String,
+    enabled: Boolean = true,
     @DrawableRes iconId: Int? = null,
+    contentPadding: PaddingValues = PaddingValues(12.dp),
+    color: Color = MaterialTheme.colors.primary,
     onClick: () -> Unit,
 ) {
     OutlinedButton(
         modifier = modifier,
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-        border = BorderStroke(1.5.dp, MaterialTheme.colors.primary),
+        border = BorderStroke(1.5.dp, color),
         shape = MaterialTheme.shapes.medium,
-        contentPadding = PaddingValues(12.dp),
+        contentPadding = contentPadding,
         onClick = { onClick() },
     ) {
         Row(
@@ -104,13 +109,13 @@ fun CustomButtonSecondary(
                         .size(22.dp),
                     painter = painterResource(iconId),
                     contentDescription = null,
-                    tint = MaterialTheme.colors.primary
+                    tint = color
                 )
             Text(
                 text = text,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.subtitle1,
-                color = MaterialTheme.colors.primary,
+                color = color,
             )
         }
     }
@@ -118,10 +123,50 @@ fun CustomButtonSecondary(
 }
 
 @Composable
+fun CustomButtonTertiary(
+    modifier: Modifier = Modifier,
+    text: String,
+    @DrawableRes iconId: Int? = null,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+    onClick: () -> Unit,
+) {
+    Button(
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary.copy(0.1f)),
+        shape = MaterialTheme.shapes.medium,
+        elevation = ButtonDefaults.elevation(defaultElevation = 0.dp, pressedElevation = 0.dp),
+        contentPadding = contentPadding,
+        onClick = { onClick() },
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            if (iconId != null)
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 15.dp)
+                        .size(22.dp),
+                    painter = painterResource(iconId),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.onPrimary
+                )
+            Text(
+                text = text,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.caption,
+                color = MaterialTheme.colors.primary,
+            )
+        }
+    }
+}
+
+@Composable
 fun CustomButtonSelector(
     modifier: Modifier = Modifier,
     text: String,
     @DrawableRes iconId: Int? = null,
+    contentPadding: PaddingValues = PaddingValues(9.dp),
     onClick: () -> Unit,
 ) {
     Column(modifier) {
@@ -129,7 +174,7 @@ fun CustomButtonSelector(
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
             shape = MaterialTheme.shapes.medium,
             border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
-            contentPadding = PaddingValues(9.dp),
+            contentPadding = contentPadding,
             onClick = { onClick() },
         ) {
             Row(
@@ -182,6 +227,17 @@ fun CustomButtonSecondaryPreview() {
     CustomButtonSecondary(
         modifier = Modifier,
         text = "Test"
+    ) {
+
+    }
+}
+
+@Composable
+@Preview()
+fun CustomButtonTerziaryPreview() {
+    CustomButtonTertiary(
+        modifier = Modifier,
+        text = "Test",
     ) {
 
     }

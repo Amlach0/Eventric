@@ -13,7 +13,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import java.lang.Error
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,8 +27,9 @@ class EventRepository @Inject constructor() {
         try {
             val refDoc = events.add(event).await()
             Log.d(E_TAG, "Event written with ID: ${refDoc.id}")
-        } catch (ce: CancellationException) { throw ce }
-        catch (e: Exception) {
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
             Log.w(E_TAG, "Error adding Event", e)
         }
     }
@@ -39,15 +39,16 @@ class EventRepository @Inject constructor() {
             .snapshots().map { document: DocumentSnapshot ->
                 Pair(document.id, document.toObject<Event>())
             }
-    } catch (ce: CancellationException) { throw ce }
-    catch (e: Exception) {
+    } catch (ce: CancellationException) {
+        throw ce
+    } catch (e: Exception) {
         Log.w(E_TAG, "Error reading Event", e)
         flowOf()
     }
 
     fun getAllEvents(
         filter: Filter = Filter(),
-        order: String = "name"
+        order: String = "name",
     ) = try {
         events
             .where(filter)
@@ -59,9 +60,24 @@ class EventRepository @Inject constructor() {
                 }
                 docList
             }
-    } catch (ce: CancellationException) { throw ce }
-    catch (e: Exception) {
+    } catch (ce: CancellationException) {
+        throw ce
+    } catch (e: Exception) {
         Log.w(E_TAG, "Error reading Events", e)
         flowOf()
+    }
+
+    suspend fun updateEvent(
+        eventId: String,
+        mapFieldValue: Map<String, Any>
+    ) {
+        try {
+            events.document(eventId).update(mapFieldValue).await()
+            Log.d(E_TAG, "Event $eventId updated with this updates : \n $mapFieldValue")
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
+            Log.w(E_TAG, "Error updating Event", e)
+        }
     }
 }

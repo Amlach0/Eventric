@@ -30,5 +30,14 @@
     <string name="select_time_end_date">Seleziona l\'orario di fine per il </string>
     <string name="create_event">Crea Evento</string>
     <string name="info_event">Dettagli Evento</string>
-    <string name="common_subscribe">Iscriviti</string>
+    <string name="common_subscribe">ISCRIVITI</string>
+    <string name="invite_btn_label">invite</string>
+    <string name="organizer_label">Organizer</string>
+    <string name="follow_label">Follow</string>
+    <string name="unfollow_label">Unfollow</string>
+    <string name="invite_label">Invita</string>
+    <string name="invited_label">Invitato</string>
+    <string name="info_label">Dettagli Event</string>
+    <string name="common_close_subscribe">Le iscrizioni sono chiuse</string>
+    <string name="common_unsubscribe">DISISCRIVITI</string>
 </resources>

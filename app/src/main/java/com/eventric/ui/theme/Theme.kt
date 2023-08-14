@@ -5,7 +5,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.datastore.preferences.SharedPreferencesMigration
 
 private val DarkColors = darkColors(
     primary = Purple,
@@ -20,6 +19,7 @@ private val LightColors = lightColors(
     primary = Purple,
     onPrimary = White,
     secondary = LightPurple,
+    onSecondary = Black,
     background = White,
     onBackground = LightGray,
     error = Red,

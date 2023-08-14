@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.eventric.ui.auth.login.LoginScreen
 import com.eventric.ui.dispatcher.DispatcherScreen
 import com.eventric.ui.home.HomeScreen
-import com.eventric.ui.infoEvent.InfoEventScreen
+import com.eventric.ui.detailEvent.DetailEventScreen
 import com.eventric.ui.newEvent.CreateEventScreen
 import com.eventric.ui.theme.EventricTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                       )
                     }
                     composable("info_event?eventId={eventId}") { navBackStackEntry ->
-                        InfoEventScreen(
+                        DetailEventScreen(
                             eventId = navBackStackEntry.arguments?.getString("eventId")
                                 ?: throw IllegalStateException("missing event id arguments"),
                             navController = navController
