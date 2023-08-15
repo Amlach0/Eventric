@@ -22,7 +22,7 @@ class DetailEventViewModel @Inject constructor(
     private val eventIdFlow = MutableStateFlow("")
     val eventFlow = eventIdFlow.flatMapLatest { id ->
         if (id != "")
-            eventRepository.getEvent(id).map { it.second ?: Event()}
+            eventRepository.getEvent(id).map { it.second ?: Event() }
         else
             flowOf()
     }
@@ -67,60 +67,26 @@ class DetailEventViewModel @Inject constructor(
 
     suspend fun changeFavourite(
         isFavourite: Boolean,
-    ) {
-        val userId = loggedUserFlow.first().first
-        val eventId = eventIdFlow.value
-        val favorites = loggedUserFlow.first().second.favoriteEvents.toMutableList()
-
-        val isFavouriteNow = favorites.contains(eventId)
-
-        if (isFavourite != isFavouriteNow) {
-            if (isFavourite) favorites.add(eventId) else favorites.remove(eventId)
-
-            userRepository.updateUser(
-                userId = userId,
-                mapFieldValue = mapOf("favoriteEvents" to favorites.toList())
-            )
-        }
-
-    }
+    ) = userRepository.addOrRemoveFavorite(
+        userId = loggedUserFlow.first().first,
+        eventId = eventIdFlow.value,
+        addOrRemove = isFavourite
+    )
 
     suspend fun changeSubscribe(
         isSubscribed: Boolean,
-    ) {
-        val userId = loggedUserFlow.first().first
-        val eventId = eventIdFlow.value
-        val subscribers = eventFlow.first().subscribed.toMutableList()
+    ) = eventRepository.addOrRemoveSubscribe(
+        eventId = eventIdFlow.value,
+        userId = loggedUserFlow.first().first,
+        addOrRemove = isSubscribed
+    )
 
-        val isSubscribedNow = subscribers.contains(userId)
-
-        if (isSubscribed != isSubscribedNow) {
-            if (isSubscribed) subscribers.add(userId) else subscribers.remove(userId)
-
-            eventRepository.updateEvent(
-                eventId = eventId,
-                mapFieldValue = mapOf("subscribed" to (subscribers.toList()))
-            )
-        }
-    }
-
-    suspend fun changeFollow(
+    suspend fun changeOrganizerFollow(
         isFollowed: Boolean,
-    ) {
-        val loggedUserId = loggedUserFlow.first().first
-        val organizerId = organizerFlow.first().first
-        val following = loggedUserFlow.first().second.followingUsers.toMutableList()
-
-        val isFollowedNow = following.contains(organizerId)
-
-        if (isFollowed != isFollowedNow) {
-            if (isFollowed) following.add(organizerId) else following.remove(organizerId)
-
-            userRepository.updateUser(
-                userId = loggedUserId,
-                mapFieldValue = mapOf("followingUsers" to following.toList())
-            )
-        }
-    }
+    ) = userRepository.addOrRemoveFollow(
+        followedUserId = organizerFlow.first().first,
+        followingUserId = loggedUserFlow.first().first,
+        addOrRemove = isFollowed
+    )
 }
 

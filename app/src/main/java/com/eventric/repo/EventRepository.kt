@@ -10,6 +10,7 @@ import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
@@ -67,7 +68,7 @@ class EventRepository @Inject constructor() {
         flowOf()
     }
 
-    suspend fun updateEvent(
+    private suspend fun updateEvent(
         eventId: String,
         mapFieldValue: Map<String, Any>
     ) {
@@ -79,5 +80,32 @@ class EventRepository @Inject constructor() {
         } catch (e: Exception) {
             Log.w(E_TAG, "Error updating Event", e)
         }
+    }
+
+
+    /**
+     * Adds or Removes a User Id from the subscribed users of the event
+     * @param eventId The event Id
+     * @param userId The user Id
+     * @param addOrRemove a boolean that tells if the Id has to be added (TRUE) or removed (FALSE)
+     */
+    suspend fun addOrRemoveSubscribe(
+        eventId: String,
+        userId: String,
+        addOrRemove: Boolean,
+    ) {
+        val subscribed = getEvent(eventId).first().second?.subscribed?.toMutableList() ?: mutableListOf()
+
+        if (addOrRemove) {
+            if (!subscribed.contains(userId))
+                subscribed.add(userId)
+        }
+        else
+            subscribed.remove(userId)
+
+        updateEvent(
+            eventId = eventId,
+            mapFieldValue = mapOf("subscribed" to subscribed.toList())
+        )
     }
 }

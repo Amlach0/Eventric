@@ -44,7 +44,7 @@ fun DetailEventScreen(
     }
 
     fun onFollowChange() = coroutineScope.launch {
-        detailEventViewModel.changeFollow(!isOrganizerFollowed)
+        detailEventViewModel.changeOrganizerFollow(!isOrganizerFollowed)
     }
 
     EventricTheme {

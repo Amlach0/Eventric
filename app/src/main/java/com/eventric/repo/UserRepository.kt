@@ -13,6 +13,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -41,8 +42,9 @@ class UserRepository @Inject constructor() {
             auth.signInWithEmailAndPassword(email, password).await()
             refreshLoggedUser()
             Log.d(U_TAG, "signInWithEmail:success")
-        } catch (ce: CancellationException) { throw ce }
-        catch (e: Exception) {
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
             Log.w(U_TAG, "signInWithEmail:failure", e)
             throw IllegalStateException("User not found")
         }
@@ -64,8 +66,9 @@ class UserRepository @Inject constructor() {
             Log.d(U_TAG, "createUserWithEmail:success")
             createUser(user)
             refreshLoggedUser()
-        } catch (ce: CancellationException) { throw ce }
-        catch (e: Exception) {
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
             Log.w(U_TAG, "createUserWithEmail:failure", e)
         }
 
@@ -76,8 +79,9 @@ class UserRepository @Inject constructor() {
             users.document(user.email)
                 .set(user).await()
             Log.d(U_TAG, "User written with ID: ${user.email}")
-        } catch (ce: CancellationException) { throw ce }
-        catch (e: Exception) {
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
             Log.w(U_TAG, "Error adding User", e)
         }
     }
@@ -87,8 +91,9 @@ class UserRepository @Inject constructor() {
             .snapshots().map { document: DocumentSnapshot ->
                 Pair(document.id, document.toObject<User>() ?: User.EMPTY_USER)
             }
-    } catch (ce: CancellationException) { throw ce }
-    catch (e: Exception) {
+    } catch (ce: CancellationException) {
+        throw ce
+    } catch (e: Exception) {
         Log.w(U_TAG, "Error reading User", e)
         flowOf()
     }
@@ -107,15 +112,16 @@ class UserRepository @Inject constructor() {
                 }
                 docList
             }
-    } catch (ce: CancellationException) { throw ce }
-    catch (e: Exception) {
+    } catch (ce: CancellationException) {
+        throw ce
+    } catch (e: Exception) {
         Log.w(U_TAG, "Error reading Users", e)
         flowOf()
     }
 
-    suspend fun updateUser(
+    private suspend fun updateUser(
         userId: String,
-        mapFieldValue: Map<String, Any>
+        mapFieldValue: Map<String, Any>,
     ) {
         try {
             users.document(userId).update(mapFieldValue).await()
@@ -125,6 +131,59 @@ class UserRepository @Inject constructor() {
         } catch (e: Exception) {
             Log.w(E_TAG, "Error updating Event", e)
         }
+    }
+
+
+    /**
+     * Adds or Removes a event Id from the favorite events of the user
+     * @param userId The user Id
+     * @param eventId The event Id
+     * @param addOrRemove a boolean that tells if the Id has to be added (TRUE) or removed (FALSE)
+     */
+    suspend fun addOrRemoveFavorite(
+        userId: String,
+        eventId: String,
+        addOrRemove: Boolean,
+    ) {
+        val favorites = getUser(userId).first().second.favoriteEvents.toMutableList()
+
+        if (addOrRemove) {
+            if (!favorites.contains(eventId))
+                favorites.add(eventId)
+        }
+        else
+            favorites.remove(eventId)
+
+        updateUser(
+            userId = userId,
+            mapFieldValue = mapOf("favoriteEvents" to favorites.toList())
+        )
+    }
+
+    /**
+     * Adds or Removes a following User Id from the following users of the followed user
+     * @param followedUserId The Followed user Id
+     * @param followingUserId The Following user Id
+     * @param addOrRemove a boolean that tells if the Id has to be added (TRUE) or removed (FALSE)
+     */
+    suspend fun addOrRemoveFollow(
+        followedUserId: String,
+        followingUserId: String,
+        addOrRemove: Boolean,
+    ) {
+        val following = getUser(followingUserId).first().second.followingUsers.toMutableList()
+
+        if (addOrRemove) {
+            if (!following.contains(followedUserId))
+                following.add(followedUserId)
+        }
+        else
+            following.remove(followedUserId)
+
+        updateUser(
+            userId = followingUserId,
+            mapFieldValue = mapOf("followingUsers" to following.toList())
+        )
     }
 }
 
