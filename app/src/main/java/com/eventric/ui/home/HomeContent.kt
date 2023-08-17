@@ -64,11 +64,11 @@ fun HomeContent(
         NavHost(
             modifier = Modifier.padding(paddingValues),
             navController = navController,
-            startDestination = BottomNavItem.Profile.screen_route
+            startDestination = BottomNavItem.Explore.screen_route
         ) {
 
-            composable(BottomNavItem.Profile.screen_route) {
-                ProfileScreen()
+            composable(BottomNavItem.Explore.screen_route) {
+                ExploreScreen(mainNavController)
             }
         }
     }

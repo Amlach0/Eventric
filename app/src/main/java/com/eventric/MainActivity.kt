@@ -47,8 +47,12 @@ class MainActivity : ComponentActivity() {
                           navController = navController
                       )
                     }
-                    composable("profile") {
-                        ProfileScreen()
+                    composable("profile?userId={userId}") { navBackStackEntry ->
+                        ProfileScreen(
+                            userId = navBackStackEntry.arguments?.getString("userId")
+                                ?: throw IllegalStateException("missing event id arguments"),
+                            navController = navController
+                        )
                     }
                 }
             }

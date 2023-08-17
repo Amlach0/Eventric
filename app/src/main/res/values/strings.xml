@@ -33,4 +33,7 @@
     <string name="followed">seguiti</string>
     <string name="followers">seguaci</string>
     <string name="bio">Bio</string>
+    <string name="follow_label">Follow</string>
+    <string name="unfollow_label">Unfollow</string>
+    <string name="edit_profile">Modifica Profilo</string>
 </resources>

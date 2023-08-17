@@ -4,10 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -30,25 +27,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.eventric.R
-import com.eventric.ui.component.BrandTopBar
 import com.eventric.ui.component.CustomButtonSecondary
+import com.eventric.vo.User
 
 
 @Composable
 fun ProfileContent(
-    name: String,
-    surname: String,
-    nFollowed: Int,
-    nFollowers: Int,
-    bio: String,
+    navController: NavController,
+    id: String,
+    user: User,
+    self: Boolean,
+    followed: Boolean,
+    onFollowClick: () -> Unit,
+    onEditPress: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -88,7 +86,7 @@ fun ProfileContent(
                 )
             }
             Text(
-                text = "$name $surname",
+                text = user.name+" "+user.surname,
                 style = MaterialTheme.typography.h4,
                 color = MaterialTheme.colors.onBackground
             )
@@ -108,7 +106,7 @@ fun ProfileContent(
                     ){ /*TODO onclick*/ }
                 ) {
                     Text(
-                        text = "$nFollowed",
+                        text = ""+user.followingUsers.size,
                         style = MaterialTheme.typography.subtitle1,
                         color = MaterialTheme.colors.onBackground
                     )
@@ -136,7 +134,7 @@ fun ProfileContent(
                     ){ /*TODO onclick*/ }
                 ) {
                     Text(
-                        text = "$nFollowers",
+                        text = "800",
                         style = MaterialTheme.typography.subtitle1,
                         color = MaterialTheme.colors.onBackground
                     )
@@ -148,14 +146,27 @@ fun ProfileContent(
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
-            CustomButtonSecondary(
-                text = "modifica profilo",
-                modifier = Modifier
-                    .width(200.dp),
-                iconId = R.drawable.ic_search
-            ){
+            if (self){
+                CustomButtonSecondary(
+                    text = stringResource(id = R.string.edit_profile),
+                    modifier = Modifier
+                        .width(200.dp),
+                    iconId = R.drawable.ic_edit,
+                    onClick = onEditPress,
+                )
+                Spacer(modifier = Modifier.height(20.dp))
             }
-            Spacer(modifier = Modifier.height(20.dp))
+            else
+            {
+                CustomButtonSecondary(
+                    text = if(followed) stringResource(id = R.string.unfollow_label) else stringResource(id = R.string.follow_label),
+                    modifier = Modifier
+                        .width(200.dp),
+                    iconId = if(followed) R.drawable.ic_unfollow else R.drawable.ic_follow,
+                    onClick = onFollowClick
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
             Text(
                 modifier = Modifier
                     .align(Alignment.Start)
@@ -168,38 +179,10 @@ fun ProfileContent(
                 modifier = Modifier
                     .align(Alignment.Start)
                     .padding(horizontal = 30.dp),
-                text = bio,
+                text = user.bio ?: "nessuna bio",
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onBackground
             )
         }
     }
 }
-
-@Composable
-fun ProfileTopBar() {
-    BrandTopBar(
-        modifier = Modifier
-            .clip(
-                RoundedCornerShape(
-                    bottomStart = 33.dp,
-                    bottomEnd = 33.dp
-                )
-            ),
-        paddingValues = PaddingValues(top = 15.dp, bottom = 24.dp, start = 24.dp, end = 24.dp),
-        center = {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.profile),
-                    style = MaterialTheme.typography.h5,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.onPrimary
-                )
-            }
-        }
-    )
-}
-
