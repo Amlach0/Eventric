@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -25,8 +26,8 @@ import com.eventric.ui.explore.ExploreTopBar
 fun HomeContent(
     mainNavController: NavController
 ) {
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val homeNavController = rememberNavController()
+    val navBackStackEntry by homeNavController.currentBackStackEntryAsState()
 
     Scaffold(
         topBar = {
@@ -41,7 +42,7 @@ fun HomeContent(
 
 
         },
-        bottomBar = { CustomBottomNavigation(navController = navController) },
+        bottomBar = { CustomBottomNavigation(navController = homeNavController) },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
@@ -50,7 +51,19 @@ fun HomeContent(
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = MaterialTheme.colors.onPrimary,
                 onClick = {
-                    mainNavController.navigate(BottomNavItem.FabAdd.screen_route)
+                    mainNavController.navigate(BottomNavItem.FabAdd.screen_route) {
+                        // Pop up to the start destination of the graph to
+                        // avoid building up a large stack of destinations
+                        // on the back stack as users select items
+                        popUpTo(homeNavController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        // Avoid multiple copies of the same destination when
+                        // reselecting the same item
+                        launchSingleTop = true
+                        // Restore state when reselecting a previously selected item
+                        restoreState = true
+                    }
                 }
             ) {
                 Icon(
@@ -62,7 +75,7 @@ fun HomeContent(
     ) { paddingValues ->
         NavHost(
             modifier = Modifier.padding(paddingValues),
-            navController = navController,
+            navController = homeNavController,
             startDestination = BottomNavItem.Explore.screen_route
         ) {
 

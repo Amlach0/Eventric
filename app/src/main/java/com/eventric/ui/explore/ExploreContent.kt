@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -19,19 +18,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.eventric.R
 import com.eventric.ui.component.BrandTopBar
-import com.eventric.ui.component.CustomButtonSecondary
 
 @Composable
 fun ExploreContent(
-    openInfo: () -> Unit
 ) {
-    CustomButtonSecondary(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(40.dp),
-        text = "Evento1",
-        onClick = { openInfo() }
-    )
 }
 
 @Composable

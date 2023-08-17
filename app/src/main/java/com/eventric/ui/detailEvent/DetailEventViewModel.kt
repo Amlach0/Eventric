@@ -64,6 +64,37 @@ class DetailEventViewModel @Inject constructor(
         loggedUser.followingUsers.contains(idOrganizer)
     }
 
+    val subscribedUsers = combine(
+        eventFlow,
+        userRepository.getAllUsers()
+    ) { event, users ->
+        val subscribedUserIds = event.subscribed
+        users
+            .filter { subscribedUserIds.contains(it.first) }
+            .map { Triple(it.first, true, it.second) }
+    }
+
+    val invitableUsers = combine(
+        eventIdFlow,
+        eventFlow,
+        userRepository.getAllUsers(),
+        loggedUserFlow,
+        organizerFlow
+    ) { eventId, event, users, (loggedUserId, loggedUser), (organizerId, _) ->
+        val subscribedUserIds = event.subscribed
+        val followingUserIds = loggedUser.followingUsers
+        users
+            .filter { !subscribedUserIds.contains(it.first) && followingUserIds.contains(it.first) && organizerId != it.first }
+            .map { (userId, user) ->
+                val notifications = user.notifications
+                Triple(
+                    userId,
+                    !notifications.none { it.userId == loggedUserId && it.eventId == eventId },
+                    user
+                )
+            }
+    }
+
 
     suspend fun changeFavourite(
         isFavourite: Boolean,
@@ -87,6 +118,16 @@ class DetailEventViewModel @Inject constructor(
         followedUserId = organizerFlow.first().first,
         followingUserId = loggedUserFlow.first().first,
         addOrRemove = isFollowed
+    )
+
+    suspend fun changeUserInvite(
+        userId: String,
+        isInvited: Boolean
+    ) = userRepository.addOrRemoveInvite(
+        userId = loggedUserFlow.first().first,
+        invitedUserId = userId,
+        eventId = eventIdFlow.value,
+        addOrRemove = isInvited
     )
 }
 

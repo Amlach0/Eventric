@@ -1,8 +1,14 @@
 package com.eventric.ui.detailEvent
 
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -12,17 +18,18 @@ import com.eventric.vo.Event
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DetailEventScreen(
     eventId: String,
-    navController: NavController,
+    navControllerForBack: NavController,
+    goToEditEvent: () -> Unit,
     detailEventViewModel: DetailEventViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     detailEventViewModel.setEventId(eventId)
 
-    val userPair by detailEventViewModel.loggedUserFlow.collectAsStateWithLifecycle(null)
     val event by detailEventViewModel.eventFlow.collectAsStateWithLifecycle(null)
     val organizer by detailEventViewModel.organizerFlow.collectAsStateWithLifecycle(null)
 
@@ -33,6 +40,13 @@ fun DetailEventScreen(
     val isUserSubscribed by detailEventViewModel.isSubscribedFlow.collectAsStateWithLifecycle(false)
     val isUserOrganizer by detailEventViewModel.isOrganizerFlow.collectAsStateWithLifecycle(false)
     val isOrganizerFollowed by detailEventViewModel.isOrganizerFollowedFlow.collectAsStateWithLifecycle(false)
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmValueChange = { it != ModalBottomSheetValue.Expanded }
+    )
+    var isInviteSheet by remember { mutableStateOf(false) }
+    val subscribedUsers by detailEventViewModel.subscribedUsers.collectAsStateWithLifecycle(listOf())
+    val invitableUsers by detailEventViewModel.invitableUsers.collectAsStateWithLifecycle(listOf())
 
 
     fun onFavoriteChange() = coroutineScope.launch {
@@ -47,23 +61,43 @@ fun DetailEventScreen(
         detailEventViewModel.changeOrganizerFollow(!isOrganizerFollowed)
     }
 
+    fun onUserInviteChange(userId: String) = coroutineScope.launch {
+        detailEventViewModel.changeUserInvite(userId, invitableUsers.findLast { it.first== userId }?.second != true)
+    }
+
+    fun onInvite() = coroutineScope.launch {
+        sheetState.show()
+        isInviteSheet = true
+    }
+
+    fun onGoing() = coroutineScope.launch {
+        sheetState.show()
+        isInviteSheet = false
+    }
+
+    fun onEdit() = goToEditEvent()
+
     EventricTheme {
         DetailEventContent(
-            navController = navController,
-            id = eventId,
+            navController = navControllerForBack,
             event = event ?: Event(),
             organizerName = organizerName,
             isFavorite = isFavorite,
+            isRegistrationOpen = isRegistrationOpen,
             isUserOrganizer = isUserOrganizer,
             isUserSubscribed = isUserSubscribed,
             isOrganizerFollowed = isOrganizerFollowed,
-            isRegistrationOpen = isRegistrationOpen,
+            sheetState = sheetState,
+            isInviteSheet = isInviteSheet,
+            subscribedUsers = subscribedUsers,
+            invitableUsers = invitableUsers,
+            onEdit = ::onEdit,
+            onInvite = ::onInvite,
+            onGoing = ::onGoing,
             onFavoriteChange = ::onFavoriteChange,
-            onSubscribeChange = ::onSubscribeChange,
             onFollowChange = ::onFollowChange,
-            onEditClick = {},
-            onInviteClick = {},
-            onGoingClick = {},
+            onUserInviteChange = ::onUserInviteChange,
+            onSubscribeChange = ::onSubscribeChange,
         )
     }
 }

@@ -1,11 +1,11 @@
 package com.eventric.repo
 
 import android.util.Log
+import com.eventric.vo.Notification
 import com.eventric.vo.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.snapshots
@@ -99,11 +99,9 @@ class UserRepository @Inject constructor() {
     }
 
     fun getAllUsers(
-        filter: Filter = Filter(),
         order: String = "name",
     ) = try {
         users
-            .where(filter)
             .orderBy(order)
             .snapshots().map { query: QuerySnapshot ->
                 var docList = listOf<Pair<String, User>>()
@@ -133,6 +131,25 @@ class UserRepository @Inject constructor() {
         }
     }
 
+    private suspend fun addOrRemoveNotification(
+        userId: String,
+        notification: Notification,
+        addOrRemove: Boolean,
+    ) {
+        val notifications = getUser(userId).first().second.notifications.toMutableList()
+
+        if (addOrRemove) {
+            if (!notifications.contains(notification))
+                notifications.add(notification)
+        }
+        else
+            notifications.remove(notification)
+
+        updateUser(
+            userId = userId,
+            mapFieldValue = mapOf("notifications" to notifications.toList())
+        )
+    }
 
     /**
      * Adds or Removes a event Id from the favorite events of the user
@@ -183,6 +200,51 @@ class UserRepository @Inject constructor() {
         updateUser(
             userId = followingUserId,
             mapFieldValue = mapOf("followingUsers" to following.toList())
+        )
+
+        val notification = Notification(
+            text = " ha cominciato a seguirti",
+            userId = followingUserId,
+            eventId = null,
+        )
+        addOrRemoveNotification(
+            userId = followedUserId,
+            notification = notification,
+            addOrRemove = true
+        )
+    }
+
+    /**
+     * Adds or Removes an invite from a user to an invited user for an event
+     * @param userId The user Id
+     * @param invitedUserId The invited user Id
+     * @param eventId The event
+     * @param addOrRemove a boolean that tells if the Id has to be added (TRUE) or removed (FALSE)
+     */
+    suspend fun addOrRemoveInvite(
+        userId: String,
+        invitedUserId: String,
+        eventId: String,
+        addOrRemove: Boolean,
+    ) {
+        val notification = Notification(
+            text = " ti ha invitato all'evento ",
+            userId = userId,
+            eventId = eventId,
+        )
+        addOrRemoveNotification(
+            userId = invitedUserId,
+            notification = notification,
+            addOrRemove = addOrRemove
+        )
+    }
+
+    suspend fun clearAllNotifications(
+        userId: String
+    ){
+        updateUser(
+            userId = userId,
+            mapFieldValue = mapOf("notifications" to listOf<Notification>())
         )
     }
 }

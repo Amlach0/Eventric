@@ -24,14 +24,16 @@ class EventRepository @Inject constructor() {
     private val db = Firebase.firestore
     private val events = db.collection("events")
 
-    suspend fun createEvent(event: Event) {
-        try {
+    suspend fun createEvent(event: Event): String {
+        return try {
             val refDoc = events.add(event).await()
             Log.d(E_TAG, "Event written with ID: ${refDoc.id}")
+            refDoc.id
         } catch (ce: CancellationException) {
             throw ce
         } catch (e: Exception) {
             Log.w(E_TAG, "Error adding Event", e)
+            ""
         }
     }
 
@@ -79,6 +81,33 @@ class EventRepository @Inject constructor() {
             throw ce
         } catch (e: Exception) {
             Log.w(E_TAG, "Error updating Event", e)
+        }
+    }
+
+    suspend fun deleteEvent(
+        eventId: String,
+    ) {
+        try {
+            events.document(eventId).delete().await()
+            Log.d(E_TAG, "Event $eventId deleted")
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
+            Log.w(E_TAG, "Error deleting Event", e)
+        }
+    }
+
+    suspend fun editEvent(
+        eventId: String,
+        event: Event
+    ) {
+        try {
+            events.document(eventId).set(event).await()
+            Log.d(E_TAG, "Event $eventId edited with this updates : \n $event")
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
+            Log.w(E_TAG, "Error editing Event", e)
         }
     }
 

@@ -108,7 +108,7 @@ fun ProfileItem(
         )
         if (showInviteButton)
             CustomButtonTertiary(
-                text = stringResource(if (isInvited) R.string.invited_label else R.string.invite_label),
+                text = stringResource(if (isInvited) R.string.uninvite_label else R.string.invite_label),
                 onClick = { onInviteClick() }
             )
     }

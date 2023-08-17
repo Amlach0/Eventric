@@ -13,31 +13,78 @@ import com.eventric.vo.EventType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
 @HiltViewModel
 class CreateEventViewModel @Inject constructor(
     private val eventRepository: EventRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
     var createEventCodeResult = MutableStateFlow<Operation?>(null)
+    var deleteEventCodeResult = MutableStateFlow<Operation?>(null)
+
+    val eventIdFlow = MutableStateFlow("")
+    val eventFlow = eventIdFlow.flatMapLatest { id ->
+        if (id != "")
+            eventRepository.getEvent(id).map { it.second ?: Event() }
+        else
+            flowOf()
+    }
 
     private val user = userRepository.user
 
+    fun setEventId(id: String) {
+        eventIdFlow.value = id
+    }
+
     //TODO adding info
-    suspend fun createEvent(name: String, location: String, category: EventCategory, type: EventType, startDate: String, endDate: String, startRegistrationDate: String, endRegistrationDate: String) {
+    suspend fun createOrEditEvent(
+        name: String,
+        location: String,
+        category: EventCategory,
+        type: EventType,
+        startDate: String,
+        endDate: String,
+        startRegistrationDate: String,
+        endRegistrationDate: String,
+        info: String
+    ) {
         createEventCodeResult.value = LoadingOperation
 
         val organizer = user.first().first
 
         val date = DateRange(startDate, endDate)
         val registrationDate = DateRange(startRegistrationDate, endRegistrationDate)
-        val event = Event(name, location, category.dbString, type.dbString, date, registrationDate, organizer)
+        val event = Event(
+            name = name,
+            info = info,
+            location = location,
+            category = category.dbString,
+            type = type.dbString,
+            date = date,
+            registrationDate = registrationDate,
+            organizer = organizer
+        )
 
+        val eventId = eventIdFlow.value
         createEventCodeResult.value = tryOperation {
-            eventRepository.createEvent(event)
+            if (eventId == "") {
+                eventIdFlow.value = eventRepository.createEvent(event)
+            } else
+                eventRepository.editEvent(eventId, event)
+        }
+    }
+
+    suspend fun deleteEvent() {
+        val eventId = eventIdFlow.value
+        deleteEventCodeResult.value = tryOperation {
+            if (eventId != "")
+                eventRepository.deleteEvent(eventId)
         }
     }
 }

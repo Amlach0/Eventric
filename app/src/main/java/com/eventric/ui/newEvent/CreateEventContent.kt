@@ -47,8 +47,10 @@ import com.eventric.vo.EventType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateEventContent(
-    navController: NavController,
+    navControllerForBack: NavController,
+    isEdit: Boolean,
     name: String,
+    info: String,
     location: String,
     categoryList: List<EventCategory>,
     selectedCategory: EventCategory,
@@ -58,8 +60,10 @@ fun CreateEventContent(
     endDate: String,
     startRegistrationDate: String,
     endRegistrationDate: String,
-    errorBannerIsVisible: Boolean,
+    createErrorBannerIsVisible: Boolean,
+    deleteErrorBannerIsVisible: Boolean,
     onNameChange: (String) -> Unit,
+    onInfoChanged: (String) -> Unit,
     onLocationChange: (String) -> Unit,
     onSelectedCategoryChange: (EventCategory) -> Unit,
     onSelectedTypeChange: (EventType) -> Unit,
@@ -67,6 +71,7 @@ fun CreateEventContent(
     onEndDateChanged: (String) -> Unit,
     onStartRegistrationDateChanged: (String) -> Unit,
     onEndRegistrationDateChanged: (String) -> Unit,
+    onDelete: () -> Unit,
     onSubmit: () -> Unit,
 ) {
     var openDateDialog by remember { mutableStateOf(false) }
@@ -105,22 +110,30 @@ fun CreateEventContent(
             BrandTopBar(
                 left = {
                     Back(
-                        navController = navController,
+                        navController = navControllerForBack,
                         tint = MaterialTheme.colors.onBackground
                     )
                     Title(
                         modifier = Modifier.padding(horizontal = 11.dp),
-                        title = stringResource(R.string.create_event),
+                        title = stringResource(if (isEdit) R.string.edit_event else R.string.create_event),
                         color = MaterialTheme.colors.onBackground,
                         textAlign = TextAlign.Left
                     )
                 },
+                right = {
+                    if (isEdit)
+                        ActionButton(
+                            iconId = R.drawable.ic_delete,
+                            iconColor = MaterialTheme.colors.error,
+                            onClick = { onDelete() }
+                        )
+                }
             )
         }
     ) {
 
         AnimatedVisibility(
-            visible = errorBannerIsVisible,
+            visible = createErrorBannerIsVisible || deleteErrorBannerIsVisible,
         ) {
             Box(
                 Modifier
@@ -129,7 +142,7 @@ fun CreateEventContent(
                     .background(MaterialTheme.colors.error)
             ) {
                 Text(
-                    text = stringResource(R.string.error_login),
+                    text = stringResource(if (createErrorBannerIsVisible) R.string.error_new_event else R.string.error_delete_event),
                     style = MaterialTheme.typography.h3,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.align(Alignment.Center),
@@ -245,7 +258,7 @@ fun CreateEventContent(
                     color = MaterialTheme.colors.onBackground
                 )
 
-                //Row of categories
+                //Row of types
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -260,13 +273,31 @@ fun CreateEventContent(
                         )
                     }
                 }
+
+                // INFO
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    modifier = Modifier.padding(bottom = 3.dp),
+                    text = stringResource(id = R.string.new_event_info),
+                    style = MaterialTheme.typography.h4,
+                    color = MaterialTheme.colors.onBackground
+                )
+                CustomTextInput(
+                    hint = "",
+                    isLastInput = false,
+                    icon = R.drawable.ic_location,
+                    value = info,
+                    onValueChange = onInfoChanged
+                )
+
             }
 
             CustomButtonPrimary(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(15.dp),
-                text = stringResource(id = R.string.common_create),
+                text = stringResource(if (isEdit) R.string.common_edit else R.string.common_create),
                 onClick = { onSubmit() }
             )
         }

@@ -17,7 +17,7 @@ data class Event(
     val subscribed: List<String?>,
 ){
     constructor(): this(null, null, null, null, null, null, EventCategory.NoCategory.dbString, EventType.Private.dbString, null, listOf())
-    constructor(name: String, location: String?, category: String, type: String, date: DateRange?, registrationDate: DateRange?, organizer: String?): this(name, null, null, location, date, registrationDate, category, type, organizer, listOf())
+    constructor(name: String, info: String?, location: String?, category: String, type: String, date: DateRange?, registrationDate: DateRange?, organizer: String?): this(name, null, info, location, date, registrationDate, category, type, organizer, listOf())
 }
 
 data class DateRange(
@@ -57,9 +57,16 @@ sealed class EventType(var title: String, var icon: Int, var dbString: String) {
     object Private: EventType("Private", R.drawable.ic_type_private, "private")
     object Public: EventType("Public", R.drawable.ic_type_public, "public")
 
-    override fun toString(): String {
-        return this.dbString
-    }
-
     constructor(): this("", 0, "")
+
+    companion object {
+        fun fromDbString(dbString: String): EventType {
+            return when (dbString) {
+                "invite_only" -> InviteOnly
+                "private" -> Private
+                "public" -> Public
+                else -> throw IllegalArgumentException("Unknown dbString: $dbString")
+            }
+        }
+    }
 }

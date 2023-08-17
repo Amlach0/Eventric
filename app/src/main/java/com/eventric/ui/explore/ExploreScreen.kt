@@ -7,12 +7,4 @@ import androidx.navigation.NavController
 fun ExploreScreen (
     navController: NavController
 ) {
-    fun openInfo(){
-        val id = "zGsw8S6v9ljTtJfQxTaC"
-        navController.navigate("info_event?eventId=$id")
-    }
-
-    ExploreContent(
-        openInfo = ::openInfo
-    )
 }

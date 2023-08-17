@@ -60,6 +60,7 @@ interface TopBarScope {
     @Composable
     fun ActionButton(
         @DrawableRes iconId: Int,
+        iconColor: Color = MaterialTheme.colors.onPrimary,
         onClick: () -> Unit,
     ) {
         IconButton(
@@ -75,7 +76,7 @@ interface TopBarScope {
                     .size(23.dp),
                 painter = painterResource(iconId),
                 contentDescription = null,
-                tint = MaterialTheme.colors.onPrimary
+                tint = iconColor
             )
         }
     }

@@ -7,9 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eventric.ui.auth.login.LoginScreen
+import com.eventric.ui.detailEvent.DetailEventScreen
 import com.eventric.ui.dispatcher.DispatcherScreen
 import com.eventric.ui.home.HomeScreen
-import com.eventric.ui.detailEvent.DetailEventScreen
 import com.eventric.ui.newEvent.CreateEventScreen
 import com.eventric.ui.theme.EventricTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,15 +43,32 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("new_event") {
-                      CreateEventScreen(
-                          navController = navController
-                      )
+                        CreateEventScreen(
+                            navControllerForBack = navController,
+                            onSuccess = { eventId -> navController.navigate("info_event?eventId=$eventId") }
+                        )
+                    }
+                    composable("edit_event?eventId={eventId}") { navBackStackEntry ->
+                        CreateEventScreen(
+                            id = navBackStackEntry.arguments?.getString("eventId")
+                                ?: throw IllegalStateException("missing event id arguments"),
+                            navControllerForBack = navController,
+                            onSuccess = { eventId ->
+                                navController.popBackStack()
+                                navController.navigate("info_event?eventId=$eventId") {
+                                    launchSingleTop = true
+                                }
+                            },
+                            onDelete = { navController.navigate("home") { popUpTo(0) } }
+                        )
                     }
                     composable("info_event?eventId={eventId}") { navBackStackEntry ->
+                        val eventId = navBackStackEntry.arguments?.getString("eventId")
+                            ?: throw IllegalStateException("missing event id arguments")
                         DetailEventScreen(
-                            eventId = navBackStackEntry.arguments?.getString("eventId")
-                                ?: throw IllegalStateException("missing event id arguments"),
-                            navController = navController
+                            eventId = eventId,
+                            navControllerForBack = navController,
+                            goToEditEvent = { navController.navigate("edit_event?eventId=$eventId") }
                         )
                     }
                 }
