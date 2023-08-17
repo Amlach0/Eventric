@@ -27,7 +27,8 @@ fun EventCategoryItem(
     modifier: Modifier = Modifier,
     category: EventCategory,
     selected: Boolean = false,
-    onClick: () -> Unit,
+    showLabel: Boolean = true,
+    onClick: () -> Unit = {},
 ) {
 
     Column(
@@ -63,23 +64,37 @@ fun EventCategoryItem(
             )
 
         }
-        Text(
-            modifier = Modifier.padding(top = 10.dp),
-            text = category.title,
-            style = MaterialTheme.typography.body1,
-            color = MaterialTheme.colors.onBackground
-        )
+        if (showLabel)
+            Text(
+                modifier = Modifier.padding(top = 10.dp),
+                text = category.title,
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.onBackground
+            )
     }
 }
 
 
 @Composable
 @Preview
-fun EventCategoryItemPreview() {
+fun EventCategoryItemUnselectedPreview() {
     EventricTheme {
         EventCategoryItem(
             category = EventCategory.Art,
             selected = false,
+            onClick = {}
+        )
+    }
+}
+
+@Composable
+@Preview
+fun EventCategoryItemSelectedPreview() {
+    EventricTheme {
+        EventCategoryItem(
+            category = EventCategory.Art,
+            selected = true,
+            showLabel = false,
             onClick = {}
         )
     }

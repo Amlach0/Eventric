@@ -9,6 +9,7 @@ import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
@@ -22,14 +23,15 @@ class EventRepository @Inject constructor() {
     private val db = Firebase.firestore
     private val events = db.collection("events")
 
-    suspend fun createEvent(event: Event) {
-        try {
+    suspend fun createEvent(event: Event): String {
+        return try {
             val refDoc = events.add(event).await()
             Log.d(E_TAG, "Event written with ID: ${refDoc.id}")
         }
         catch (e: Exception) {
             Log.w(E_TAG, "Error adding Event", e)
             throw e
+            ""
         }
     }
 
@@ -38,9 +40,8 @@ class EventRepository @Inject constructor() {
             .snapshots().map { document: DocumentSnapshot ->
                 Pair(document.id, document.toObject<Event>())
             }
-    } catch (ce: CancellationException) {
-        throw ce
-    } catch (e: Exception) {
+    } catch (ce: CancellationException) { throw ce }
+    catch (e: Exception) {
         Log.w(E_TAG, "Error reading Event", e)
         flowOf()
     }
@@ -48,22 +49,86 @@ class EventRepository @Inject constructor() {
     fun getAllEvents(
         order: String = "name"
     ) = try {
-        Log.d("test", "start get all events")
         events
             .orderBy(order)
             .snapshots().map { query: QuerySnapshot ->
                 var docList = listOf<Pair<String, Event>>()
                 for (doc in query) {
-                    Log.d("test", "${doc.id} || ${doc.data}")
-                        docList = docList + Pair(doc.id, doc.toObject())
+                    docList = docList + Pair(doc.id, doc.toObject())
                 }
-                Log.d("test", "end get all events ${docList.size}")
                 docList
             }
-    } catch (ce: CancellationException) {
-        throw ce
-    } catch (e: Exception) {
+    } catch (ce: CancellationException) { throw ce }
+    catch (e: Exception) {
         Log.w(E_TAG, "Error reading Events", e)
         flowOf()
+    }
+
+    private suspend fun updateEvent(
+        eventId: String,
+        mapFieldValue: Map<String, Any>
+    ) {
+        try {
+            events.document(eventId).update(mapFieldValue).await()
+            Log.d(E_TAG, "Event $eventId updated with this updates : \n $mapFieldValue")
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
+            Log.w(E_TAG, "Error updating Event", e)
+        }
+    }
+
+    suspend fun deleteEvent(
+        eventId: String,
+    ) {
+        try {
+            events.document(eventId).delete().await()
+            Log.d(E_TAG, "Event $eventId deleted")
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
+            Log.w(E_TAG, "Error deleting Event", e)
+        }
+    }
+
+    suspend fun editEvent(
+        eventId: String,
+        event: Event
+    ) {
+        try {
+            events.document(eventId).set(event).await()
+            Log.d(E_TAG, "Event $eventId edited with this updates : \n $event")
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
+            Log.w(E_TAG, "Error editing Event", e)
+        }
+    }
+
+
+    /**
+     * Adds or Removes a User Id from the subscribed users of the event
+     * @param eventId The event Id
+     * @param userId The user Id
+     * @param addOrRemove a boolean that tells if the Id has to be added (TRUE) or removed (FALSE)
+     */
+    suspend fun addOrRemoveSubscribe(
+        eventId: String,
+        userId: String,
+        addOrRemove: Boolean,
+    ) {
+        val subscribed = getEvent(eventId).first().second?.subscribed?.toMutableList() ?: mutableListOf()
+
+        if (addOrRemove) {
+            if (!subscribed.contains(userId))
+                subscribed.add(userId)
+        }
+        else
+            subscribed.remove(userId)
+
+        updateEvent(
+            eventId = eventId,
+            mapFieldValue = mapOf("subscribed" to subscribed.toList())
+        )
     }
 }

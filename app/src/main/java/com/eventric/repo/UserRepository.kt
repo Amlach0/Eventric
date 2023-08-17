@@ -1,6 +1,7 @@
 package com.eventric.repo
 
 import android.util.Log
+import com.eventric.vo.Notification
 import com.eventric.vo.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -12,6 +13,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -88,8 +90,7 @@ class UserRepository @Inject constructor() {
             users.document(user.email)
                 .set(user).await()
             Log.d(U_TAG, "User written with ID: ${user.email}")
-        } catch (ce: CancellationException) { throw ce }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Log.w(U_TAG, "Error adding User", e)
             throw e
         }
@@ -122,6 +123,137 @@ class UserRepository @Inject constructor() {
     catch (e: Exception) {
         Log.w(U_TAG, "Error reading Users", e)
         flowOf()
+    }
+
+    private suspend fun updateUser(
+        userId: String,
+        mapFieldValue: Map<String, Any>,
+    ) {
+        try {
+            users.document(userId).update(mapFieldValue).await()
+            Log.d(E_TAG, "User $userId updated with this updates : \n $mapFieldValue")
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
+            Log.w(E_TAG, "Error updating Event", e)
+        }
+    }
+
+    private suspend fun addOrRemoveNotification(
+        userId: String,
+        notification: Notification,
+        addOrRemove: Boolean,
+    ) {
+        val notifications = getUser(userId).first().second.notifications.toMutableList()
+
+        if (addOrRemove) {
+            if (!notifications.contains(notification))
+                notifications.add(notification)
+        }
+        else
+            notifications.remove(notification)
+
+        updateUser(
+            userId = userId,
+            mapFieldValue = mapOf("notifications" to notifications.toList())
+        )
+    }
+
+    /**
+     * Adds or Removes a event Id from the favorite events of the user
+     * @param userId The user Id
+     * @param eventId The event Id
+     * @param addOrRemove a boolean that tells if the Id has to be added (TRUE) or removed (FALSE)
+     */
+    suspend fun addOrRemoveFavorite(
+        userId: String,
+        eventId: String,
+        addOrRemove: Boolean,
+    ) {
+        val favorites = getUser(userId).first().second.favoriteEvents.toMutableList()
+
+        if (addOrRemove) {
+            if (!favorites.contains(eventId))
+                favorites.add(eventId)
+        }
+        else
+            favorites.remove(eventId)
+
+        updateUser(
+            userId = userId,
+            mapFieldValue = mapOf("favoriteEvents" to favorites.toList())
+        )
+    }
+
+    /**
+     * Adds or Removes a following User Id from the following users of the followed user
+     * @param followedUserId The Followed user Id
+     * @param followingUserId The Following user Id
+     * @param addOrRemove a boolean that tells if the Id has to be added (TRUE) or removed (FALSE)
+     */
+    suspend fun addOrRemoveFollow(
+        followedUserId: String,
+        followingUserId: String,
+        addOrRemove: Boolean,
+    ) {
+        val following = getUser(followingUserId).first().second.followingUsers.toMutableList()
+
+        if (addOrRemove) {
+            if (!following.contains(followedUserId))
+                following.add(followedUserId)
+        }
+        else
+            following.remove(followedUserId)
+
+        updateUser(
+            userId = followingUserId,
+            mapFieldValue = mapOf("followingUsers" to following.toList())
+        )
+
+        val notification = Notification(
+            text = " ha cominciato a seguirti",
+            userId = followingUserId,
+            eventId = null,
+        )
+        addOrRemoveNotification(
+            userId = followedUserId,
+            notification = notification,
+            addOrRemove = true
+        )
+    }
+
+    /**
+     * Adds or Removes an invite from a user to an invited user for an event
+     * @param userId The user Id
+     * @param invitedUserId The invited user Id
+     * @param eventId The event
+     * @param addOrRemove a boolean that tells if the Id has to be added (TRUE) or removed (FALSE)
+     */
+    suspend fun addOrRemoveInvite(
+        userId: String,
+        invitedUserId: String,
+        eventId: String,
+        addOrRemove: Boolean,
+    ) {
+        val notification = Notification(
+            text = " ti ha invitato all'evento ",
+            userId = userId,
+            eventId = eventId,
+        )
+        addOrRemoveNotification(
+            userId = invitedUserId,
+            notification = notification,
+            addOrRemove = addOrRemove
+        )
+    }
+
+    suspend fun clearAllNotifications(
+        userId: String
+    ){
+        updateUser(
+            userId = userId,
+            mapFieldValue = mapOf("notifications" to listOf<Notification>())
+        )
     }
 }
 

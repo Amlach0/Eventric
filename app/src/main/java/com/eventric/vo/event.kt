@@ -17,7 +17,7 @@ data class Event(
     val subscribed: List<String?>,
 ){
     constructor(): this(null, null, null, null, null, null, EventCategory.NoCategory.dbString, EventType.Private.dbString, null, listOf())
-    constructor(name: String, location: String?, category: String, type: String, date: DateRange?, registrationDate: DateRange?, organizer: String?): this(name, null, null, location, date, registrationDate, category, type, organizer, listOf())
+    constructor(name: String, info: String?, location: String?, category: String, type: String, date: DateRange?, registrationDate: DateRange?, organizer: String?): this(name, null, info, location, date, registrationDate, category, type, organizer, listOf())
 }
 
 data class DateRange(
@@ -35,6 +35,20 @@ sealed class EventCategory(var title: String, var icon: Int, var color: Color, v
     object Food : EventCategory("Food", R.drawable.ic_category_food, Color(0xFF29D697), "food")
     object Sport : EventCategory("Sport", R.drawable.ic_category_sport, Color(0xFFEE544A), "sport")
 
+    companion object {
+        fun fromDbString(dbString: String): EventCategory {
+            return when (dbString) {
+                "none" -> NoCategory
+                "music" -> Music
+                "art" -> Art
+                "food" -> Food
+                "sport" -> Sport
+                else -> throw IllegalArgumentException("Unknown dbString: $dbString")
+            }
+        }
+    }
+
+    constructor(): this("", 0, Color.Black, "")
 
 }
 
@@ -43,5 +57,16 @@ sealed class EventType(var title: String, var icon: Int, var dbString: String) {
     object Private: EventType("Private", R.drawable.ic_type_private, "private")
     object Public: EventType("Public", R.drawable.ic_type_public, "public")
 
+    constructor(): this("", 0, "")
 
+    companion object {
+        fun fromDbString(dbString: String): EventType {
+            return when (dbString) {
+                "invite_only" -> InviteOnly
+                "private" -> Private
+                "public" -> Public
+                else -> throw IllegalArgumentException("Unknown dbString: $dbString")
+            }
+        }
+    }
 }

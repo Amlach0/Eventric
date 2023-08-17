@@ -60,6 +60,30 @@ interface TopBarScope {
     @Composable
     fun ActionButton(
         @DrawableRes iconId: Int,
+        iconColor: Color = MaterialTheme.colors.onPrimary,
+        onClick: () -> Unit,
+    ) {
+        IconButton(
+            modifier = Modifier
+                .background(
+                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.3f),
+                    shape = MaterialTheme.shapes.small
+                ),
+            onClick = { onClick() }
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(23.dp),
+                painter = painterResource(iconId),
+                contentDescription = null,
+                tint = iconColor
+            )
+        }
+    }
+
+    @Composable
+    fun ExploreActionButton(
+        @DrawableRes iconId: Int,
         onClick: () -> Unit,
     ) {
         IconButton(

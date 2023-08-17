@@ -63,7 +63,7 @@ fun ExploreTopBar(
         backgroundColor = MaterialTheme.colors.primary,
         paddingValues = PaddingValues(top = 15.dp, bottom = 24.dp, start = 24.dp, end = 24.dp),
         left = {
-            ActionButton(
+            ExploreActionButton(
                 iconId = R.drawable.ic_map,
                 onClick = { goToMap() }
             )
@@ -99,7 +99,7 @@ fun ExploreTopBar(
             }
         },
         right = {
-            ActionButton(
+            ExploreActionButton(
                 iconId = R.drawable.ic_notification,
                 onClick = { goToNotification() }
             )

@@ -4,6 +4,7 @@
     <string name="error_signup">Registrazione fallita. Verifica i tuoi dati</string>
     <string name="error_confirmation_psw">Password e conferma password non corrispondono</string>
     <string name="error_new_event">Creazione evento fallita. Ripovare</string>
+    <string name="error_delete_event">Eliminazione evento fallita. Ripovare</string>
     <string name="title_login">Log In</string>
     <string name="common_login">LOG IN</string>
     <string name="common_signup">SIGN UP</string>
@@ -15,6 +16,7 @@
     <string name="new_event_name">Nome evento</string>
     <string name="event_label">Nome Evento</string>
     <string name="new_event_location">Luogo</string>
+    <string name="new_event_info">Info</string>
     <string name="location_label">Via Roma 1234</string>
     <string name="new_event_date">Data Evento</string>
     <string name="new_event_registration_date">Data di iscrizione</string>
@@ -26,6 +28,7 @@
     <string name="category_sport">sport</string>
     <string name="new_event_type">Tipo evento</string>
     <string name="common_create">Crea</string>
+    <string name="common_edit">Modifica</string>
     <string name="cancel">Chiudi</string>
     <string name="back">Indietro</string>
     <string name="done">Fatto</string>
@@ -35,4 +38,18 @@
     <string name="select_time_start_date">Seleziona l\'orario di inizio per il </string>
     <string name="select_time_end_date">Seleziona l\'orario di fine per il </string>
     <string name="create_event">Crea Evento</string>
+    <string name="edit_event">Modifica Evento</string>
+    <string name="info_event">Dettagli Evento</string>
+    <string name="common_subscribe">ISCRIVITI</string>
+    <string name="invite_btn_label">invite</string>
+    <string name="organizer_label">Organizer</string>
+    <string name="follow_label">Segui</string>
+    <string name="unfollow_label">Non seguire</string>
+    <string name="invite_label">Invita</string>
+    <string name="uninvite_label">Togli invito</string>
+    <string name="info_label">Dettagli Event</string>
+    <string name="common_close_subscribe">Le iscrizioni sono chiuse</string>
+    <string name="common_unsubscribe">DISISCRIVITI</string>
+    <string name="invite_list_label">Invita i tuoi amici</string>
+    <string name="subscribed_list_label">Lista dei partecipanti</string>
 </resources>

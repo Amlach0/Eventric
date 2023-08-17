@@ -22,7 +22,7 @@ import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,8 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.eventric.R
-import java.text.SimpleDateFormat
-import java.util.Calendar
+import com.eventric.utils.getDateFromMilli
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -122,14 +121,14 @@ fun DateAndTimeRangePickerDialog(
     onStartDateSelected: (String) -> Unit,
     onEndDateSelected: (String) -> Unit,
 ) {
-    var pageState by remember { mutableStateOf(0) }
+    var pageState by remember { mutableIntStateOf(0) }
 
     val dateState = rememberDateRangePickerState()
     val startTimeState = rememberTimePickerState()
     val endTimeState = rememberTimePickerState()
 
-    val startDate: String = getDate(dateState.selectedStartDateMillis ?: 0, "dd/MM/yyyy")
-    val endDate: String = getDate(dateState.selectedEndDateMillis ?: 0, "dd/MM/yyyy")
+    val startDate: String = getDateFromMilli(dateState.selectedStartDateMillis ?: 0, "dd/MM/yyyy")
+    val endDate: String = getDateFromMilli(dateState.selectedEndDateMillis ?: 0, "dd/MM/yyyy")
     val startTime = "${startTimeState.hour}:${startTimeState.minute}"
     val endTime = "${endTimeState.hour}:${endTimeState.minute}"
 
@@ -217,18 +216,3 @@ fun DateAndTimeRangePickerDialog(
     }
 }
 
-/**
- * Return date in specified format.
- * @param milliSeconds Date in milliseconds
- * @param dateFormat Date format
- * @return String representing date in specified format
- */
-fun getDate(milliSeconds: Long, dateFormat: String): String {
-    // Create a DateFormatter object for displaying date in specified format.
-    val formatter = SimpleDateFormat(dateFormat)
-
-    // Create a calendar object that will convert the date and time value in milliseconds to date.
-    val calendar: Calendar = Calendar.getInstance()
-    calendar.timeInMillis = milliSeconds
-    return formatter.format(calendar.time)
-}
