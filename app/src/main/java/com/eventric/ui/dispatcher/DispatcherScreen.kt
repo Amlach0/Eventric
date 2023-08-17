@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
 import com.eventric.ui.theme.EventricTheme
 import kotlinx.coroutines.delay
 
@@ -17,7 +16,6 @@ fun DispatcherScreen(
     goToHome: () -> Unit,
     goToLogin: () -> Unit
 ) {
-    val navController = rememberNavController()
 
     val dispatcherState by dispatcherViewModel.dispatcherStateFlow.collectAsState(DispatcherState.LOADING)
 

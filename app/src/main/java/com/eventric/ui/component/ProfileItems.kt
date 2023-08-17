@@ -221,7 +221,7 @@ fun ProfileExpandedItemPreview() {
     EventricTheme {
         ProfileOrganizerItem(
             name = "Antonio Cagliari",
-            imageId = R.drawable._27a1f62a2d277788a853d203733f8d5,
+            imageId = R.drawable.img_profile,
             isFollowed = false,
             showFollowButton = true,
             onFollowClick = {},
@@ -235,7 +235,7 @@ fun ProfileItemPreview() {
     EventricTheme {
         ProfileItem(
             name = "Antonio Cagliari",
-            imageId = R.drawable._27a1f62a2d277788a853d203733f8d5,
+            imageId = R.drawable.img_profile,
             isInvited = false,
             showInviteButton = true,
             onInviteClick = {},

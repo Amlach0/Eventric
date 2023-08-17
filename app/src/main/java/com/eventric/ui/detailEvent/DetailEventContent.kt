@@ -92,7 +92,7 @@ fun DetailEventContent(
                     items(items = if (isInviteSheet) invitableUsers else subscribedUsers) { (userId, isInvited, user) ->
                         ProfileItem(
                             name = "${user.name} ${user.surname}",
-                            imageId = R.drawable._27a1f62a2d277788a853d203733f8d5,
+                            imageId = R.drawable.img_profile,
                             isInvited = isInvited,
                             showInviteButton = isInviteSheet,
                             onInviteClick = { onUserInviteChange(userId) }
@@ -108,7 +108,7 @@ fun DetailEventContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(230.dp),
-                painter = painterResource(R.drawable._794d36030d9c5d830e431721e08ddd7),
+                painter = painterResource(R.drawable.img_event),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
@@ -198,7 +198,7 @@ fun DetailEventContent(
                         ProfileOrganizerItem(
                             modifier = Modifier.padding(top = 24.dp),
                             name = organizerName,
-                            imageId = R.drawable._27a1f62a2d277788a853d203733f8d5,
+                            imageId = R.drawable.img_profile,
                             isFollowed = isOrganizerFollowed,
                             showFollowButton = !isUserOrganizer,
                             onFollowClick = { onFollowChange() }
