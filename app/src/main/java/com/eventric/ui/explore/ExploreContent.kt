@@ -26,6 +26,7 @@ import com.eventric.vo.Event
 @Composable
 fun ExploreContent(
     events: List<Triple<String,Boolean, Event>>,
+    goToEvent: (eventId: String) -> Unit
 ) {
 
     LazyColumn(
@@ -39,7 +40,7 @@ fun ExploreContent(
                 event = event,
                 organaserName = event.organizer.toString(),
                 isFavorite = isFavourite,
-                onClick = {}
+                onClick = {goToEvent(id) }
             )
         }
     }

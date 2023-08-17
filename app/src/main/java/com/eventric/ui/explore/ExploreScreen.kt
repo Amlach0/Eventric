@@ -7,11 +7,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun ExploreScreen(
+    goToEventDetail: (eventId: String) -> Unit,
     exploreViewModel: ExploreViewModel = hiltViewModel(),
 ) {
     val events by exploreViewModel.getEvents().collectAsStateWithLifecycle(listOf())
 
+    fun goToEvent(eventId: String) {
+        goToEventDetail(eventId)
+    }
+
     ExploreContent(
-        events = events
+        events = events,
+        goToEvent = ::goToEvent
     )
 }

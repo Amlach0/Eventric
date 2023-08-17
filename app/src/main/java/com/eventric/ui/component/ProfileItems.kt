@@ -171,7 +171,6 @@ fun ProfileGoingExpandedItem(
 ) {
     Card(
         modifier = modifier
-            .heightIn(min = 60.dp)
             .clickable { onClick() },
         shape = CircleShape,
         backgroundColor = MaterialTheme.colors.background,

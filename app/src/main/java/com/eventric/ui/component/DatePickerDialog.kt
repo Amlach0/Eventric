@@ -44,7 +44,7 @@ fun DatePickerDialog(
 ) {
     val dateState = rememberDatePickerState()
 
-    val date: String = getDate(dateState.selectedDateMillis ?: 0, "dd/MM/yyyy")
+    val date: String = getDateFromMilli(dateState.selectedDateMillis ?: 0, "dd/MM/yyyy")
 
 
     Dialog(

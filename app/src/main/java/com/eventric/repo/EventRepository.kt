@@ -27,11 +27,11 @@ class EventRepository @Inject constructor() {
         return try {
             val refDoc = events.add(event).await()
             Log.d(E_TAG, "Event written with ID: ${refDoc.id}")
+            refDoc.id
         }
         catch (e: Exception) {
             Log.w(E_TAG, "Error adding Event", e)
             throw e
-            ""
         }
     }
 

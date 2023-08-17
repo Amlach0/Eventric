@@ -80,7 +80,9 @@ fun HomeContent(
         ) {
 
             composable(BottomNavItem.Explore.screen_route) {
-                ExploreScreen(mainNavController)
+                ExploreScreen(
+                    goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") },
+                )
             }
         }
     }

@@ -30,6 +30,19 @@ data class User(
         listOf(),
         listOf()
     )
+    constructor(email: String, name: String?, surname: String?, bio: String?, birthDate: String?): this(
+        email,
+        name,
+        surname,
+        null,
+        bio,
+        birthDate,
+        listOf(),
+        listOf(),
+        listOf(),
+        listOf(),
+        listOf()
+    )
 
     companion object {
         val EMPTY_USER = User(
@@ -64,4 +77,5 @@ data class Notification(
 
     override fun equals(other: Any?): Boolean =
         (other is Notification) && userId == other.userId && eventId == other.eventId
+
 }

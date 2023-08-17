@@ -73,6 +73,7 @@ fun DetailEventContent(
 
     ModalBottomSheetLayout(
         sheetState = sheetState,
+        sheetBackgroundColor = MaterialTheme.colors.background,
         sheetContent = {
             Column(
                 modifier = Modifier

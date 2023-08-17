@@ -25,10 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eventric.R
 import com.eventric.ui.theme.EventricTheme
-import com.eventric.vo.DateRange
 import com.eventric.vo.Event
-import com.eventric.vo.EventCategory
-import com.eventric.vo.EventType
 
 
 @Composable
@@ -112,14 +109,6 @@ fun EventCardItemPreview() {
     EventricTheme {
         EventCardItem(
             event = Event(
-                "test",
-                "via T",
-                EventCategory.Music.dbString,
-                EventType.Private.dbString,
-                DateRange("10/05", "20/11"),
-                DateRange(),
-                "\n" +
-                        "admin@admin.com"
             ),
             organaserName = "Carlo Santini",
             isFavorite = true,
