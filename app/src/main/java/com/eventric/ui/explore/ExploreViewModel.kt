@@ -25,21 +25,27 @@ class ExploreViewModel @Inject constructor(
             eventRepository.getAllEvents(),
             userRepository.getAllUsers(),
             userFlow
-        ) { events, users, currentUser ->
-            events.map { (id, event) ->
-                Log.d("test", "event")
-                val organizerUser = users.find { it.first == event.organizer }?.second
-                Triple(
-                    id,
-                    currentUser.second.favoriteEvents.contains(id),
-                    event.copy(
-                        organizer = "${organizerUser?.name} ${organizerUser?.surname}"
+        ) { events, users, (loggedUserId, loggedUser) ->
+            events
+                .filter { (_, event) ->
+                    event.organizer != loggedUserId
+                            && (event.type == "public"
+                                    || (event.type == "private"
+                                    && loggedUser.followingUsers.contains(event.organizer)))
+                }
+                .map { (id, event) ->
+                    Log.d("test", "event")
+                    val organizerUser = users.find { it.first == event.organizer }?.second
+                    Triple(
+                        id,
+                        loggedUser.favoriteEvents.contains(id),
+                        event.copy(
+                            organizer = "${organizerUser?.name} ${organizerUser?.surname}"
+                        )
                     )
-                )
-            }
+                }
         }
     }
-
 
 
 }
