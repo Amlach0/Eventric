@@ -30,7 +30,7 @@ class DetailEventViewModel @Inject constructor(
         userRepository.getUser(event.organizer ?: "")
     }
 
-    val loggedUserFlow = userRepository.user
+    private val loggedUserFlow = userRepository.user
 
     fun setEventId(id: String) {
         eventIdFlow.value = id
@@ -64,7 +64,7 @@ class DetailEventViewModel @Inject constructor(
         loggedUser.followingUsers.contains(idOrganizer)
     }
 
-    val subscribedUsers = combine(
+    val subscribedUsersFlow = combine(
         eventFlow,
         userRepository.getAllUsers()
     ) { event, users ->
@@ -74,7 +74,7 @@ class DetailEventViewModel @Inject constructor(
             .map { Triple(it.first, true, it.second) }
     }
 
-    val invitableUsers = combine(
+    val invitableUsersFlow = combine(
         eventIdFlow,
         eventFlow,
         userRepository.getAllUsers(),

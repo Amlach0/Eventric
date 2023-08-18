@@ -49,8 +49,9 @@ fun ExploreContent(
 @Composable
 fun ExploreTopBar(
     address: String,
+    isNotificationActive: Boolean,
     goToMap: () -> Unit,
-    goToNotification: () -> Unit,
+    goToNotifications: () -> Unit,
 ) {
 
     BrandTopBar(
@@ -102,7 +103,8 @@ fun ExploreTopBar(
         right = {
             ExploreActionButton(
                 iconId = R.drawable.ic_notification,
-                onClick = { goToNotification() }
+                showBadge = isNotificationActive,
+                onClick = { goToNotifications() }
             )
         }
     )
