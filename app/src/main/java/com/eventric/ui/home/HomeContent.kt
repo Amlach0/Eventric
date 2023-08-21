@@ -21,6 +21,7 @@ import com.eventric.ui.component.BottomNavItem
 import com.eventric.ui.component.CustomBottomNavigation
 import com.eventric.ui.explore.ExploreScreen
 import com.eventric.ui.explore.ExploreTopBar
+import com.eventric.ui.profile.ProfileScreen
 
 @Composable
 fun HomeContent(
@@ -82,6 +83,13 @@ fun HomeContent(
             composable(BottomNavItem.Explore.screen_route) {
                 ExploreScreen(
                     goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") },
+                )
+            }
+            composable(BottomNavItem.Profile.screen_route) {
+                ProfileScreen(
+                    userId = "admin@admin.com",
+                    navController = mainNavController,
+                    goToProfile = { userId -> mainNavController.navigate("profile?userId=$userId") }
                 )
             }
         }

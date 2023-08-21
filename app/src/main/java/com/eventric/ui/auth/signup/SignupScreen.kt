@@ -9,17 +9,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eventric.ui.theme.EventricTheme
 import com.eventric.utils.ErrorOperation
 import com.eventric.utils.LoadingOperation
 import com.eventric.utils.SuccessOperation
+import com.eventric.vo.User
 import kotlinx.coroutines.launch
 
 @Composable
 fun SignupScreen(
+    id: String = "",
     signupViewModel: SignupViewModel = hiltViewModel(),
     onSuccess: () -> Unit,
 ) {
+    var isEdit by remember { mutableStateOf(false) }
+    if (id != "") {
+        signupViewModel.setEventId(id)
+        isEdit = true
+    }
+
     val signupState by signupViewModel.signupCodeResult.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
@@ -28,22 +37,27 @@ fun SignupScreen(
 
     var errorBannerConfermationIsVisible by remember { mutableStateOf(false) }
 
+    val user by signupViewModel.userFlow.collectAsStateWithLifecycle(User())
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
-
     var email by remember { mutableStateOf("") }
-
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-
     var confirmPassword by remember { mutableStateOf("") }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-
     var birthDate by remember { mutableStateOf("") }
 
     LaunchedEffect(signupState) {
         if (signupState is ErrorOperation) errorBannerIsVisible = true
         if (signupState is SuccessOperation) onSuccess()
+    }
+
+    LaunchedEffect(user)
+    {
+        name = user.name ?: ""
+        surname = user.surname ?: ""
+        email = user.email
+        birthDate = user.birthDate ?: ""
     }
 
     fun onNameChange(value: String) {
@@ -107,6 +121,7 @@ fun SignupScreen(
         SignupContent(
             errorBannerIsVisible = errorBannerIsVisible,
             errorBannerConfirmationIsVisible = errorBannerConfermationIsVisible,
+            isEdit = isEdit,
             name = name,
             surname = surname,
             email = email,

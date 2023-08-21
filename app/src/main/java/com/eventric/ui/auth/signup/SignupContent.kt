@@ -42,6 +42,7 @@ import com.eventric.ui.theme.EventricTheme
 fun SignupContent(
     errorBannerIsVisible: Boolean,
     errorBannerConfirmationIsVisible: Boolean,
+    isEdit: Boolean,
     name: String,
     surname: String,
     email: String,
@@ -134,7 +135,7 @@ fun SignupContent(
             )
             Text(
                 modifier = Modifier.padding(horizontal = 34.dp),
-                text = stringResource(id = R.string.title_login),
+                text = stringResource(id = if(isEdit) R.string.edit_profile else R.string.title_login),
                 style = MaterialTheme.typography.h4,
                 fontSize = 27.sp,
                 color = MaterialTheme.colors.onBackground
@@ -175,7 +176,7 @@ fun SignupContent(
                 modifier = Modifier
                     .padding(horizontal = 34.dp)
                     .padding(top = 18.dp),
-                hint = stringResource(R.string.pwd_label),
+                hint = stringResource(if(isEdit) R.string.new_pwd_label else R.string.pwd_label),
                 value = password,
                 icon = R.drawable.ic_pwd,
                 onValueChange = onPasswordChange,
@@ -188,7 +189,7 @@ fun SignupContent(
                 modifier = Modifier
                     .padding(horizontal = 34.dp)
                     .padding(top = 18.dp),
-                hint = stringResource(R.string.confirm_pwd_label),
+                hint = stringResource(if(isEdit) R.string.new_confirm_pwd_label else R.string.confirm_pwd_label),
                 value = confirmPassword,
                 icon = R.drawable.ic_pwd,
                 onValueChange = onConfirmPasswordChange,
@@ -215,12 +216,12 @@ fun SignupContent(
                     .padding(57.dp)
             ) {
                 CustomButtonPrimary(
-                    text = stringResource(id = R.string.common_signup),
+                    text = stringResource(id = if(isEdit) R.string.common_edit else R.string.common_signup),
                     onClick = { onSubmit() }
                 )
                 Spacer(Modifier.height(17.dp))
                 CustomButtonSecondary(
-                    text = stringResource(id = R.string.common_login),
+                    text = stringResource(id = if(isEdit) R.string.cancel else R.string.common_login),
                     onClick = { onLoginPressed() }
                 )
             }
@@ -242,6 +243,7 @@ fun SignupContentPreview() {
         var birthDate by remember { mutableStateOf("") }
 
         SignupContent(
+            isEdit = false,
             name = name,
             surname = surname,
             email = email,

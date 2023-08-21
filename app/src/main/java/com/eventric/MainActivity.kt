@@ -12,6 +12,7 @@ import com.eventric.ui.detailEvent.DetailEventScreen
 import com.eventric.ui.dispatcher.DispatcherScreen
 import com.eventric.ui.home.HomeScreen
 import com.eventric.ui.newEvent.CreateEventScreen
+import com.eventric.ui.profile.ProfileScreen
 import com.eventric.ui.theme.EventricTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -75,7 +76,24 @@ class MainActivity : ComponentActivity() {
                         DetailEventScreen(
                             eventId = eventId,
                             navControllerForBack = navController,
-                            goToEditEvent = { navController.navigate("edit_event?eventId=$eventId") }
+                            goToEditEvent = { navController.navigate("edit_event?eventId=$eventId") },
+                            goToProfile = { userId -> navController.navigate("profile?userId=$userId") }
+                        )
+                    }
+                    composable("edit_user?userId={userId}") { navBackStackEntry ->
+                        SignupScreen(
+                            id = navBackStackEntry.arguments?.getString("userId")
+                                ?: throw IllegalStateException("missing user id arguments"),
+                            onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } },
+                        )
+                    }
+                    composable("profile?userId={userId}") { navBackStackEntry ->
+                        val userId = navBackStackEntry.arguments?.getString("userId")
+                            ?: throw IllegalStateException("missing user id arguments")
+                        ProfileScreen(
+                            userId = userId,
+                            navController = navController,
+                            goToProfile = { goToUserId -> navController.navigate("profile?userId=$goToUserId") }
                         )
                     }
                 }
