@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -21,7 +20,7 @@ class ProfileViewModel @Inject constructor(
         if (id != "")
             userRepository.getUser(id).map { it.second }
         else
-            flowOf()
+            userRepository.getUser(loggedUserFlow.first().first).map { it.second }
     }
 
     val loggedUserFlow = userRepository.user
@@ -49,7 +48,7 @@ class ProfileViewModel @Inject constructor(
     ) { users, userId ->
         users
             .filter { it.second.followingUsers.contains(userId) }
-            .map { Triple(it.first, true, it.second) }
+            .map { Pair(it.first, it.second) }
     }
 
     val followedFlow = combine(
@@ -60,11 +59,7 @@ class ProfileViewModel @Inject constructor(
         users
             .filter { followingUserIds.contains(it.first) }
             .map { (userId, user) ->
-                Triple(
-                    userId,
-                    true,
-                    user
-                )
+                Pair(userId, user)
             }
     }
 

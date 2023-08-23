@@ -87,7 +87,6 @@ fun HomeContent(
             }
             composable(BottomNavItem.Profile.screen_route) {
                 ProfileScreen(
-                    userId = "admin@admin.com",
                     navController = mainNavController,
                     goToProfile = { userId -> mainNavController.navigate("profile?userId=$userId") }
                 )

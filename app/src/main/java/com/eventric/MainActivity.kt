@@ -96,6 +96,12 @@ class MainActivity : ComponentActivity() {
                             goToProfile = { goToUserId -> navController.navigate("profile?userId=$goToUserId") }
                         )
                     }
+                    composable("profile") { navBackStackEntry ->
+                        ProfileScreen(
+                            navController = navController,
+                            goToProfile = { goToUserId -> navController.navigate("profile?userId=$goToUserId") }
+                        )
+                    }
                 }
             }
         }

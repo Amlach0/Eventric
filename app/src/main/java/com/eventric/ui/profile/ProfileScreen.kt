@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProfileScreen (
-    userId: String,
+    userId: String = "",
     navController: NavController,
     goToProfile: (String) -> Unit,
     profileViewModel: ProfileViewModel = hiltViewModel()
@@ -28,6 +28,7 @@ fun ProfileScreen (
 
     profileViewModel.setUserId(userId)
 
+    val userFromBottomBar = (userId == "")
     val user by profileViewModel.userFlow.collectAsStateWithLifecycle(null)
     val self by profileViewModel.isUserSelfFlow.collectAsStateWithLifecycle(false)
     val isUserFollowed by profileViewModel.isUserFollowedFlow.collectAsStateWithLifecycle(false)
@@ -65,6 +66,7 @@ fun ProfileScreen (
     EventricTheme {
         ProfileContent(
             navController = navController,
+            userFromBottomBar = userFromBottomBar,
             isFollowersClicked = isFollowersClicked,
             user = user ?: User(),
             self = self,

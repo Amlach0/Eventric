@@ -52,19 +52,19 @@ import com.eventric.ui.component.CustomButtonSecondary
 import com.eventric.ui.component.ProfileItem
 import com.eventric.vo.User
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ProfileContent(
     navController: NavController,
+    userFromBottomBar: Boolean,
     isFollowersClicked: Boolean,
     sheetState: ModalBottomSheetState,
     user: User,
     self: Boolean,
     isUserFollowed: Boolean,
-    followers: List<Triple<String, Boolean, User>>,
-    followed: List<Triple<String, Boolean, User>>,
+    followers: List<Pair<String, User>>,
+    followed: List<Pair<String, User>>,
     onFollowClick: () -> Unit,
     onEditPress: () -> Unit,
     onUser: (String) -> Unit,
@@ -81,7 +81,7 @@ fun ProfileContent(
                     .padding(top = 34.dp)
             ) {
                 Text(
-                    text = stringResource(if (isFollowersClicked) R.string.followers else R.string.followed),
+                    text = stringResource(if (isFollowersClicked) R.string.followers_label else R.string.followed_label),
                     style = MaterialTheme.typography.h4,
                     color = MaterialTheme.colors.onSecondary
                 )
@@ -89,11 +89,11 @@ fun ProfileContent(
                     contentPadding = PaddingValues(vertical = 25.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(items = if (isFollowersClicked) followers else followed) { (userId, isInvited, user) ->
+                    items(items = if (isFollowersClicked) followers else followed) { (userId, user) ->
                         ProfileItem(
                             name = "${user.name} ${user.surname}",
                             imageId = R.drawable.img_profile,
-                            isInvited = isInvited,
+                            isInvited = false,
                             showInviteButton = false,
                             onInviteClick = { },
                             modifier = Modifier.clickable(
@@ -114,25 +114,15 @@ fun ProfileContent(
             Scaffold(
                 modifier = Modifier
                     .fillMaxSize(),
-                backgroundColor = Color.Transparent,
+                backgroundColor = MaterialTheme.colors.background,
                 topBar = {
                     BrandTopBar(
                         left = {
-                            Back(
-                                navController = navController,
-                            )
-                        },
-                        right = {
-                            if (self) {
-                                ActionButton(
-                                    iconId = R.drawable.ic_edit,
-                                    onClick = { onEditPress() }
-                                )
-                                Spacer(Modifier.width(15.dp))
-                                ActionButton(
-                                    iconId = R.drawable.ic_logout,
-                                    iconColor = MaterialTheme.colors.error,
-                                    onClick = { onLogoutPress() }
+                            if(!userFromBottomBar)
+                            {
+                                Back(
+                                    navController = navController,
+                                    tint = MaterialTheme.colors.onBackground
                                 )
                             }
                         }
@@ -214,7 +204,7 @@ fun ProfileContent(
                                     color = MaterialTheme.colors.onBackground
                                 )
                                 Text(
-                                    text = stringResource(id = R.string.followed),
+                                    text = stringResource(R.string.followed_label),
                                     style = MaterialTheme.typography.subtitle2,
                                     color = MaterialTheme.colors.onBackground
                                 )
@@ -242,7 +232,7 @@ fun ProfileContent(
                                     color = MaterialTheme.colors.onBackground
                                 )
                                 Text(
-                                    text = stringResource(id = R.string.followers),
+                                    text = stringResource(R.string.followers_label),
                                     style = MaterialTheme.typography.subtitle2,
                                     color = MaterialTheme.colors.onBackground
                                 )
@@ -251,25 +241,24 @@ fun ProfileContent(
                         Spacer(modifier = Modifier.height(10.dp))
                         if (self) {
                             CustomButtonSecondary(
-                                text = stringResource(id = R.string.edit_profile),
+                                text = stringResource(R.string.edit_profile),
                                 modifier = Modifier
                                     .width(200.dp),
                                 iconId = R.drawable.ic_edit,
                                 onClick = onEditPress,
                             )
                             CustomButtonSecondary(
-                                text = stringResource(id = R.string.logout),
+                                text = stringResource(R.string.logout),
                                 modifier = Modifier
                                     .width(200.dp),
                                 iconId = R.drawable.ic_logout,
                                 onClick = onLogoutPress,
+                                color = MaterialTheme.colors.error
                             )
                             Spacer(modifier = Modifier.height(20.dp))
                         } else {
                             CustomButtonSecondary(
-                                text = if (isUserFollowed) stringResource(id = R.string.unfollow_label) else stringResource(
-                                    id = R.string.follow_label
-                                ),
+                                text = stringResource(if (isUserFollowed) R.string.unfollow_label else R.string.follow_label),
                                 modifier = Modifier
                                     .width(200.dp),
                                 iconId = if (isUserFollowed) R.drawable.ic_unfollow else R.drawable.ic_follow,
@@ -281,7 +270,7 @@ fun ProfileContent(
                             modifier = Modifier
                                 .align(Alignment.Start)
                                 .padding(horizontal = 30.dp),
-                            text = stringResource(id = R.string.bio),
+                            text = stringResource(R.string.bio),
                             style = MaterialTheme.typography.h3,
                             color = MaterialTheme.colors.onBackground
                         )

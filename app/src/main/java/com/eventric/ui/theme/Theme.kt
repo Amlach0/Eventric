@@ -10,6 +10,7 @@ private val DarkColors = darkColors(
     primary = Purple,
     onPrimary = White,
     secondary = LightPurple,
+    onSecondary = White,
     background = Black,
     onBackground = LightGray,
     error = Red
