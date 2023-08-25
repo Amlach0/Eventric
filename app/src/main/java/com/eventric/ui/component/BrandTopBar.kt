@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Badge
+import androidx.compose.material.BadgedBox
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -61,29 +63,45 @@ interface TopBarScope {
     fun ActionButton(
         @DrawableRes iconId: Int,
         iconColor: Color = MaterialTheme.colors.onPrimary,
+        backgroundColor: Color = MaterialTheme.colors.onPrimary.copy(alpha = 0.3f),
+        text: String = "",
         onClick: () -> Unit,
     ) {
         IconButton(
             modifier = Modifier
                 .background(
-                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.3f),
+                    color = backgroundColor,
                     shape = MaterialTheme.shapes.small
                 ),
             onClick = { onClick() }
         ) {
-            Icon(
-                modifier = Modifier
-                    .size(23.dp),
-                painter = painterResource(iconId),
-                contentDescription = null,
-                tint = iconColor
-            )
+            Row(
+                modifier = Modifier.padding(horizontal = 3.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(23.dp),
+                    painter = painterResource(iconId),
+                    contentDescription = null,
+                    tint = iconColor
+                )
+                if (text != "")
+                    Text(
+                        modifier = Modifier.padding(start = 3.dp),
+                        text = text,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.caption,
+                        color = iconColor,
+                    )
+            }
         }
     }
 
     @Composable
     fun ExploreActionButton(
         @DrawableRes iconId: Int,
+        showBadge: Boolean = false,
         onClick: () -> Unit,
     ) {
         IconButton(
@@ -94,13 +112,15 @@ interface TopBarScope {
                 ),
             onClick = { onClick() }
         ) {
-            Icon(
-                modifier = Modifier
-                    .size(20.dp),
-                painter = painterResource(iconId),
-                contentDescription = null,
-                tint = MaterialTheme.colors.onPrimary
-            )
+            BadgedBox(badge = { if (showBadge) Badge() }) {
+                Icon(
+                    modifier = Modifier
+                        .size(20.dp),
+                    painter = painterResource(iconId),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.onPrimary
+                )
+            }
         }
     }
 

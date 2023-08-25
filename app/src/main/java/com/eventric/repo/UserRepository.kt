@@ -218,7 +218,7 @@ class UserRepository @Inject constructor() {
         addOrRemoveNotification(
             userId = followedUserId,
             notification = notification,
-            addOrRemove = true
+            addOrRemove = addOrRemove
         )
     }
 

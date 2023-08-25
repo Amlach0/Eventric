@@ -25,6 +25,7 @@ import com.eventric.ui.explore.ExploreTopBar
 @Composable
 fun HomeContent(
     mainNavController: NavController,
+    isNotificationActive: Boolean
 ) {
     val homeNavController = rememberNavController()
     val navBackStackEntry by homeNavController.currentBackStackEntryAsState()
@@ -36,7 +37,8 @@ fun HomeContent(
                     ExploreTopBar(
                         address = "Via Esempio, 69",
                         goToMap = {},
-                        goToNotification = {}
+                        goToNotifications = { mainNavController.navigate("notifications") },
+                        isNotificationActive = isNotificationActive
                     )
             }
 

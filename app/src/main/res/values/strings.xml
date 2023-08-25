@@ -52,4 +52,9 @@
     <string name="common_unsubscribe">DISISCRIVITI</string>
     <string name="invite_list_label">Invita i tuoi amici</string>
     <string name="subscribed_list_label">Lista dei partecipanti</string>
+    <string name="accept_label">Accetta</string>
+    <string name="reject_label">Rifiuta</string>
+    <string name="view_event_label">Guarda</string>
+    <string name="notifications_label">Notifiche</string>
+    <string name="clear_all_label">Ripulisci</string>
 </resources>
