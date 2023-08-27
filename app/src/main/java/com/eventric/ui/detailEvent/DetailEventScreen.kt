@@ -46,8 +46,8 @@ fun DetailEventScreen(
         confirmValueChange = { it != ModalBottomSheetValue.Expanded }
     )
     var isInviteSheet by remember { mutableStateOf(false) }
-    val subscribedUsers by detailEventViewModel.subscribedUsers.collectAsStateWithLifecycle(listOf())
-    val invitableUsers by detailEventViewModel.invitableUsers.collectAsStateWithLifecycle(listOf())
+    val subscribedUsers by detailEventViewModel.subscribedUsersFlow.collectAsStateWithLifecycle(listOf())
+    val invitableUsers by detailEventViewModel.invitableUsersFlow.collectAsStateWithLifecycle(listOf())
 
 
     fun onFavoriteChange() = coroutineScope.launch {

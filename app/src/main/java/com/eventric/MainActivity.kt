@@ -13,6 +13,7 @@ import com.eventric.ui.dispatcher.DispatcherScreen
 import com.eventric.ui.home.HomeScreen
 import com.eventric.ui.newEvent.CreateEventScreen
 import com.eventric.ui.profile.ProfileScreen
+import com.eventric.ui.notifications.NotificationsScreen
 import com.eventric.ui.theme.EventricTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("home") {
                         HomeScreen(
-                            mainNavController = navController
+                            mainNavController = navController,
                         )
                     }
                     composable("new_event") {
@@ -97,6 +98,13 @@ class MainActivity : ComponentActivity() {
                             goToEvent = { eventId -> navController.navigate("info_event?eventId=$eventId") },
                             goToEditProfile = {},
                             goToDispatcher = {}
+                        )
+                    }
+                    composable("notifications") {
+                        NotificationsScreen(
+                            navControllerForBack = navController,
+                            goToEvent = { eventId -> navController.navigate("info_event?eventId=$eventId") },
+                            goToUser = {  }, //TODO add user page
                         )
                     }
                 }

@@ -63,4 +63,9 @@
     <string name="new_pwd_label">New Password</string>
     <string name="new_confirm_pwd_label">Confirm New Password</string>
     <string name="profile_label">Profile</string>
+    <string name="accept_label">Accetta</string>
+    <string name="reject_label">Rifiuta</string>
+    <string name="view_event_label">Guarda</string>
+    <string name="notifications_label">Notifiche</string>
+    <string name="clear_all_label">Ripulisci</string>
 </resources>
