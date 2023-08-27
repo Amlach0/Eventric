@@ -32,7 +32,6 @@ class ExploreViewModel @Inject constructor(
                                     && loggedUser.followingUsers.contains(event.organizer)))
                 }
                 .map { (id, event) ->
-                    Log.d("test", "event")
                     val organizerUser = users.find { it.first == event.organizer }?.second
                     Triple(
                         id,
