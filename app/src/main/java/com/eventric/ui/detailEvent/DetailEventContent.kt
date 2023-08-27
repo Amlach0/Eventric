@@ -102,13 +102,7 @@ fun DetailEventContent(
                             isInvited = isInvited,
                             showInviteButton = isInviteSheet,
                             onInviteClick = { onUserInviteChange(userId) },
-                            modifier = Modifier.clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple(
-                                    color = MaterialTheme.colors.onPrimary,
-                                    bounded = false
-                                )
-                            ){ onUser(userId) },
+                            onClick = { onUser(userId) },
                         )
                     }
                 }
@@ -139,6 +133,7 @@ fun DetailEventContent(
                             Title(
                                 modifier = Modifier.padding(horizontal = 13.dp),
                                 title = stringResource(R.string.info_event),
+                                color = MaterialTheme.colors.onPrimary,
                                 textAlign = TextAlign.Left
                             )
                         },

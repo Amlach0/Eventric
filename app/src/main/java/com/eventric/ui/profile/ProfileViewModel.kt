@@ -1,6 +1,7 @@
 package com.eventric.ui.profile
 
 import androidx.lifecycle.ViewModel
+import com.eventric.repo.EventRepository
 import com.eventric.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
+    private val eventRepository: EventRepository
 ) : ViewModel() {
 
     private val userIdFlow = MutableStateFlow("")
@@ -23,16 +25,9 @@ class ProfileViewModel @Inject constructor(
             userRepository.getUser(loggedUserFlow.first().first).map { it.second }
     }
 
-    val loggedUserFlow = userRepository.user
+    private val loggedUserFlow = userRepository.user
     fun setUserId(id: String) {
         userIdFlow.value = id
-    }
-
-    val isUserSelfFlow = combine(
-        userFlow,
-        loggedUserFlow
-    ) { (id, _), (userId, _) ->
-        id == userId
     }
 
     val isUserFollowedFlow = combine(
@@ -63,6 +58,31 @@ class ProfileViewModel @Inject constructor(
             }
     }
 
+    val loggedUserId = loggedUserFlow.map { it.first }
+
+    val organizedEvents = combine(
+        eventRepository.getAllEvents(),
+        userIdFlow,
+        userFlow,
+        userRepository.user,
+        userRepository.getAllUsers()
+    ) { events, userId, _, (_, loggedUser), users ->
+        events
+            .filter { (_, event) ->
+                event.organizer == userId
+                        && (event.type == "public"
+                        || (event.type == "private"
+                        && loggedUser.followingUsers.contains(event.organizer)))
+            }
+            .map { (id, event) ->
+                Triple(
+                    id,
+                    loggedUser.favoriteEvents.contains(id),
+                    event
+                )
+            }
+    }
+
     suspend fun changeUserFollow(
         isFollowed: Boolean,
     ) = userRepository.addOrRemoveFollow(
@@ -74,4 +94,5 @@ class ProfileViewModel @Inject constructor(
     fun logout(){
         userRepository.logout()
     }
+
 }

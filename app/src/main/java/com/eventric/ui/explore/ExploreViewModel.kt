@@ -19,27 +19,23 @@ class ExploreViewModel @Inject constructor(
     private val userFlow = userRepository.user
 
 
-    fun getEvents(): Flow<List<Triple<String, Boolean, Event>>> {
-        Log.d("test", "start get")
-        return combine(
-            eventRepository.getAllEvents(),
-            userRepository.getAllUsers(),
-            userFlow
-        ) { events, users, currentUser ->
-            events.map { (id, event) ->
-                Log.d("test", "event")
-                val organizerUser = users.find { it.first == event.organizer }?.second
-                Triple(
-                    id,
-                    currentUser.second.favoriteEvents.contains(id),
-                    event.copy(
-                        organizer = "${organizerUser?.name} ${organizerUser?.surname}"
-                    )
+    fun getEvents(): Flow<List<Triple<String, Boolean, Event>>> = combine(
+        eventRepository.getAllEvents(),
+        userRepository.getAllUsers(),
+        userFlow
+    ) { events, users, currentUser ->
+        events.map { (id, event) ->
+            Log.d("test", "event")
+            val organizerUser = users.find { it.first == event.organizer }?.second
+            Triple(
+                id,
+                currentUser.second.favoriteEvents.contains(id),
+                event.copy(
+                    organizer = "${organizerUser?.name} ${organizerUser?.surname}"
                 )
-            }
+            )
         }
     }
-
 
 
 }

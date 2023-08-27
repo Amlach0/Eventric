@@ -93,13 +93,10 @@ class MainActivity : ComponentActivity() {
                         ProfileScreen(
                             userId = userId,
                             navController = navController,
-                            goToProfile = { goToUserId -> navController.navigate("profile?userId=$goToUserId") }
-                        )
-                    }
-                    composable("profile") { navBackStackEntry ->
-                        ProfileScreen(
-                            navController = navController,
-                            goToProfile = { goToUserId -> navController.navigate("profile?userId=$goToUserId") }
+                            goToProfile = { goUserId -> navController.navigate("profile?userId=$goUserId") },
+                            goToEvent = { eventId -> navController.navigate("info_event?eventId=$eventId") },
+                            goToEditProfile = {},
+                            goToDispatcher = {}
                         )
                     }
                 }

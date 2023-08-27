@@ -53,11 +53,12 @@
     <string name="invite_list_label">Invita i tuoi amici</string>
     <string name="subscribed_list_label">Lista dei partecipanti</string>
     <string name="profile">Profilo</string>
-    <string name="followed_label">seguiti</string>
-    <string name="followers_label">follower</string>
+    <string name="followed_label">Seguiti</string>
+    <string name="followers_label">Followers</string>
     <string name="bio">Bio</string>
-    <string name="edit_profile">Modifica Profilo</string>
+    <string name="edit_profile">Modifica</string>
     <string name="logout">Logout</string>
     <string name="new_pwd_label">New Password</string>
     <string name="new_confirm_pwd_label">Confirm New Password</string>
+    <string name="profile_label">Profile</string>
 </resources>

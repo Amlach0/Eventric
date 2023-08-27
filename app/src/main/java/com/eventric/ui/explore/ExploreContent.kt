@@ -38,7 +38,7 @@ fun ExploreContent(
         items(events){ (id, isFavourite, event) ->
             EventCardItem(
                 event = event,
-                organaserName = event.organizer.toString(),
+                organiserName = event.organizer.toString(),
                 isFavorite = isFavourite,
                 onClick = {goToEvent(id) }
             )

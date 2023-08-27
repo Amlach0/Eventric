@@ -53,16 +53,10 @@ fun HomeContent(
                 contentColor = MaterialTheme.colors.onPrimary,
                 onClick = {
                     mainNavController.navigate(BottomNavItem.FabAdd.screen_route) {
-                        // Pop up to the start destination of the graph to
-                        // avoid building up a large stack of destinations
-                        // on the back stack as users select items
                         popUpTo(homeNavController.graph.findStartDestination().id) {
                             saveState = true
                         }
-                        // Avoid multiple copies of the same destination when
-                        // reselecting the same item
                         launchSingleTop = true
-                        // Restore state when reselecting a previously selected item
                         restoreState = true
                     }
                 }
@@ -88,7 +82,12 @@ fun HomeContent(
             composable(BottomNavItem.Profile.screen_route) {
                 ProfileScreen(
                     navController = mainNavController,
-                    goToProfile = { userId -> mainNavController.navigate("profile?userId=$userId") }
+                    goToProfile = { userId -> mainNavController.navigate("profile?userId=$userId") },
+                    goToEvent = {  },
+                    goToEditProfile = { mainNavController.navigate("") },
+                    goToDispatcher = { mainNavController.navigate("dispatcher"){
+                        popUpTo(mainNavController.graph.findStartDestination().id)
+                    } }
                 )
             }
         }
