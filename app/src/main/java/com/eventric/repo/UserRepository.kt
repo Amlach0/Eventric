@@ -255,5 +255,35 @@ class UserRepository @Inject constructor() {
             mapFieldValue = mapOf("notifications" to listOf<Notification>())
         )
     }
+
+    suspend fun editUser(
+        userId: String,
+        user: User,
+        newPassword: String
+    ) {
+        try {
+            users.document(userId).set(user).await()
+            currentUserFlow.value?.updateEmail(user.email)?.await()
+            currentUserFlow.value?.updatePassword(newPassword)?.await()
+            Log.d(E_TAG, "User $userId edited with this updates : \n $user")
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
+            Log.w(E_TAG, "Error editing User", e)
+        }
+    }
+
+    suspend fun deleteUser(
+        userId: String,
+    ) {
+        try {
+            users.document(userId).delete().await()
+            Log.d(E_TAG, "User $userId deleted")
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Exception) {
+            Log.w(E_TAG, "Error deleting User", e)
+        }
+    }
 }
 

@@ -2,6 +2,8 @@ package com.eventric.ui.detailEvent
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +23,9 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,6 +66,8 @@ fun DetailEventContent(
     subscribedUsers: List<Triple<String, Boolean, User>>,
     invitableUsers: List<Triple<String, Boolean, User>>,
     onEdit: () -> Unit,
+    onUser: (String) -> Unit,
+    onOrganizer: () -> Unit,
     onInvite: () -> Unit,
     onGoing: () -> Unit,
     onFavoriteChange: () -> Unit,
@@ -95,7 +101,8 @@ fun DetailEventContent(
                             imageId = R.drawable.img_profile,
                             isInvited = isInvited,
                             showInviteButton = isInviteSheet,
-                            onInviteClick = { onUserInviteChange(userId) }
+                            onInviteClick = { onUserInviteChange(userId) },
+                            onClick = { onUser(userId) },
                         )
                     }
                 }
@@ -126,12 +133,12 @@ fun DetailEventContent(
                             Title(
                                 modifier = Modifier.padding(horizontal = 13.dp),
                                 title = stringResource(R.string.info_event),
+                                color = MaterialTheme.colors.onPrimary,
                                 textAlign = TextAlign.Left
                             )
                         },
                         right = {
                             if (isUserOrganizer)
-                            //TODO check proprietario o organizzatore
                             {
                                 ActionButton(
                                     onClick = { onEdit() },
@@ -196,7 +203,15 @@ fun DetailEventContent(
                             primaryText = event.location.toString(),
                         )
                         ProfileOrganizerItem(
-                            modifier = Modifier.padding(top = 24.dp),
+                            modifier = Modifier
+                                .padding(top = 24.dp)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = rememberRipple(
+                                        color = MaterialTheme.colors.onPrimary,
+                                        bounded = false
+                                    )
+                                ){ onOrganizer() },
                             name = organizerName,
                             imageId = R.drawable.img_profile,
                             isFollowed = isOrganizerFollowed,

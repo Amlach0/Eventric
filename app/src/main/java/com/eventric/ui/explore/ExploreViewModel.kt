@@ -1,6 +1,5 @@
 package com.eventric.ui.explore
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
 import com.eventric.repo.UserRepository
@@ -20,7 +19,6 @@ class ExploreViewModel @Inject constructor(
 
 
     fun getEvents(): Flow<List<Triple<String, Boolean, Event>>> {
-        Log.d("test", "start get")
         return combine(
             eventRepository.getAllEvents(),
             userRepository.getAllUsers(),
