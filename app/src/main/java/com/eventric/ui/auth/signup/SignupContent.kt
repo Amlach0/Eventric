@@ -51,6 +51,7 @@ fun SignupContent(
     confirmPassword: String,
     confirmPasswordVisible: Boolean,
     birthDate: String,
+    bio: String,
     onNameChange: (String) -> Unit,
     onSurnameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
@@ -59,8 +60,10 @@ fun SignupContent(
     onConfirmPasswordVisibleChange: (Boolean) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
     onBirthDateSelected: (String) -> Unit,
+    onBioChange: (String) -> Unit,
     onSubmit: () -> Unit,
-    onLoginPressed: () -> Unit
+    onLoginPressed: () -> Unit,
+    onDeletePressed: () -> Unit
 ) {
     var openDateDialog by remember { mutableStateOf(false) }
 
@@ -79,6 +82,12 @@ fun SignupContent(
         .fillMaxSize()
         .background(MaterialTheme.colors.background)
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.img_log_in_backgound),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
         Column(
             Modifier
                 .fillMaxSize()
@@ -127,10 +136,10 @@ fun SignupContent(
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1F),
+                    .weight(8F),
                 painter = painterResource(R.drawable.ic_logo),
                 contentDescription = "logo",
-                contentScale = ContentScale.None,
+                contentScale = ContentScale.Fit,
                 alignment = Alignment.Center
             )
             Text(
@@ -196,7 +205,7 @@ fun SignupContent(
                 visualTransformationEnabled = true,
                 passwordVisible = confirmPasswordVisible,
                 onPasswordVisibleChange = onConfirmPasswordVisibleChange,
-                isLastInput = true,
+                isLastInput = false,
             )
 
             CustomButtonSelector(
@@ -206,6 +215,18 @@ fun SignupContent(
                 text = if (birthDate == "") stringResource(R.string.select_date) else birthDate,
                 iconId = R.drawable.ic_calendar,
                 onClick = { openDateDialog = true }
+            )
+
+            CustomTextInput(
+                modifier = Modifier
+                    .padding(horizontal = 34.dp)
+                    .padding(top = 18.dp),
+                hint = stringResource(R.string.bio_label),
+                value = bio,
+                icon = R.drawable.ic_info,
+                onValueChange = onBioChange,
+                passwordVisible = true,
+                isLastInput = true,
             )
 
             Spacer(Modifier.weight(1F))
@@ -221,8 +242,10 @@ fun SignupContent(
                 )
                 Spacer(Modifier.height(17.dp))
                 CustomButtonSecondary(
-                    text = stringResource(id = if(isEdit) R.string.cancel else R.string.common_login),
-                    onClick = { onLoginPressed() }
+                    text = stringResource(id = if(isEdit) R.string.delete_account else R.string.common_login),
+                    color = if (isEdit) MaterialTheme.colors.error else MaterialTheme.colors.primary,
+                    iconId = if (isEdit) R.drawable.ic_delete else null,
+                    onClick = { if (isEdit) onDeletePressed() else onLoginPressed() }
                 )
             }
         }
@@ -243,7 +266,7 @@ fun SignupContentPreview() {
         var birthDate by remember { mutableStateOf("") }
 
         SignupContent(
-            isEdit = false,
+            isEdit = true,
             name = name,
             surname = surname,
             email = email,
@@ -279,7 +302,8 @@ fun SignupContentPreview() {
                 birthDate = it
             },
             onSubmit = {},
-            onLoginPressed = {}
+            onLoginPressed = {},
+            onDeletePressed = {}, bio = "", onBioChange = {}
         )
     }
 }

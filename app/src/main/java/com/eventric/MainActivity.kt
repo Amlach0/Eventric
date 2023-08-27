@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("signup"){
                         SignupScreen(
-                            onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } },
+                            goToDispatcher = { navController.navigate("dispatcher") { popUpTo(0) } },
                         )
                     }
                     composable("dispatcher") {
@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity() {
                         SignupScreen(
                             id = navBackStackEntry.arguments?.getString("userId")
                                 ?: throw IllegalStateException("missing user id arguments"),
-                            onSuccess = { navController.navigate("dispatcher") { popUpTo(0) } },
+                            goToDispatcher = { navController.navigate("dispatcher") { popUpTo(0) } },
                         )
                     }
                     composable("profile?userId={userId}") { navBackStackEntry ->

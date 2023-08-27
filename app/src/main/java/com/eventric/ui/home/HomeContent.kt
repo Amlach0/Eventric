@@ -83,8 +83,8 @@ fun HomeContent(
                 ProfileScreen(
                     navController = mainNavController,
                     goToProfile = { userId -> mainNavController.navigate("profile?userId=$userId") },
-                    goToEvent = {  },
-                    goToEditProfile = { mainNavController.navigate("") },
+                    goToEvent = {},
+                    goToEditProfile = { userId -> mainNavController.navigate("edit_user?userId=$userId") },
                     goToDispatcher = { mainNavController.navigate("dispatcher"){
                         popUpTo(mainNavController.graph.findStartDestination().id)
                     } }

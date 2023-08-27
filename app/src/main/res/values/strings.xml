@@ -13,6 +13,7 @@
     <string name="name_label">Name</string>
     <string name="surname_label">Surname</string>
     <string name="confirm_pwd_label">Confirm Your Password</string>
+    <string name="bio_label">Bio</string>
     <string name="new_event_name">Nome evento</string>
     <string name="event_label">Nome Evento</string>
     <string name="new_event_location">Luogo</string>
@@ -30,6 +31,7 @@
     <string name="common_create">Crea</string>
     <string name="common_edit">Modifica</string>
     <string name="cancel">Chiudi</string>
+    <string name="delete_account">Elimina l\'account</string>
     <string name="back">Indietro</string>
     <string name="done">Fatto</string>
     <string name="forward">Avanti</string>

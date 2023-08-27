@@ -21,11 +21,11 @@ import kotlinx.coroutines.launch
 fun SignupScreen(
     id: String = "",
     signupViewModel: SignupViewModel = hiltViewModel(),
-    onSuccess: () -> Unit,
+    goToDispatcher: () -> Unit,
 ) {
     var isEdit by remember { mutableStateOf(false) }
     if (id != "") {
-        signupViewModel.setEventId(id)
+        signupViewModel.setUserId(id)
         isEdit = true
     }
 
@@ -46,18 +46,20 @@ fun SignupScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
     var birthDate by remember { mutableStateOf("") }
+    var bio by remember { mutableStateOf("") }
 
     LaunchedEffect(signupState) {
         if (signupState is ErrorOperation) errorBannerIsVisible = true
-        if (signupState is SuccessOperation) onSuccess()
+        if (signupState is SuccessOperation) goToDispatcher()
     }
 
     LaunchedEffect(user)
     {
-        name = user.name ?: ""
-        surname = user.surname ?: ""
+        name = user.name.toString()
+        surname = user.surname.toString()
         email = user.email
-        birthDate = user.birthDate ?: ""
+        birthDate = user.birthDate.toString()
+        bio = user.bio.toString()
     }
 
     fun onNameChange(value: String) {
@@ -94,17 +96,23 @@ fun SignupScreen(
         birthDate = value
     }
 
+    fun onBioChange(value: String) {
+        bio = value
+    }
+
     fun onSubmit() = coroutineScope.launch {
         if (password == confirmPassword) {
             if (signupState !is LoadingOperation) {
                 try {
-                    signupViewModel.signup(
+                    signupViewModel.signupOrEdit(
                         name,
                         surname,
                         email,
                         password,
                         confirmPassword,
-                        birthDate
+                        birthDate,
+                        bio,
+                        isEdit
                     )
                 } catch (e: Exception) {
                     // Nothing to do
@@ -114,7 +122,12 @@ fun SignupScreen(
     }
 
     fun onLoginPressed() {
-        onSuccess()
+        goToDispatcher()
+    }
+
+    fun onDeletePressed() = coroutineScope.launch {
+        signupViewModel.deleteUser()
+        goToDispatcher()
     }
 
     EventricTheme {
@@ -130,6 +143,7 @@ fun SignupScreen(
             confirmPassword = confirmPassword,
             confirmPasswordVisible = confirmPasswordVisible,
             birthDate = birthDate,
+            bio = bio,
             onNameChange = ::onNameChange,
             onSurnameChange = ::onSurnameChange,
             onEmailChange = ::onEmailChange,
@@ -138,8 +152,10 @@ fun SignupScreen(
             onConfirmPasswordVisibleChange = ::onConfirmPasswordVisibleChange,
             onConfirmPasswordChange = ::onConfirmPasswordChange,
             onBirthDateSelected = ::onBirthDateSelected,
+            onBioChange = ::onBioChange,
             onSubmit = ::onSubmit,
             onLoginPressed = ::onLoginPressed,
+            onDeletePressed = ::onDeletePressed,
         )
     }
 }
