@@ -42,6 +42,7 @@ import com.eventric.ui.theme.EventricTheme
 fun SignupContent(
     errorBannerIsVisible: Boolean,
     errorBannerConfirmationIsVisible: Boolean,
+    isEdit: Boolean,
     name: String,
     surname: String,
     email: String,
@@ -50,6 +51,7 @@ fun SignupContent(
     confirmPassword: String,
     confirmPasswordVisible: Boolean,
     birthDate: String,
+    bio: String,
     onNameChange: (String) -> Unit,
     onSurnameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
@@ -58,8 +60,10 @@ fun SignupContent(
     onConfirmPasswordVisibleChange: (Boolean) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
     onBirthDateSelected: (String) -> Unit,
+    onBioChange: (String) -> Unit,
     onSubmit: () -> Unit,
-    onLoginPressed: () -> Unit
+    onLoginPressed: () -> Unit,
+    onDeletePressed: () -> Unit
 ) {
     var openDateDialog by remember { mutableStateOf(false) }
 
@@ -78,6 +82,12 @@ fun SignupContent(
         .fillMaxSize()
         .background(MaterialTheme.colors.background)
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.img_log_in_backgound),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
         Column(
             Modifier
                 .fillMaxSize()
@@ -126,15 +136,15 @@ fun SignupContent(
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1F),
+                    .weight(8F),
                 painter = painterResource(R.drawable.ic_logo),
                 contentDescription = "logo",
-                contentScale = ContentScale.None,
+                contentScale = ContentScale.Fit,
                 alignment = Alignment.Center
             )
             Text(
                 modifier = Modifier.padding(horizontal = 34.dp),
-                text = stringResource(id = R.string.title_login),
+                text = stringResource(id = if(isEdit) R.string.edit_profile else R.string.title_login),
                 style = MaterialTheme.typography.h4,
                 fontSize = 27.sp,
                 color = MaterialTheme.colors.onBackground
@@ -175,7 +185,7 @@ fun SignupContent(
                 modifier = Modifier
                     .padding(horizontal = 34.dp)
                     .padding(top = 18.dp),
-                hint = stringResource(R.string.pwd_label),
+                hint = stringResource(if(isEdit) R.string.new_pwd_label else R.string.pwd_label),
                 value = password,
                 icon = R.drawable.ic_pwd,
                 onValueChange = onPasswordChange,
@@ -188,14 +198,14 @@ fun SignupContent(
                 modifier = Modifier
                     .padding(horizontal = 34.dp)
                     .padding(top = 18.dp),
-                hint = stringResource(R.string.confirm_pwd_label),
+                hint = stringResource(if(isEdit) R.string.new_confirm_pwd_label else R.string.confirm_pwd_label),
                 value = confirmPassword,
                 icon = R.drawable.ic_pwd,
                 onValueChange = onConfirmPasswordChange,
                 visualTransformationEnabled = true,
                 passwordVisible = confirmPasswordVisible,
                 onPasswordVisibleChange = onConfirmPasswordVisibleChange,
-                isLastInput = true,
+                isLastInput = false,
             )
 
             CustomButtonSelector(
@@ -207,6 +217,18 @@ fun SignupContent(
                 onClick = { openDateDialog = true }
             )
 
+            CustomTextInput(
+                modifier = Modifier
+                    .padding(horizontal = 34.dp)
+                    .padding(top = 18.dp),
+                hint = stringResource(R.string.bio_label),
+                value = bio,
+                icon = R.drawable.ic_info,
+                onValueChange = onBioChange,
+                passwordVisible = true,
+                isLastInput = true,
+            )
+
             Spacer(Modifier.weight(1F))
 
             Column(
@@ -215,13 +237,15 @@ fun SignupContent(
                     .padding(57.dp)
             ) {
                 CustomButtonPrimary(
-                    text = stringResource(id = R.string.common_signup),
+                    text = stringResource(id = if(isEdit) R.string.common_edit else R.string.common_signup),
                     onClick = { onSubmit() }
                 )
                 Spacer(Modifier.height(17.dp))
                 CustomButtonSecondary(
-                    text = stringResource(id = R.string.common_login),
-                    onClick = { onLoginPressed() }
+                    text = stringResource(id = if(isEdit) R.string.delete_account else R.string.common_login),
+                    color = if (isEdit) MaterialTheme.colors.error else MaterialTheme.colors.primary,
+                    iconId = if (isEdit) R.drawable.ic_delete else null,
+                    onClick = { if (isEdit) onDeletePressed() else onLoginPressed() }
                 )
             }
         }
@@ -242,6 +266,7 @@ fun SignupContentPreview() {
         var birthDate by remember { mutableStateOf("") }
 
         SignupContent(
+            isEdit = true,
             name = name,
             surname = surname,
             email = email,
@@ -277,7 +302,8 @@ fun SignupContentPreview() {
                 birthDate = it
             },
             onSubmit = {},
-            onLoginPressed = {}
+            onLoginPressed = {},
+            onDeletePressed = {}, bio = "", onBioChange = {}
         )
     }
 }

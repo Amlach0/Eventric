@@ -24,6 +24,7 @@ fun DetailEventScreen(
     eventId: String,
     navControllerForBack: NavController,
     goToEditEvent: () -> Unit,
+    goToProfile: (String) -> Unit,
     detailEventViewModel: DetailEventViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -77,6 +78,12 @@ fun DetailEventScreen(
 
     fun onEdit() = goToEditEvent()
 
+    fun onUser(userId: String) = coroutineScope.launch{
+        sheetState.hide()
+        goToProfile(userId)
+    }
+    fun onOrganizer() = goToProfile(organizer!!.first)
+
     EventricTheme {
         DetailEventContent(
             navController = navControllerForBack,
@@ -92,6 +99,8 @@ fun DetailEventScreen(
             subscribedUsers = subscribedUsers,
             invitableUsers = invitableUsers,
             onEdit = ::onEdit,
+            onUser = ::onUser,
+            onOrganizer = ::onOrganizer,
             onInvite = ::onInvite,
             onGoing = ::onGoing,
             onFavoriteChange = ::onFavoriteChange,

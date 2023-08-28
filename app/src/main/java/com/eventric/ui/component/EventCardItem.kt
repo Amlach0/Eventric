@@ -124,46 +124,46 @@ fun EventCardCompactItem(
         Row(
             modifier = Modifier.padding(vertical = 7.dp, horizontal = 9.dp)
         ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(80.dp)
-                    .clip(MaterialTheme.shapes.medium),
-                painter = painterResource(R.drawable.img_event),
-                contentDescription = "",
-                contentScale = ContentScale.Crop
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 17.dp),
-            ) {
-                Row {
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = "${event.date?.start} - ${event.date?.end}",
-                        style = MaterialTheme.typography.caption,
-                        color = MaterialTheme.colors.primary
-                    )
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        painter = painterResource( if (isFavorite) R.drawable.ic_favorite_fill else R.drawable.ic_favorite_void ),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.primary
-                    )
-                }
-                Text(
+                Image(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(vertical = 5.dp),
-                    text = event.name.toString(),
-                    style = MaterialTheme.typography.subtitle1,
-                    color = MaterialTheme.colors.onSecondary
+                        .fillMaxHeight()
+                        .width(80.dp)
+                        .clip(MaterialTheme.shapes.medium),
+                    painter = painterResource(R.drawable.img_event),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
                 )
-                LocationCompactItem(location = event.location ?: "")
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 17.dp),
+                ) {
+                    Row {
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = "${event.date?.start} - ${event.date?.end}",
+                            style = MaterialTheme.typography.caption,
+                            color = MaterialTheme.colors.primary
+                        )
+                        Icon(
+                            modifier = Modifier.size(16.dp),
+                            painter = painterResource( if (isFavorite) R.drawable.ic_favorite_fill else R.drawable.ic_favorite_void ),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.primary
+                        )
+                    }
+                    Text(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(vertical = 5.dp),
+                        text = event.name.toString(),
+                        style = MaterialTheme.typography.subtitle1,
+                        color = MaterialTheme.colors.onSecondary
+                    )
+                    LocationCompactItem(location = event.location ?: "")
+                }
             }
-        }
     }
 }
 

@@ -55,23 +55,23 @@ class CreateEventViewModel @Inject constructor(
         info: String
     ) {
         createEventCodeResult.value = LoadingOperation
+        val eventId = eventIdFlow.value
 
         val organizer = user.first().first
 
         val date = DateRange(startDate, endDate)
         val registrationDate = DateRange(startRegistrationDate, endRegistrationDate)
-        val event = Event(
+        val event = ( if(eventId == "") Event() else eventFlow.first() ).copy(
             name = name,
             info = info,
             location = location,
             category = category.dbString,
             type = type.dbString,
             date = date,
-            registrationDate = registrationDate,
+            dateRegistration = registrationDate,
             organizer = organizer
         )
 
-        val eventId = eventIdFlow.value
         createEventCodeResult.value = tryOperation {
             if (eventId == "") {
                 eventIdFlow.value = eventRepository.createEvent(event)

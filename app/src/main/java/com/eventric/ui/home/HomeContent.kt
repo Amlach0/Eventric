@@ -22,6 +22,7 @@ import com.eventric.ui.component.CustomBottomNavigation
 import com.eventric.ui.events.EventsScreen
 import com.eventric.ui.explore.ExploreScreen
 import com.eventric.ui.explore.ExploreTopBar
+import com.eventric.ui.profile.ProfileScreen
 
 @Composable
 fun HomeContent(
@@ -55,16 +56,10 @@ fun HomeContent(
                 contentColor = MaterialTheme.colors.onPrimary,
                 onClick = {
                     mainNavController.navigate(BottomNavItem.FabAdd.screen_route) {
-                        // Pop up to the start destination of the graph to
-                        // avoid building up a large stack of destinations
-                        // on the back stack as users select items
                         popUpTo(homeNavController.graph.findStartDestination().id) {
                             saveState = true
                         }
-                        // Avoid multiple copies of the same destination when
-                        // reselecting the same item
                         launchSingleTop = true
-                        // Restore state when reselecting a previously selected item
                         restoreState = true
                     }
                 }
@@ -90,6 +85,15 @@ fun HomeContent(
             composable(BottomNavItem.Events.screen_route) {
                 EventsScreen(
                     goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") },
+            composable(BottomNavItem.Profile.screen_route) {
+                ProfileScreen(
+                    navController = mainNavController,
+                    goToProfile = { userId -> mainNavController.navigate("profile?userId=$userId") },
+                    goToEvent = {},
+                    goToEditProfile = { userId -> mainNavController.navigate("edit_user?userId=$userId") },
+                    goToDispatcher = { mainNavController.navigate("dispatcher"){
+                        popUpTo(mainNavController.graph.findStartDestination().id)
+                    } }
                 )
             }
         }

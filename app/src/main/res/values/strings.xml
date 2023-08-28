@@ -13,6 +13,7 @@
     <string name="name_label">Name</string>
     <string name="surname_label">Surname</string>
     <string name="confirm_pwd_label">Confirm Your Password</string>
+    <string name="bio_label">Bio</string>
     <string name="new_event_name">Nome evento</string>
     <string name="event_label">Nome Evento</string>
     <string name="new_event_location">Luogo</string>
@@ -30,6 +31,7 @@
     <string name="common_create">Crea</string>
     <string name="common_edit">Modifica</string>
     <string name="cancel">Chiudi</string>
+    <string name="delete_account">Elimina l\'account</string>
     <string name="back">Indietro</string>
     <string name="done">Fatto</string>
     <string name="forward">Avanti</string>
@@ -52,6 +54,15 @@
     <string name="common_unsubscribe">DISISCRIVITI</string>
     <string name="invite_list_label">Invita i tuoi amici</string>
     <string name="subscribed_list_label">Lista dei partecipanti</string>
+    <string name="profile">Profilo</string>
+    <string name="followed_label">Seguiti</string>
+    <string name="followers_label">Followers</string>
+    <string name="bio">Bio</string>
+    <string name="edit_profile">Modifica</string>
+    <string name="logout">Logout</string>
+    <string name="new_pwd_label">New Password</string>
+    <string name="new_confirm_pwd_label">Confirm New Password</string>
+    <string name="profile_label">Profile</string>
     <string name="accept_label">Accetta</string>
     <string name="reject_label">Rifiuta</string>
     <string name="view_event_label">Guarda</string>

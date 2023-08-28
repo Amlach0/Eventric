@@ -129,7 +129,7 @@ interface TopBarScope {
     fun Title(
         modifier: Modifier = Modifier,
         title: String,
-        color: Color = MaterialTheme.colors.onPrimary,
+        color: Color = MaterialTheme.colors.onBackground,
         textAlign: TextAlign = TextAlign.Center,
     ) {
         Text(
