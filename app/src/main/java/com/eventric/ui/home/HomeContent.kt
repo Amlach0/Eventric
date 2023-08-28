@@ -27,7 +27,7 @@ import com.eventric.ui.profile.ProfileScreen
 @Composable
 fun HomeContent(
     mainNavController: NavController,
-    isNotificationActive: Boolean
+    isNotificationActive: Boolean,
 ) {
     val homeNavController = rememberNavController()
     val navBackStackEntry by homeNavController.currentBackStackEntryAsState()
@@ -43,8 +43,6 @@ fun HomeContent(
                         isNotificationActive = isNotificationActive
                     )
             }
-
-
         },
         bottomBar = { CustomBottomNavigation(navController = homeNavController) },
         floatingActionButtonPosition = FabPosition.Center,
@@ -85,15 +83,19 @@ fun HomeContent(
             composable(BottomNavItem.Events.screen_route) {
                 EventsScreen(
                     goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") },
+                )
+            }
             composable(BottomNavItem.Profile.screen_route) {
                 ProfileScreen(
                     navController = mainNavController,
                     goToProfile = { userId -> mainNavController.navigate("profile?userId=$userId") },
                     goToEvent = {},
                     goToEditProfile = { userId -> mainNavController.navigate("edit_user?userId=$userId") },
-                    goToDispatcher = { mainNavController.navigate("dispatcher"){
-                        popUpTo(mainNavController.graph.findStartDestination().id)
-                    } }
+                    goToDispatcher = {
+                        mainNavController.navigate("dispatcher") {
+                            popUpTo(mainNavController.graph.findStartDestination().id)
+                        }
+                    }
                 )
             }
         }
