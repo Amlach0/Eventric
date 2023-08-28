@@ -1,31 +1,39 @@
 package com.eventric.ui.events
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.eventric.R
+import com.eventric.ui.component.SelectorItemData
 
 @Composable
 fun EventsScreen(
     goToEventDetail: (eventId: String) -> Unit,
     eventsViewModel: EventsViewModel = hiltViewModel(),
 ) {
-    val events by eventsViewModel.getEvents().collectAsStateWithLifecycle(null)
-    var selected by remember { mutableIntStateOf(0) }
+    val pages = listOf(
+        SelectorItemData(value = "organized", label = stringResource(R.string.organized_label), iconId = null),
+        SelectorItemData(value = "subscribed", label = stringResource(R.string.subscribed_label), iconId = null),
+        SelectorItemData(value = "favorites", label = stringResource(R.string.favorites_label), iconId = R.drawable.ic_favorite_fill)
+    )
 
-    fun getOrganized(){
-        selected = 0
+    val events by eventsViewModel.getEvents.collectAsStateWithLifecycle(listOf())
+    var selectedPage by remember { mutableStateOf( pages[0] ) }
+
+    LaunchedEffect(events){
+        Log.d("test", "$events")
     }
 
-    fun getSubscribed(){
-        selected = 1
-    }
-
-    fun getFavorite(){
-        selected = 2
+    fun onChangeSelectedPage(selected: SelectorItemData) {
+        selectedPage = selected
+        eventsViewModel.setSelectedFilter(selectedPage.value)
     }
 
     fun goToEvent(eventId: String) {
@@ -33,11 +41,10 @@ fun EventsScreen(
     }
 
     EventsContent(
-        events = events ?: emptyList(),
-        getOrganized = ::getOrganized,
-        getSubscribed = ::getSubscribed,
-        getFavorite = ::getFavorite,
-        selected = selected,
-        goToEvent = ::goToEvent
+        events = events,
+        pages = pages,
+        selectedPage = selectedPage,
+        onChangeSelectedPage = ::onChangeSelectedPage,
+        goToEvent = ::goToEvent,
     )
 }

@@ -7,6 +7,7 @@ import com.eventric.repo.UserRepository
 import com.eventric.vo.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
@@ -16,20 +17,22 @@ class EventsViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
+    private val selectedFilterFlow = MutableStateFlow("organized")
+
     private val userFlow = userRepository.user
 
-    fun getEvents(): Flow<List<Pair<Triple<String, Boolean, Event>, Triple<Boolean, Boolean, Boolean>>>> {
-        Log.d("test", "start get")
-        return combine(
+    val getEvents: Flow<List<Pair<Triple<String, Boolean, Event>, Boolean>>> =
+        combine(
             eventRepository.getAllEvents(),
             userRepository.getAllUsers(),
-            userFlow
-        ) { events, users, (loggedUserId, loggedUser) ->
+            userFlow,
+            selectedFilterFlow
+        ) { events, users, (loggedUserId, loggedUser), selectedFilter ->
             events
                 .filter { (eventId, event) ->
                     event.organizer == loggedUserId ||
-                    loggedUser.favoriteEvents.contains(eventId) ||
-                    event.subscribed.contains(loggedUserId)
+                            loggedUser.favoriteEvents.contains(eventId) ||
+                            event.subscribed.contains(loggedUserId)
 
                 }
                 .map { (id, event) ->
@@ -43,13 +46,17 @@ class EventsViewModel @Inject constructor(
                                 organizer = "${organizerUser?.name} ${organizerUser?.surname}"
                             )
                         ),
-                        Triple(
-                            event.organizer == loggedUserId,
-                            event.subscribed.contains(loggedUserId),
-                            loggedUser.favoriteEvents.contains(id)
-                        )
+                        when(selectedFilter){
+                            "organized" -> event.organizer == loggedUserId
+                            "subscribed" -> event.subscribed.contains(loggedUserId)
+                            "favorites" -> loggedUser.favoriteEvents.contains(id)
+                            else -> false
+                        }
                     )
                 }
         }
+
+    fun setSelectedFilter(filter: String) {
+        selectedFilterFlow.value = filter
     }
 }
