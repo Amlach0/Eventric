@@ -19,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.eventric.ui.component.BottomNavItem
 import com.eventric.ui.component.CustomBottomNavigation
+import com.eventric.ui.events.EventsScreen
 import com.eventric.ui.explore.ExploreScreen
 import com.eventric.ui.explore.ExploreTopBar
 import com.eventric.ui.profile.ProfileScreen
@@ -81,6 +82,9 @@ fun HomeContent(
                     goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") },
                 )
             }
+            composable(BottomNavItem.Events.screen_route) {
+                EventsScreen(
+                    goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") },
             composable(BottomNavItem.Profile.screen_route) {
                 ProfileScreen(
                     navController = mainNavController,
@@ -95,5 +99,7 @@ fun HomeContent(
         }
     }
 }
+
+
 
 

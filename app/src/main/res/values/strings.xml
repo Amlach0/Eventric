@@ -68,4 +68,10 @@
     <string name="view_event_label">Guarda</string>
     <string name="notifications_label">Notifiche</string>
     <string name="clear_all_label">Ripulisci</string>
+    <string name="organized_events_label">Organizzati</string>
+    <string name="subscribed_events_label">Iscrizione</string>
+    <string name="favorites_events_label">Preferiti</string>
+    <string name="organized_label">Organizzati</string>
+    <string name="subscribed_label">Iscritti</string>
+    <string name="favorites_label">Preferiti</string>
 </resources>
