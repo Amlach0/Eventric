@@ -1,7 +1,9 @@
 package com.eventric.ui.newEvent
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
+import com.eventric.repo.ImagesRepository
 import com.eventric.repo.UserRepository
 import com.eventric.utils.LoadingOperation
 import com.eventric.utils.Operation
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class CreateEventViewModel @Inject constructor(
     private val eventRepository: EventRepository,
     private val userRepository: UserRepository,
+    private val imagesRepository: ImagesRepository,
 ) : ViewModel() {
 
     var createEventCodeResult = MutableStateFlow<Operation?>(null)
@@ -38,13 +41,18 @@ class CreateEventViewModel @Inject constructor(
 
     private val user = userRepository.user
 
+    val uriImageFlow = eventIdFlow.flatMapLatest { eventId ->
+        imagesRepository.downloadEventImage(eventId)
+    }
+
     fun setEventId(id: String) {
         eventIdFlow.value = id
     }
 
-    //TODO adding info
+
     suspend fun createOrEditEvent(
         name: String,
+        uriImage: Uri,
         location: String,
         category: EventCategory,
         type: EventType,
@@ -52,7 +60,7 @@ class CreateEventViewModel @Inject constructor(
         endDate: String,
         startRegistrationDate: String,
         endRegistrationDate: String,
-        info: String
+        info: String,
     ) {
         createEventCodeResult.value = LoadingOperation
         val eventId = eventIdFlow.value
@@ -61,7 +69,7 @@ class CreateEventViewModel @Inject constructor(
 
         val date = DateRange(startDate, endDate)
         val registrationDate = DateRange(startRegistrationDate, endRegistrationDate)
-        val event = ( if(eventId == "") Event() else eventFlow.first() ).copy(
+        val event = (if (eventId == "") Event() else eventFlow.first()).copy(
             name = name,
             info = info,
             location = location,
@@ -77,14 +85,18 @@ class CreateEventViewModel @Inject constructor(
                 eventIdFlow.value = eventRepository.createEvent(event)
             } else
                 eventRepository.editEvent(eventId, event)
+            if (uriImage != Uri.EMPTY)
+                imagesRepository.uploadEventImage(uriImage, eventIdFlow.value)
         }
     }
 
     suspend fun deleteEvent() {
         val eventId = eventIdFlow.value
         deleteEventCodeResult.value = tryOperation {
-            if (eventId != "")
+            if (eventId != "") {
                 eventRepository.deleteEvent(eventId)
+                imagesRepository.deleteEventImage(eventId)
+            }
         }
     }
 }

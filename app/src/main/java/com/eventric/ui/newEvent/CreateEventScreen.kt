@@ -1,5 +1,7 @@
 package com.eventric.ui.newEvent
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -56,7 +58,9 @@ fun CreateEventScreen(
 
     val eventId by createEventViewModel.eventIdFlow.collectAsStateWithLifecycle("")
     val event by createEventViewModel.eventFlow.collectAsStateWithLifecycle(Event())
+    val dbUriImage by createEventViewModel.uriImageFlow.collectAsStateWithLifecycle(Uri.EMPTY)
     var name by remember { mutableStateOf("") }
+    var uriImage by remember { mutableStateOf(Uri.EMPTY) }
     var location by remember { mutableStateOf("") }
     var selectedCategory: EventCategory by remember { mutableStateOf(EventCategory.NoCategory) }
     var selectedType: EventType by remember { mutableStateOf(EventType.InviteOnly) }
@@ -66,9 +70,10 @@ fun CreateEventScreen(
     var endRegistrationDate by remember { mutableStateOf("") }
     var info by remember { mutableStateOf("") }
 
-    LaunchedEffect(event) {
+    LaunchedEffect(event, dbUriImage) {
         name = event.name ?: ""
         location = event.location ?: ""
+        uriImage = dbUriImage
         selectedCategory = EventCategory.fromDbString(event.category ?: "")
         selectedType = EventType.fromDbString(event.type ?: "")
         startDate = event.date?.start ?: ""
@@ -78,6 +83,9 @@ fun CreateEventScreen(
         info = event.info ?: ""
     }
 
+    LaunchedEffect(uriImage) {
+        Log.d("test", "uriImage : $uriImage")
+    }
 
     var createErrorBannerIsVisible by remember { mutableStateOf(false) }
     var deleteErrorBannerIsVisible by remember { mutableStateOf(false) }
@@ -98,6 +106,11 @@ fun CreateEventScreen(
     fun onEventNameChange(value: String) {
         closeErrorBanner()
         name = value
+    }
+
+    fun onUriImageChange(value: Uri) {
+        closeErrorBanner()
+        uriImage = value
     }
 
     fun onEventLocationChange(value: String) {
@@ -143,14 +156,15 @@ fun CreateEventScreen(
     fun onSubmit() = coroutineScope.launch {
         if (createEventState !is LoadingOperation) {
             createEventViewModel.createOrEditEvent(
-                name,
-                location,
-                selectedCategory,
-                selectedType,
-                startDate,
-                endDate,
-                startRegistrationDate,
-                endRegistrationDate,
+                name = name,
+                uriImage = uriImage,
+                location = location,
+                category = selectedCategory,
+                type = selectedType,
+                startDate = startDate,
+                endDate = endDate,
+                startRegistrationDate = startRegistrationDate,
+                endRegistrationDate = endRegistrationDate,
                 info = info
             )
         }
@@ -165,6 +179,7 @@ fun CreateEventScreen(
             navControllerForBack = navControllerForBack,
             isEdit = isEdit,
             name = name,
+            uriImage = uriImage,
             location = location,
             categoryList = categoryList,
             selectedCategory = selectedCategory,
@@ -178,6 +193,7 @@ fun CreateEventScreen(
             createErrorBannerIsVisible = createErrorBannerIsVisible,
             deleteErrorBannerIsVisible = deleteErrorBannerIsVisible,
             onNameChange = ::onEventNameChange,
+            onUriImageChange = ::onUriImageChange,
             onLocationChange = ::onEventLocationChange,
             onSelectedCategoryChange = ::onEventCategoryChange,
             onSelectedTypeChange = ::onEventTypeChange,

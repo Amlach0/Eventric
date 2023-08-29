@@ -13,8 +13,8 @@ import com.eventric.ui.dispatcher.DispatcherScreen
 import com.eventric.ui.events.EventsScreen
 import com.eventric.ui.home.HomeScreen
 import com.eventric.ui.newEvent.CreateEventScreen
-import com.eventric.ui.profile.ProfileScreen
 import com.eventric.ui.notifications.NotificationsScreen
+import com.eventric.ui.profile.ProfileScreen
 import com.eventric.ui.theme.EventricTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,7 +55,12 @@ class MainActivity : ComponentActivity() {
                     composable("new_event") {
                         CreateEventScreen(
                             navControllerForBack = navController,
-                            onSuccess = { eventId -> navController.navigate("info_event?eventId=$eventId") }
+                            onSuccess = { eventId ->
+                                navController.popBackStack()
+                                navController.navigate("info_event?eventId=$eventId") {
+                                    launchSingleTop = true
+                                }
+                            }
                         )
                     }
                     composable("edit_event?eventId={eventId}") { navBackStackEntry ->
