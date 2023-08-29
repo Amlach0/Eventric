@@ -74,4 +74,6 @@
     <string name="organized_label">Organizzati</string>
     <string name="subscribed_label">Iscritti</string>
     <string name="favorites_label">Preferiti</string>
+    <string name="choose_event_image_label">Scegli</string>
+    <string name="choose_profile_image_label">Scegli</string>
 </resources>
