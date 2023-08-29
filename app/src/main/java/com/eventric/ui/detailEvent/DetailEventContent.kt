@@ -1,7 +1,7 @@
 package com.eventric.ui.detailEvent
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.eventric.R
 import com.eventric.ui.component.BrandTopBar
 import com.eventric.ui.component.CustomButtonPrimary
@@ -55,7 +56,9 @@ import com.eventric.vo.User
 fun DetailEventContent(
     navController: NavController,
     event: Event,
+    uriImage: Uri,
     organizerName: String,
+    uriOrganizerImage: Uri,
     isFavorite: Boolean,
     isRegistrationOpen: Boolean,
     isUserOrganizer: Boolean,
@@ -63,8 +66,8 @@ fun DetailEventContent(
     isOrganizerFollowed: Boolean,
     sheetState: ModalBottomSheetState,
     isInviteSheet: Boolean,
-    subscribedUsers: List<Triple<String, Boolean, User>>,
-    invitableUsers: List<Triple<String, Boolean, User>>,
+    subscribedUsers: List<Triple<Pair<String, User>, Boolean, Uri>>,
+    invitableUsers: List<Triple<Pair<String, User>, Boolean, Uri>>,
     onEdit: () -> Unit,
     onUser: (String) -> Unit,
     onOrganizer: () -> Unit,
@@ -95,10 +98,12 @@ fun DetailEventContent(
                     contentPadding = PaddingValues(vertical = 25.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(items = if (isInviteSheet) invitableUsers else subscribedUsers) { (userId, isInvited, user) ->
+                    items(items = if (isInviteSheet) invitableUsers else subscribedUsers) { (userPair, isInvited, uriImage) ->
+                        val userId = userPair.first
+                        val user = userPair.second
                         ProfileItem(
                             name = "${user.name} ${user.surname}",
-                            imageId = R.drawable.img_profile,
+                            uriImage = uriImage,
                             isInvited = isInvited,
                             showInviteButton = isInviteSheet,
                             onInviteClick = { onUserInviteChange(userId) },
@@ -111,12 +116,13 @@ fun DetailEventContent(
         modifier = Modifier.fillMaxSize()
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(230.dp),
-                painter = painterResource(R.drawable.img_event),
+                model = if (uriImage== Uri.EMPTY) R.drawable.img_event_placeholder else uriImage,
                 contentDescription = null,
+                placeholder = painterResource(R.drawable.img_event_placeholder),
                 contentScale = ContentScale.Crop
             )
 
@@ -213,7 +219,7 @@ fun DetailEventContent(
                                     )
                                 ){ onOrganizer() },
                             name = organizerName,
-                            imageId = R.drawable.img_profile,
+                            uriImage = uriOrganizerImage,
                             isFollowed = isOrganizerFollowed,
                             showFollowButton = !isUserOrganizer,
                             onFollowClick = { onFollowChange() }

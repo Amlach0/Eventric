@@ -2,6 +2,7 @@ package com.eventric.ui.detailEvent
 
 import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
+import com.eventric.repo.ImagesRepository
 import com.eventric.repo.UserRepository
 import com.eventric.vo.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class DetailEventViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val eventRepository: EventRepository,
+    private val imagesRepository: ImagesRepository,
 ) : ViewModel() {
 
     private val eventIdFlow = MutableStateFlow("")
@@ -34,6 +36,14 @@ class DetailEventViewModel @Inject constructor(
 
     fun setEventId(id: String) {
         eventIdFlow.value = id
+    }
+
+    val uriImageFlow = eventIdFlow.flatMapLatest { eventId ->
+        imagesRepository.downloadEventImage(eventId)
+    }
+
+    val uriOrganiserImageFlow = organizerFlow.flatMapLatest { (organiserId, _) ->
+        imagesRepository.downloadUserImage(organiserId)
     }
 
     val isFavoriteFlow = combine(
@@ -71,7 +81,11 @@ class DetailEventViewModel @Inject constructor(
         val subscribedUserIds = event.subscribed
         users
             .filter { subscribedUserIds.contains(it.first) }
-            .map { Triple(it.first, true, it.second) }
+            .map { Triple(
+                it,
+                true,
+                imagesRepository.downloadUserImage(it.first).first()
+            ) }
     }
 
     val invitableUsersFlow = combine(
@@ -88,9 +102,9 @@ class DetailEventViewModel @Inject constructor(
             .map { (userId, user) ->
                 val notifications = user.notifications
                 Triple(
-                    userId,
+                    Pair(userId, user),
                     !notifications.none { it.userId == loggedUserId && it.eventId == eventId },
-                    user
+                    imagesRepository.downloadUserImage(userId).first()
                 )
             }
     }
@@ -122,7 +136,7 @@ class DetailEventViewModel @Inject constructor(
 
     suspend fun changeUserInvite(
         userId: String,
-        isInvited: Boolean
+        isInvited: Boolean,
     ) = userRepository.addOrRemoveInvite(
         userId = loggedUserFlow.first().first,
         invitedUserId = userId,

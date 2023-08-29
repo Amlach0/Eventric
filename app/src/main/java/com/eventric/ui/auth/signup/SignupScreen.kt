@@ -145,7 +145,7 @@ fun SignupScreen(
     }
 
     EventricTheme {
-        if (signupState is LoadingOperation)
+        if (signupState is LoadingOperation || signupState is SuccessOperation)
             FullScreenLoader()
         else
             SignupContent(

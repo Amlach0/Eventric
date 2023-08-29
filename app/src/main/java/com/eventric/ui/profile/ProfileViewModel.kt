@@ -2,6 +2,7 @@ package com.eventric.ui.profile
 
 import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
+import com.eventric.repo.ImagesRepository
 import com.eventric.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
+    private val imagesRepository: ImagesRepository
 ) : ViewModel() {
 
     private val userIdFlow = MutableStateFlow("")
@@ -22,12 +24,21 @@ class ProfileViewModel @Inject constructor(
         if (id != "")
             userRepository.getUser(id).map { it.second }
         else
-            userRepository.getUser(loggedUserFlow.first().first).map { it.second }
+            loggedUserFlow.map { it.second }
     }
 
     private val loggedUserFlow = userRepository.user
     fun setUserId(id: String) {
         userIdFlow.value = id
+    }
+
+    val uriImageFlow = combine(
+        userIdFlow,
+        loggedUserFlow
+    ) { userId, (loggedUserId, _) ->
+        Pair(userId, loggedUserId)
+    }.flatMapLatest {(userId, loggedUserId) ->
+        imagesRepository.downloadUserImage(if (userId != "") userId else loggedUserId)
     }
 
     val isUserFollowedFlow = combine(
@@ -43,7 +54,9 @@ class ProfileViewModel @Inject constructor(
     ) { users, userId ->
         users
             .filter { it.second.followingUsers.contains(userId) }
-            .map { Pair(it.first, it.second) }
+            .map { (userId, user) ->
+                Triple(userId, user, imagesRepository.downloadUserImage(userId).first())
+            }
     }
 
     val followedFlow = combine(
@@ -54,7 +67,7 @@ class ProfileViewModel @Inject constructor(
         users
             .filter { followingUserIds.contains(it.first) }
             .map { (userId, user) ->
-                Pair(userId, user)
+                Triple(userId, user, imagesRepository.downloadUserImage(userId).first())
             }
     }
 
@@ -65,8 +78,7 @@ class ProfileViewModel @Inject constructor(
         userIdFlow,
         userFlow,
         userRepository.user,
-        userRepository.getAllUsers()
-    ) { events, userId, _, (_, loggedUser), users ->
+    ) { events, userId, _, (_, loggedUser) ->
         events
             .filter { (_, event) ->
                 event.organizer == userId
@@ -76,9 +88,12 @@ class ProfileViewModel @Inject constructor(
             }
             .map { (id, event) ->
                 Triple(
-                    id,
+                    Pair(
+                        id,
+                        event
+                    ),
                     loggedUser.favoriteEvents.contains(id),
-                    event
+                    imagesRepository.downloadEventImage(id).first()
                 )
             }
     }
@@ -91,7 +106,7 @@ class ProfileViewModel @Inject constructor(
         addOrRemove = isFollowed
     )
 
-    fun logout(){
+    fun logout() {
         userRepository.logout()
     }
 

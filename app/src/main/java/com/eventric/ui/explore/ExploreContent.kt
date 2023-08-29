@@ -1,5 +1,6 @@
 package com.eventric.ui.explore
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,7 +26,7 @@ import com.eventric.vo.Event
 
 @Composable
 fun ExploreContent(
-    events: List<Triple<String,Boolean, Event>>,
+    events: List<Triple<Pair<String, Event> ,Boolean, Pair<Uri, Uri>>>,
     goToEvent: (eventId: String) -> Unit
 ) {
 
@@ -35,12 +36,18 @@ fun ExploreContent(
         contentPadding = PaddingValues(vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ){
-        items(events){ (id, isFavourite, event) ->
+        items(events){ (eventPair, isFavourite, uriImages) ->
+            val event = eventPair.second
+            val id = eventPair.first
+            val uriEventImage = uriImages.first
+            val uriOrganizerImage = uriImages.second
             EventCardItem(
                 event = event,
+                uriEventImage = uriEventImage,
                 organiserName = event.organizer.toString(),
+                uriOrganiserImage = uriOrganizerImage,
                 isFavorite = isFavourite,
-                onClick = {goToEvent(id) }
+                onClick = {goToEvent(id) },
             )
         }
     }

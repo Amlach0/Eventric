@@ -24,7 +24,7 @@ fun EventsScreen(
         SelectorItemData(value = "favorites", label = stringResource(R.string.favorites_label), iconId = R.drawable.ic_favorite_fill)
     )
 
-    val events by eventsViewModel.getEvents.collectAsStateWithLifecycle(listOf())
+    val events by eventsViewModel.events.collectAsStateWithLifecycle(listOf())
     var selectedPage by remember { mutableStateOf( pages[0] ) }
 
     LaunchedEffect(events){

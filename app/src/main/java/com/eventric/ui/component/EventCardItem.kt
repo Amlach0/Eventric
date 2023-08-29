@@ -1,6 +1,6 @@
 package com.eventric.ui.component
 
-import androidx.compose.foundation.Image
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.eventric.R
 import com.eventric.ui.theme.EventricTheme
 import com.eventric.vo.Event
@@ -35,7 +36,9 @@ import com.eventric.vo.Event
 fun EventCardItem(
     modifier: Modifier = Modifier,
     event: Event,
+    uriEventImage: Uri,
     organiserName: String,
+    uriOrganiserImage: Uri,
     isFavorite: Boolean,
     onClick: () -> Unit
 ) {
@@ -53,12 +56,13 @@ fun EventCardItem(
                     .fillMaxWidth()
                     .height(130.dp)
             ) {
-                Image(
+                AsyncImage(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(MaterialTheme.shapes.medium),
-                    painter = painterResource(R.drawable.img_event),
-                    contentDescription = "",
+                    model = if (uriEventImage== Uri.EMPTY) R.drawable.img_event_placeholder else uriEventImage,
+                    contentDescription = null,
+                    placeholder = painterResource(R.drawable.img_event_placeholder),
                     contentScale = ContentScale.Crop
                 )
 
@@ -94,7 +98,7 @@ fun EventCardItem(
                 ) {
                     ProfileCompactItem(
                         name = organiserName,
-                        imageId = R.drawable.img_profile
+                        uriImage = uriOrganiserImage,
                     )
                     Spacer(modifier = Modifier.width(30.dp))
                     ProfileGoingItem(numberOfGoing = event.subscribed.size)
@@ -109,6 +113,7 @@ fun EventCardItem(
 fun EventCardCompactItem(
     modifier: Modifier = Modifier,
     event: Event,
+    uriImage: Uri,
     isFavorite: Boolean,
     onClick: () -> Unit
 ) {
@@ -124,13 +129,14 @@ fun EventCardCompactItem(
         Row(
             modifier = Modifier.padding(vertical = 7.dp, horizontal = 9.dp)
         ) {
-                Image(
+                AsyncImage(
                     modifier = Modifier
                         .fillMaxHeight()
                         .width(80.dp)
                         .clip(MaterialTheme.shapes.medium),
-                    painter = painterResource(R.drawable.img_event),
-                    contentDescription = "",
+                    model = if (uriImage== Uri.EMPTY) R.drawable.img_event_placeholder else uriImage,
+                    contentDescription = null,
+                    placeholder = painterResource(R.drawable.img_event_placeholder),
                     contentScale = ContentScale.Crop
                 )
 
@@ -174,9 +180,11 @@ fun EventCardItemPreview() {
     EventricTheme {
         EventCardItem(
             event = Event(),
+            uriEventImage = Uri.EMPTY,
             organiserName = "Carlo Santini",
+            uriOrganiserImage = Uri.EMPTY,
             isFavorite = true,
-            onClick = {}
+            onClick = {},
         )
     }
 }
@@ -187,6 +195,7 @@ fun EventCardCompactItemPreview() {
     EventricTheme {
         EventCardCompactItem(
             event = Event(),
+            uriImage = Uri.EMPTY,
             isFavorite = true,
             onClick = {}
         )

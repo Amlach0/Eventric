@@ -1,7 +1,7 @@
 package com.eventric.ui.events
 
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +18,7 @@ import com.eventric.vo.Event
 
 @Composable
 fun EventsContent(
-    events: List<Pair<Triple<String, Boolean, Event>, Boolean>>,
+    events: List<Pair<Triple<Pair<String, Event>, Boolean, Uri>, Boolean>>,
     pages: List<SelectorItemData>,
     selectedPage: SelectorItemData,
     onChangeSelectedPage: (SelectorItemData) -> Unit,
@@ -39,17 +39,22 @@ fun EventsContent(
         LazyColumn(
             modifier = Modifier
                 .padding(horizontal = 25.dp),
-            contentPadding = PaddingValues(vertical = 30.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            contentPadding = PaddingValues(vertical = 20.dp)
         ) {
-            items(events) { (event, isVisible) ->
+            items(events) { (eventTriple, isVisible) ->
+                val eventId = eventTriple.first.first
+                val event = eventTriple.first.second
+                val isFavourite = eventTriple.second
+                val uriImage = eventTriple.third
                 AnimatedVisibility(
                     visible = isVisible
                 ){
                     EventCardCompactItem(
-                        event = event.third,
-                        isFavorite = event.second,
-                        onClick = { goToEvent(event.first) }
+                        modifier = Modifier.padding(vertical = 10.dp),
+                        event = event,
+                        uriImage = uriImage,
+                        isFavorite = isFavourite,
+                        onClick = { goToEvent(eventId) }
                     )
                 }
             }

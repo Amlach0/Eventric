@@ -10,7 +10,7 @@ fun ExploreScreen(
     goToEventDetail: (eventId: String) -> Unit,
     exploreViewModel: ExploreViewModel = hiltViewModel(),
 ) {
-    val events by exploreViewModel.getEvents().collectAsStateWithLifecycle(listOf())
+    val events by exploreViewModel.events.collectAsStateWithLifecycle(listOf())
 
     fun goToEvent(eventId: String) {
         goToEventDetail(eventId)

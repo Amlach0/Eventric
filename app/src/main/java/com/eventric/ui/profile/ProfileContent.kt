@@ -1,11 +1,12 @@
 package com.eventric.ui.profile
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.eventric.R
 import com.eventric.ui.component.BrandSelector
 import com.eventric.ui.component.BrandTopBar
@@ -47,15 +49,16 @@ import com.eventric.vo.User
 fun ProfileContent(
     navController: NavController,
     user: User,
+    uriImage: Uri,
     isInHome: Boolean,
     isUserFollowed: Boolean,
-    followers: List<Pair<String, User>>,
-    followed: List<Pair<String, User>>,
+    followers: List<Triple<String, User, Uri>>,
+    followed: List<Triple<String, User, Uri>>,
     sheetState: ModalBottomSheetState,
     isFollowersSheet: Boolean,
     pages: List<SelectorItemData>,
     selectedPage: SelectorItemData,
-    organizedEvents: List<Triple<String, Boolean, Event>>,
+    organizedEvents: List<Triple<Pair<String, Event>, Boolean, Uri>>,
     onFollowChange: () -> Unit,
     onEdit: () -> Unit,
     onUser: (String) -> Unit,
@@ -83,10 +86,10 @@ fun ProfileContent(
                     contentPadding = PaddingValues(vertical = 25.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(items = if (isFollowersSheet) followers else followed) { (userId, user) ->
+                    items(items = if (isFollowersSheet) followers else followed) { (userId, user, uriImage) ->
                         ProfileItem(
                             name = "${user.name} ${user.surname}",
-                            imageId = R.drawable.img_profile,
+                            uriImage = uriImage,
                             isInvited = false,
                             showInviteButton = false,
                             onInviteClick = { },
@@ -121,12 +124,14 @@ fun ProfileContent(
                     .padding(30.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Image(
+                AsyncImage(
                     modifier = Modifier
                         .size(120.dp)
+                        .aspectRatio(1f)
                         .clip(CircleShape),
-                    painter = painterResource(R.drawable.img_profile),
-                    contentDescription = "Profile",
+                    model = if (uriImage== Uri.EMPTY) R.drawable.img_profile_placeholder else uriImage,
+                    contentDescription = null,
+                    placeholder = painterResource(R.drawable.img_profile_placeholder),
                     contentScale = ContentScale.Crop
                 )
 
@@ -225,9 +230,12 @@ fun ProfileContent(
                                     contentPadding = PaddingValues(vertical = 15.dp),
                                     verticalArrangement = Arrangement.spacedBy(15.dp)
                                 ) {
-                                    items(organizedEvents) { (eventId, isFavorite,  event) ->
+                                    items(organizedEvents) { (eventPair, isFavorite,  uriImage) ->
+                                        val eventId = eventPair.first
+                                        val event = eventPair.second
                                         EventCardCompactItem(
                                             event = event,
+                                            uriImage = uriImage,
                                             isFavorite = isFavorite,
                                             onClick = { onEvent(eventId) }
                                         )
