@@ -1,7 +1,6 @@
 package com.eventric.ui.newEvent
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -13,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.eventric.ui.component.FullScreenLoader
 import com.eventric.ui.theme.EventricTheme
 import com.eventric.utils.ErrorOperation
 import com.eventric.utils.LoadingOperation
@@ -81,10 +81,6 @@ fun CreateEventScreen(
         startRegistrationDate = event.dateRegistration?.start ?: ""
         endRegistrationDate = event.dateRegistration?.end ?: ""
         info = event.info ?: ""
-    }
-
-    LaunchedEffect(uriImage) {
-        Log.d("test", "uriImage : $uriImage")
     }
 
     var createErrorBannerIsVisible by remember { mutableStateOf(false) }
@@ -175,36 +171,39 @@ fun CreateEventScreen(
     }
 
     EventricTheme {
-        CreateEventContent(
-            navControllerForBack = navControllerForBack,
-            isEdit = isEdit,
-            name = name,
-            uriImage = uriImage,
-            location = location,
-            categoryList = categoryList,
-            selectedCategory = selectedCategory,
-            typeList = typeList,
-            selectedType = selectedType,
-            startDate = startDate,
-            endDate = endDate,
-            info = info,
-            startRegistrationDate = startRegistrationDate,
-            endRegistrationDate = endRegistrationDate,
-            createErrorBannerIsVisible = createErrorBannerIsVisible,
-            deleteErrorBannerIsVisible = deleteErrorBannerIsVisible,
-            onNameChange = ::onEventNameChange,
-            onUriImageChange = ::onUriImageChange,
-            onLocationChange = ::onEventLocationChange,
-            onSelectedCategoryChange = ::onEventCategoryChange,
-            onSelectedTypeChange = ::onEventTypeChange,
-            onStartDateChanged = ::onStartDateChanged,
-            onEndDateChanged = ::onEndDateChanged,
-            onStartRegistrationDateChanged = ::onStartRegistrationDateChanged,
-            onEndRegistrationDateChanged = ::onEndRegistrationDateChanged,
-            onInfoChanged = ::onInfoChanged,
-            onSubmit = ::onSubmit,
-            onDelete = ::onDelete,
-        )
+        if (createEventState is LoadingOperation)
+            FullScreenLoader()
+        else
+            CreateEventContent(
+                navControllerForBack = navControllerForBack,
+                isEdit = isEdit,
+                name = name,
+                uriImage = uriImage,
+                location = location,
+                categoryList = categoryList,
+                selectedCategory = selectedCategory,
+                typeList = typeList,
+                selectedType = selectedType,
+                startDate = startDate,
+                endDate = endDate,
+                info = info,
+                startRegistrationDate = startRegistrationDate,
+                endRegistrationDate = endRegistrationDate,
+                createErrorBannerIsVisible = createErrorBannerIsVisible,
+                deleteErrorBannerIsVisible = deleteErrorBannerIsVisible,
+                onNameChange = ::onEventNameChange,
+                onUriImageChange = ::onUriImageChange,
+                onLocationChange = ::onEventLocationChange,
+                onSelectedCategoryChange = ::onEventCategoryChange,
+                onSelectedTypeChange = ::onEventTypeChange,
+                onStartDateChanged = ::onStartDateChanged,
+                onEndDateChanged = ::onEndDateChanged,
+                onStartRegistrationDateChanged = ::onStartRegistrationDateChanged,
+                onEndRegistrationDateChanged = ::onEndRegistrationDateChanged,
+                onInfoChanged = ::onInfoChanged,
+                onSubmit = ::onSubmit,
+                onDelete = ::onDelete,
+            )
     }
 }
 

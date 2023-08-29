@@ -5,6 +5,7 @@
     <string name="error_confirmation_psw">Password e conferma password non corrispondono</string>
     <string name="error_new_event">Creazione evento fallita. Ripovare</string>
     <string name="error_delete_event">Eliminazione evento fallita. Ripovare</string>
+    <string name="error_delete_user">Eliminazione utente fallita. Ripovare</string>
     <string name="title_login">Log In</string>
     <string name="common_login">LOG IN</string>
     <string name="common_signup">SIGN UP</string>

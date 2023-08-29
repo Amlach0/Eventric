@@ -101,7 +101,7 @@ fun ImageProfilePicker(
 
     Box(
         modifier = Modifier
-            .height(120.dp)
+            .height(150.dp)
             .aspectRatio(1f)
     ) {
         AsyncImage(
@@ -126,7 +126,7 @@ fun ImageProfilePicker(
             CustomButtonSecondary(
                 modifier = Modifier
                     .width(100.dp)
-                    .padding(5.dp),
+                    .padding(7.dp),
                 text = stringResource(R.string.choose_event_image_label),
                 contentPadding = PaddingValues(0.dp),
                 iconId = null,
