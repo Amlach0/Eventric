@@ -43,6 +43,7 @@ import com.eventric.ui.component.CustomButtonPrimary
 import com.eventric.ui.component.CustomButtonSecondary
 import com.eventric.ui.component.EventCategoryItem
 import com.eventric.ui.component.EventInfoItem
+import com.eventric.ui.component.ProfileEmptyItem
 import com.eventric.ui.component.ProfileGoingExpandedItem
 import com.eventric.ui.component.ProfileItem
 import com.eventric.ui.component.ProfileOrganizerItem
@@ -94,23 +95,26 @@ fun DetailEventContent(
                     style = MaterialTheme.typography.h4,
                     color = MaterialTheme.colors.onSecondary
                 )
-                LazyColumn(
-                    contentPadding = PaddingValues(vertical = 25.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(items = if (isInviteSheet) invitableUsers else subscribedUsers) { (userPair, isInvited, uriImage) ->
-                        val userId = userPair.first
-                        val user = userPair.second
-                        ProfileItem(
-                            name = "${user.name} ${user.surname}",
-                            uriImage = uriImage,
-                            isInvited = isInvited,
-                            showInviteButton = isInviteSheet,
-                            onInviteClick = { onUserInviteChange(userId) },
-                            onClick = { onUser(userId) },
-                        )
+                if ((isInviteSheet && invitableUsers.isEmpty()) || (!isInviteSheet && subscribedUsers.isEmpty()))
+                    ProfileEmptyItem(Modifier.padding(vertical = 25.dp))
+                else
+                    LazyColumn(
+                        contentPadding = PaddingValues(vertical = 25.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(items = if (isInviteSheet) invitableUsers else subscribedUsers) { (userPair, isInvited, uriImage) ->
+                            val userId = userPair.first
+                            val user = userPair.second
+                            ProfileItem(
+                                name = "${user.name} ${user.surname}",
+                                uriImage = uriImage,
+                                isInvited = isInvited,
+                                showInviteButton = isInviteSheet,
+                                onInviteClick = { onUserInviteChange(userId) },
+                                onClick = { onUser(userId) },
+                            )
+                        }
                     }
-                }
             }
         },
         modifier = Modifier.fillMaxSize()
@@ -120,7 +124,7 @@ fun DetailEventContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(230.dp),
-                model = if (uriImage== Uri.EMPTY) R.drawable.img_event_placeholder else uriImage,
+                model = if (uriImage == Uri.EMPTY) R.drawable.img_event_placeholder else uriImage,
                 contentDescription = null,
                 placeholder = painterResource(R.drawable.img_event_placeholder),
                 contentScale = ContentScale.Crop
@@ -144,8 +148,7 @@ fun DetailEventContent(
                             )
                         },
                         right = {
-                            if (isUserOrganizer)
-                            {
+                            if (isUserOrganizer) {
                                 ActionButton(
                                     onClick = { onEdit() },
                                     iconId = R.drawable.ic_edit,
@@ -217,7 +220,7 @@ fun DetailEventContent(
                                         color = MaterialTheme.colors.onPrimary,
                                         bounded = false
                                     )
-                                ){ onOrganizer() },
+                                ) { onOrganizer() },
                             name = organizerName,
                             uriImage = uriOrganizerImage,
                             isFollowed = isOrganizerFollowed,

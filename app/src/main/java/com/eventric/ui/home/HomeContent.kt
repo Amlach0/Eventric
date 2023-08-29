@@ -23,6 +23,7 @@ import com.eventric.ui.events.EventsScreen
 import com.eventric.ui.explore.ExploreScreen
 import com.eventric.ui.explore.ExploreTopBar
 import com.eventric.ui.profile.ProfileScreen
+import com.eventric.ui.search.SearchScreen
 
 @Composable
 fun HomeContent(
@@ -78,6 +79,11 @@ fun HomeContent(
             composable(BottomNavItem.Explore.screen_route) {
                 ExploreScreen(
                     goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") },
+                )
+            }
+            composable(BottomNavItem.Search.screen_route) {
+                SearchScreen(
+                    goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") }
                 )
             }
             composable(BottomNavItem.Events.screen_route) {

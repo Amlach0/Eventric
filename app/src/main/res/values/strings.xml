@@ -77,4 +77,7 @@
     <string name="favorites_label">Preferiti</string>
     <string name="choose_event_image_label">Scegli</string>
     <string name="choose_profile_image_label">Scegli</string>
+    <string name="search_label">Cerca</string>
+    <string name="empty_events_label">Non ci sono Eventi</string>
+    <string name="empty_users_label">Non ci sono Utenti</string>
 </resources>

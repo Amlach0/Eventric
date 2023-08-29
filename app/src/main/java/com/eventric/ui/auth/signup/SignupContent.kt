@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,7 +34,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.eventric.R
+import com.eventric.ui.component.BrandTopBar
 import com.eventric.ui.component.CustomButtonPrimary
 import com.eventric.ui.component.CustomButtonSecondary
 import com.eventric.ui.component.CustomButtonSelector
@@ -45,6 +49,7 @@ import com.eventric.ui.theme.EventricTheme
 
 @Composable
 fun SignupContent(
+    navControllerForBack: NavController,
     errorBannerIsVisible: Boolean,
     errorBannerConfirmationIsVisible: Boolean,
     isEdit: Boolean,
@@ -97,131 +102,156 @@ fun SignupContent(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
-        Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(bottom = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            AnimatedVisibility(
-                visible = errorBannerIsVisible || errorBannerConfirmationIsVisible || errorBannerDeleteIsVisible,
-            ) {
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(MaterialTheme.colors.error)
-                ) {
-                    Text(
-                        text = stringResource(if (errorBannerDeleteIsVisible) R.string.error_delete_user else if (errorBannerConfirmationIsVisible) R.string.error_confirmation_psw else R.string.error_signup),
-                        style = MaterialTheme.typography.h3,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.align(Alignment.Center),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Light,
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+            backgroundColor = Color.Transparent,
+            topBar = {
+                if (isEdit)
+                    BrandTopBar(
+                        left = {
+                            Back(
+                                navController = navControllerForBack,
+                                tint = MaterialTheme.colors.onBackground
+                            )
+                            Title(
+                                modifier = Modifier.padding(horizontal = 13.dp),
+                                title = stringResource(R.string.edit_profile),
+                                color = MaterialTheme.colors.onBackground,
+                                textAlign = TextAlign.Left
+                            )
+                        },
                     )
-                }
             }
+        ) { paddingValues ->
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(paddingValues)
+                    .padding(bottom = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(horizontal = 34.dp)
-                    .padding(top = 10.dp),
-                text = stringResource(id = if (isEdit) R.string.edit_profile else R.string.title_login),
-                style = MaterialTheme.typography.h4,
-                fontSize = 27.sp,
-                color = MaterialTheme.colors.onBackground
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            ImageProfilePicker(
-                uri = uriImage,
-                onUriChange = onUriImageChange
-            )
-            CustomTextInput(
-                modifier = Modifier
-                    .padding(horizontal = 34.dp)
-                    .padding(top = 18.dp),
-                hint = stringResource(id = R.string.name_label),
-                value = name,
-                icon = R.drawable.ic_type_private,
-                isLastInput = false,
-                onValueChange = onNameChange
-            )
-            CustomTextInput(
-                modifier = Modifier
-                    .padding(horizontal = 34.dp)
-                    .padding(top = 18.dp),
-                hint = stringResource(id = R.string.surname_label),
-                value = surname,
-                icon = R.drawable.ic_type_private,
-                isLastInput = false,
-                onValueChange = onSurnameChange
-            )
-            CustomTextInput(
-                modifier = Modifier
-                    .padding(horizontal = 34.dp)
-                    .padding(top = 18.dp),
-                hint = stringResource(id = R.string.username_label),
-                value = email,
-                icon = R.drawable.ic_mail,
-                passwordVisible = true,
-                isLastInput = false,
-                onValueChange = onEmailChange
-            )
-            CustomTextInput(
-                modifier = Modifier
-                    .padding(horizontal = 34.dp)
-                    .padding(top = 18.dp),
-                hint = stringResource(if (isEdit) R.string.new_pwd_label else R.string.pwd_label),
-                value = password,
-                icon = R.drawable.ic_pwd,
-                onValueChange = onPasswordChange,
-                visualTransformationEnabled = true,
-                passwordVisible = passwordVisible,
-                onPasswordVisibleChange = onPasswordVisibleChange,
-                isLastInput = false,
-            )
-            CustomTextInput(
-                modifier = Modifier
-                    .padding(horizontal = 34.dp)
-                    .padding(top = 18.dp),
-                hint = stringResource(if (isEdit) R.string.new_confirm_pwd_label else R.string.confirm_pwd_label),
-                value = confirmPassword,
-                icon = R.drawable.ic_pwd,
-                onValueChange = onConfirmPasswordChange,
-                visualTransformationEnabled = true,
-                passwordVisible = confirmPasswordVisible,
-                onPasswordVisibleChange = onConfirmPasswordVisibleChange,
-                isLastInput = false,
-            )
+                AnimatedVisibility(
+                    visible = errorBannerIsVisible || errorBannerConfirmationIsVisible || errorBannerDeleteIsVisible,
+                ) {
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .background(MaterialTheme.colors.error)
+                    ) {
+                        Text(
+                            text = stringResource(if (errorBannerDeleteIsVisible) R.string.error_delete_user else if (errorBannerConfirmationIsVisible) R.string.error_confirmation_psw else R.string.error_signup),
+                            style = MaterialTheme.typography.h3,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.align(Alignment.Center),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Light,
+                        )
+                    }
+                }
 
-            CustomButtonSelector(
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(horizontal = 34.dp)
-                    .padding(top = 18.dp),
-                text = if (birthDate == "") stringResource(R.string.select_date) else birthDate,
-                iconId = R.drawable.ic_calendar,
-                onClick = { openDateDialog = true }
-            )
 
-            CustomTextInput(
-                modifier = Modifier
-                    .padding(horizontal = 34.dp)
-                    .padding(top = 18.dp),
-                hint = stringResource(R.string.bio_label),
-                value = bio,
-                icon = R.drawable.ic_info,
-                onValueChange = onBioChange,
-                passwordVisible = true,
-                isLastInput = true,
-            )
-            Spacer(Modifier.height(200.dp))
+                if (!isEdit)
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(horizontal = 34.dp)
+                            .padding(top = 10.dp),
+                        text = stringResource(R.string.title_login),
+                        style = MaterialTheme.typography.h4,
+                        fontSize = 27.sp,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                Spacer(modifier = Modifier.height(20.dp))
+                ImageProfilePicker(
+                    uri = uriImage,
+                    onUriChange = onUriImageChange
+                )
+                CustomTextInput(
+                    modifier = Modifier
+                        .padding(horizontal = 34.dp)
+                        .padding(top = 18.dp),
+                    hint = stringResource(id = R.string.name_label),
+                    value = name,
+                    iconId = R.drawable.ic_type_private,
+                    isLastInput = false,
+                    onValueChange = onNameChange
+                )
+                CustomTextInput(
+                    modifier = Modifier
+                        .padding(horizontal = 34.dp)
+                        .padding(top = 18.dp),
+                    hint = stringResource(id = R.string.surname_label),
+                    value = surname,
+                    iconId = R.drawable.ic_type_private,
+                    isLastInput = false,
+                    onValueChange = onSurnameChange
+                )
+                CustomTextInput(
+                    modifier = Modifier
+                        .padding(horizontal = 34.dp)
+                        .padding(top = 18.dp),
+                    hint = stringResource(id = R.string.username_label),
+                    value = email,
+                    iconId = R.drawable.ic_mail,
+                    passwordVisible = true,
+                    isLastInput = false,
+                    onValueChange = onEmailChange
+                )
+                CustomTextInput(
+                    modifier = Modifier
+                        .padding(horizontal = 34.dp)
+                        .padding(top = 18.dp),
+                    hint = stringResource(if (isEdit) R.string.new_pwd_label else R.string.pwd_label),
+                    value = password,
+                    iconId = R.drawable.ic_pwd,
+                    onValueChange = onPasswordChange,
+                    visualTransformationEnabled = true,
+                    passwordVisible = passwordVisible,
+                    onPasswordVisibleChange = onPasswordVisibleChange,
+                    isLastInput = false,
+                )
+                CustomTextInput(
+                    modifier = Modifier
+                        .padding(horizontal = 34.dp)
+                        .padding(top = 18.dp),
+                    hint = stringResource(if (isEdit) R.string.new_confirm_pwd_label else R.string.confirm_pwd_label),
+                    value = confirmPassword,
+                    iconId = R.drawable.ic_pwd,
+                    onValueChange = onConfirmPasswordChange,
+                    visualTransformationEnabled = true,
+                    passwordVisible = confirmPasswordVisible,
+                    onPasswordVisibleChange = onConfirmPasswordVisibleChange,
+                    isLastInput = false,
+                )
+
+                CustomButtonSelector(
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(horizontal = 34.dp)
+                        .padding(top = 18.dp),
+                    text = if (birthDate == "") stringResource(R.string.select_date) else birthDate,
+                    iconId = R.drawable.ic_calendar,
+                    onClick = { openDateDialog = true }
+                )
+
+                CustomTextInput(
+                    modifier = Modifier
+                        .padding(horizontal = 34.dp)
+                        .padding(top = 18.dp),
+                    hint = stringResource(R.string.bio_label),
+                    value = bio,
+                    iconId = R.drawable.ic_info,
+                    onValueChange = onBioChange,
+                    passwordVisible = true,
+                    isLastInput = true,
+                )
+                Spacer(Modifier.height(200.dp))
+            }
         }
-
 
         val colorStops = arrayOf(
             0f to Color.Transparent,
@@ -267,6 +297,7 @@ fun SignupContentPreview() {
         var birthDate by remember { mutableStateOf("") }
 
         SignupContent(
+            navControllerForBack = rememberNavController(),
             isEdit = false,
             name = name,
             surname = surname,

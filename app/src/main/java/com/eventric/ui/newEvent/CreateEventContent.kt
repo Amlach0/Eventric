@@ -227,7 +227,7 @@ fun CreateEventContent(
                 CustomTextInput(
                     hint = stringResource(id = R.string.location_label),
                     isLastInput = false,
-                    icon = R.drawable.ic_location,
+                    iconId = R.drawable.ic_location,
                     value = location,
                     onValueChange = onLocationChange
                 )
@@ -301,7 +301,7 @@ fun CreateEventContent(
                 CustomTextInput(
                     hint = "",
                     isLastInput = false,
-                    icon = R.drawable.ic_info,
+                    iconId = R.drawable.ic_info,
                     value = info,
                     onValueChange = onInfoChanged
                 )

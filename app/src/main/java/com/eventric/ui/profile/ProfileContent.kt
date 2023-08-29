@@ -36,8 +36,10 @@ import com.eventric.R
 import com.eventric.ui.component.BrandSelector
 import com.eventric.ui.component.BrandTopBar
 import com.eventric.ui.component.CustomButtonSecondary
+import com.eventric.ui.component.EventCardCompactEmptyItem
 import com.eventric.ui.component.EventCardCompactItem
 import com.eventric.ui.component.FollowedAndFollowersCounters
+import com.eventric.ui.component.ProfileEmptyItem
 import com.eventric.ui.component.ProfileItem
 import com.eventric.ui.component.SelectorItemData
 import com.eventric.vo.Event
@@ -66,7 +68,7 @@ fun ProfileContent(
     onShowFollowed: () -> Unit,
     onShowFollowers: () -> Unit,
     onChangeSelectedPage: (new: SelectorItemData) -> Unit,
-    onEvent: (String) -> Unit
+    onEvent: (String) -> Unit,
 ) {
     ModalBottomSheetLayout(
         sheetState = sheetState,
@@ -82,21 +84,24 @@ fun ProfileContent(
                     style = MaterialTheme.typography.h4,
                     color = MaterialTheme.colors.onSecondary
                 )
-                LazyColumn(
-                    contentPadding = PaddingValues(vertical = 25.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(items = if (isFollowersSheet) followers else followed) { (userId, user, uriImage) ->
-                        ProfileItem(
-                            name = "${user.name} ${user.surname}",
-                            uriImage = uriImage,
-                            isInvited = false,
-                            showInviteButton = false,
-                            onInviteClick = { },
-                            onClick = { onUser(userId) },
-                        )
+                if ((isFollowersSheet && followers.isEmpty()) || (!isFollowersSheet && followed.isEmpty()))
+                    ProfileEmptyItem(Modifier.padding(vertical = 25.dp))
+                else
+                    LazyColumn(
+                        contentPadding = PaddingValues(vertical = 25.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(items = if (isFollowersSheet) followers else followed) { (userId, user, uriImage) ->
+                            ProfileItem(
+                                name = "${user.name} ${user.surname}",
+                                uriImage = uriImage,
+                                isInvited = false,
+                                showInviteButton = false,
+                                onInviteClick = { },
+                                onClick = { onUser(userId) },
+                            )
+                        }
                     }
-                }
             }
         },
         modifier = Modifier.fillMaxSize()
@@ -129,7 +134,7 @@ fun ProfileContent(
                         .size(120.dp)
                         .aspectRatio(1f)
                         .clip(CircleShape),
-                    model = if (uriImage== Uri.EMPTY) R.drawable.img_profile_placeholder else uriImage,
+                    model = if (uriImage == Uri.EMPTY) R.drawable.img_profile_placeholder else uriImage,
                     contentDescription = null,
                     placeholder = painterResource(R.drawable.img_profile_placeholder),
                     contentScale = ContentScale.Crop
@@ -204,14 +209,13 @@ fun ProfileContent(
                             style = MaterialTheme.typography.body2,
                             color = MaterialTheme.colors.onBackground
                         )
-                    }
-                    else {
+                    } else {
                         BrandSelector(
                             dataList = pages,
                             selectedItem = selectedPage,
                             onChangeSelectedItem = { onChangeSelectedPage(it) }
                         )
-                        when(selectedPage.value){
+                        when (selectedPage.value) {
                             "bio" -> {
                                 Text(
                                     modifier = Modifier
@@ -222,25 +226,29 @@ fun ProfileContent(
                                     color = MaterialTheme.colors.onBackground
                                 )
                             }
+
                             "events" -> {
-                                LazyColumn(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 15.dp),
-                                    contentPadding = PaddingValues(vertical = 15.dp),
-                                    verticalArrangement = Arrangement.spacedBy(15.dp)
-                                ) {
-                                    items(organizedEvents) { (eventPair, isFavorite,  uriImage) ->
-                                        val eventId = eventPair.first
-                                        val event = eventPair.second
-                                        EventCardCompactItem(
-                                            event = event,
-                                            uriImage = uriImage,
-                                            isFavorite = isFavorite,
-                                            onClick = { onEvent(eventId) }
-                                        )
+                                if (organizedEvents.isEmpty())
+                                    EventCardCompactEmptyItem(Modifier.padding(15.dp))
+                                else
+                                    LazyColumn(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 15.dp),
+                                        contentPadding = PaddingValues(vertical = 15.dp),
+                                        verticalArrangement = Arrangement.spacedBy(15.dp)
+                                    ) {
+                                        items(organizedEvents) { (eventPair, isFavorite, uriImage) ->
+                                            val eventId = eventPair.first
+                                            val event = eventPair.second
+                                            EventCardCompactItem(
+                                                event = event,
+                                                uriImage = uriImage,
+                                                isFavorite = isFavorite,
+                                                onClick = { onEvent(eventId) }
+                                            )
+                                        }
                                     }
-                                }
                             }
                         }
                     }

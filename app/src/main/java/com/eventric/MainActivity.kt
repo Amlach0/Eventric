@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("edit_user?userId={userId}") { navBackStackEntry ->
                         SignupScreen(
+                            navControllerForBack = navController,
                             id = navBackStackEntry.arguments?.getString("userId")
                                 ?: throw IllegalStateException("missing user id arguments"),
                             goToDispatcher = { navController.navigate("dispatcher") { popUpTo(0) } },

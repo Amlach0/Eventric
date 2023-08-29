@@ -21,36 +21,40 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.eventric.R
 import com.eventric.ui.component.BrandTopBar
+import com.eventric.ui.component.EventCardEmptyItem
 import com.eventric.ui.component.EventCardItem
 import com.eventric.vo.Event
 
 @Composable
 fun ExploreContent(
-    events: List<Triple<Pair<String, Event> ,Boolean, Pair<Uri, Uri>>>,
-    goToEvent: (eventId: String) -> Unit
+    events: List<Triple<Pair<String, Event>, Boolean, Pair<Uri, Uri>>>,
+    goToEvent: (eventId: String) -> Unit,
 ) {
 
-    LazyColumn(
-        modifier = Modifier
-            .padding(horizontal = 24.dp),
-        contentPadding = PaddingValues(vertical = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-    ){
-        items(events){ (eventPair, isFavourite, uriImages) ->
-            val event = eventPair.second
-            val id = eventPair.first
-            val uriEventImage = uriImages.first
-            val uriOrganizerImage = uriImages.second
-            EventCardItem(
-                event = event,
-                uriEventImage = uriEventImage,
-                organiserName = event.organizer.toString(),
-                uriOrganiserImage = uriOrganizerImage,
-                isFavorite = isFavourite,
-                onClick = {goToEvent(id) },
-            )
+    if (events.isEmpty())
+        EventCardEmptyItem(Modifier.padding(24.dp))
+    else
+        LazyColumn(
+            modifier = Modifier
+                .padding(horizontal = 24.dp),
+            contentPadding = PaddingValues(vertical = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+        ) {
+            items(events) { (eventPair, isFavourite, uriImages) ->
+                val event = eventPair.second
+                val id = eventPair.first
+                val uriEventImage = uriImages.first
+                val uriOrganizerImage = uriImages.second
+                EventCardItem(
+                    event = event,
+                    uriEventImage = uriEventImage,
+                    organiserName = event.organizer.toString(),
+                    uriOrganiserImage = uriOrganizerImage,
+                    isFavorite = isFavourite,
+                    onClick = { goToEvent(id) },
+                )
+            }
         }
-    }
 }
 
 @Composable

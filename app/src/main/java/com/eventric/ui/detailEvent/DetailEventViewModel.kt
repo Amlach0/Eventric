@@ -78,7 +78,7 @@ class DetailEventViewModel @Inject constructor(
     val subscribedUsersFlow = combine(
         eventFlow,
         userRepository.getAllUsers(),
-        imagesRepository.downloadAllEventsImages()
+        imagesRepository.downloadAllUserImages()
     ) { event, users, images ->
         val subscribedUserIds = event.subscribed
         users

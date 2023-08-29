@@ -29,7 +29,7 @@ fun CustomTextInput(
     value: String,
     hint: String,
     isLastInput: Boolean,
-    @DrawableRes icon: Int? = null,
+    @DrawableRes iconId: Int? = null,
     visualTransformationEnabled: Boolean = false,
     onValueChange: (String) -> Unit = {},
     passwordVisible: Boolean = false,
@@ -62,10 +62,10 @@ fun CustomTextInput(
                     )
                 },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                leadingIcon = if (icon != null) {
+                leadingIcon = if (iconId != null) {
                     {
                         Icon(
-                            painter = painterResource(icon),
+                            painter = painterResource(iconId),
                             contentDescription = "",
                             tint = MaterialTheme.colors.onBackground,
                         )
@@ -123,10 +123,10 @@ fun CustomTextInput(
                         color = MaterialTheme.colors.onBackground
                     )
                 },
-                leadingIcon = if (icon != null) {
+                leadingIcon = if (iconId != null) {
                     {
                         Icon(
-                            painter = painterResource(icon),
+                            painter = painterResource(iconId),
                             contentDescription = "",
                             tint = MaterialTheme.colors.onBackground,
                         )

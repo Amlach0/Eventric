@@ -11,6 +11,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.eventric.ui.component.FullScreenLoader
 import com.eventric.ui.theme.EventricTheme
 import com.eventric.utils.ErrorOperation
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SignupScreen(
+    navControllerForBack: NavController = rememberNavController(),
     id: String = "",
     signupViewModel: SignupViewModel = hiltViewModel(),
     goToDispatcher: () -> Unit,
@@ -149,6 +152,7 @@ fun SignupScreen(
             FullScreenLoader()
         else
             SignupContent(
+                navControllerForBack = navControllerForBack,
                 isEdit = isEdit,
                 name = name,
                 uriImage = uriImage,

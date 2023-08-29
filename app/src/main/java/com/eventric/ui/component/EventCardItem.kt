@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -110,6 +112,30 @@ fun EventCardItem(
 }
 
 @Composable
+fun EventCardEmptyItem(
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        elevation = 4.dp,
+        backgroundColor = MaterialTheme.colors.background
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.empty_events_label),
+                style = MaterialTheme.typography.h1,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colors.onSecondary
+            )
+        }
+    }
+}
+
+@Composable
 fun EventCardCompactItem(
     modifier: Modifier = Modifier,
     event: Event,
@@ -173,6 +199,29 @@ fun EventCardCompactItem(
     }
 }
 
+@Composable
+fun EventCardCompactEmptyItem(
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        elevation = 4.dp,
+        backgroundColor = MaterialTheme.colors.background
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.empty_events_label),
+                style = MaterialTheme.typography.subtitle1,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colors.onSecondary
+            )
+        }
+    }
+}
 
 @Composable
 @Preview(showBackground = true)
