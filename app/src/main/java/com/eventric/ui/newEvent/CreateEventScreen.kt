@@ -171,7 +171,7 @@ fun CreateEventScreen(
     }
 
     EventricTheme {
-        if (createEventState is LoadingOperation || createEventState is SuccessOperation)
+        if (createEventState is LoadingOperation || createEventState is SuccessOperation || deleteEventState is LoadingOperation || deleteEventState is SuccessOperation)
             FullScreenLoader()
         else
             CreateEventContent(

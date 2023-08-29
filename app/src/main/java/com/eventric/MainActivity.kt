@@ -10,7 +10,6 @@ import com.eventric.ui.auth.login.LoginScreen
 import com.eventric.ui.auth.signup.SignupScreen
 import com.eventric.ui.detailEvent.DetailEventScreen
 import com.eventric.ui.dispatcher.DispatcherScreen
-import com.eventric.ui.events.EventsScreen
 import com.eventric.ui.home.HomeScreen
 import com.eventric.ui.newEvent.CreateEventScreen
 import com.eventric.ui.notifications.NotificationsScreen
@@ -110,12 +109,7 @@ class MainActivity : ComponentActivity() {
                         NotificationsScreen(
                             navControllerForBack = navController,
                             goToEvent = { eventId -> navController.navigate("info_event?eventId=$eventId") },
-                            goToUser = {  }, //TODO add user page
-                        )
-                    }
-                    composable("events") {
-                        EventsScreen(
-                            goToEventDetail = { navController.navigate("info_event?eventId=$it") },
+                            goToUser = { userId -> navController.navigate("profile?userId=$userId") },
                         )
                     }
                 }

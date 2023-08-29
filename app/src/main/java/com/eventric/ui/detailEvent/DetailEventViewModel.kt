@@ -1,5 +1,6 @@
 package com.eventric.ui.detailEvent
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
 import com.eventric.repo.ImagesRepository
@@ -76,15 +77,16 @@ class DetailEventViewModel @Inject constructor(
 
     val subscribedUsersFlow = combine(
         eventFlow,
-        userRepository.getAllUsers()
-    ) { event, users ->
+        userRepository.getAllUsers(),
+        imagesRepository.downloadAllEventsImages()
+    ) { event, users, images ->
         val subscribedUserIds = event.subscribed
         users
             .filter { subscribedUserIds.contains(it.first) }
             .map { Triple(
                 it,
                 true,
-                imagesRepository.downloadUserImage(it.first).first()
+                images[it.first] ?: Uri.EMPTY
             ) }
     }
 
@@ -93,18 +95,18 @@ class DetailEventViewModel @Inject constructor(
         eventFlow,
         userRepository.getAllUsers(),
         loggedUserFlow,
-        organizerFlow
-    ) { eventId, event, users, (loggedUserId, loggedUser), (organizerId, _) ->
+        imagesRepository.downloadAllUserImages()
+    ) { eventId, event, users, (loggedUserId, loggedUser), images ->
         val subscribedUserIds = event.subscribed
         val followingUserIds = loggedUser.followingUsers
         users
-            .filter { !subscribedUserIds.contains(it.first) && followingUserIds.contains(it.first) && organizerId != it.first }
+            .filter { !subscribedUserIds.contains(it.first) && followingUserIds.contains(it.first) && event.organizer != it.first }
             .map { (userId, user) ->
                 val notifications = user.notifications
                 Triple(
                     Pair(userId, user),
                     !notifications.none { it.userId == loggedUserId && it.eventId == eventId },
-                    imagesRepository.downloadUserImage(userId).first()
+                    images[userId] ?: Uri.EMPTY
                 )
             }
     }

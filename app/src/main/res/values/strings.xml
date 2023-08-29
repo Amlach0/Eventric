@@ -57,7 +57,7 @@
     <string name="subscribed_list_label">Lista dei partecipanti</string>
     <string name="profile">Profilo</string>
     <string name="followed_label">Seguiti</string>
-    <string name="followers_label">Followers</string>
+    <string name="followers_label">Ti seguono</string>
     <string name="bio">Bio</string>
     <string name="edit_profile">Modifica</string>
     <string name="logout">Logout</string>

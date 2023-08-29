@@ -1,7 +1,9 @@
 package com.eventric.ui.notifications
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
+import com.eventric.repo.ImagesRepository
 import com.eventric.repo.UserRepository
 import com.eventric.vo.Event
 import com.eventric.vo.User
@@ -14,6 +16,7 @@ import javax.inject.Inject
 class NotificationsViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val eventRepository: EventRepository,
+    imagesRepository: ImagesRepository
 ) : ViewModel() {
 
     private val loggedUserFlow = userRepository.user
@@ -21,11 +24,13 @@ class NotificationsViewModel @Inject constructor(
     val notificationsFlow = combine(
         loggedUserFlow,
         userRepository.getAllUsers(),
-        eventRepository.getAllEvents()
-    ) { (_, loggedUser), users, events ->
+        eventRepository.getAllEvents(),
+        imagesRepository.downloadAllUserImages()
+    ) { (_, loggedUser), users, events, userImages ->
         loggedUser.notifications.map { notification ->
+            val userPair = users.findLast { it.first == notification.userId } ?: Pair("", User())
             Triple(
-                users.findLast { it.first == notification.userId } ?: Pair("", User()),
+                Triple(userPair.first, userPair.second, userImages[userPair.first] ?: Uri.EMPTY),
                 Pair(notification.text ?: "", notification.time ?: ""),
                 events.findLast { it.first == notification.eventId } ?: Pair("", Event())
             )

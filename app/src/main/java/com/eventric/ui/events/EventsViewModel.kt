@@ -11,14 +11,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
 class EventsViewModel @Inject constructor(
-    private val eventRepository: EventRepository,
-    private val userRepository: UserRepository,
-    private val imagesRepository: ImagesRepository,
+    eventRepository: EventRepository,
+    userRepository: UserRepository,
+    imagesRepository: ImagesRepository,
 ) : ViewModel() {
 
     private val selectedFilterFlow = MutableStateFlow("organized")
@@ -30,8 +29,9 @@ class EventsViewModel @Inject constructor(
             eventRepository.getAllEvents(),
             userRepository.getAllUsers(),
             userFlow,
-            selectedFilterFlow
-        ) { events, users, (loggedUserId, loggedUser), selectedFilter ->
+            selectedFilterFlow,
+            imagesRepository.downloadAllEventsImages()
+        ) { events, users, (loggedUserId, loggedUser), selectedFilter, eventsImages ->
             events
                 .filter { (eventId, event) ->
                     event.organizer == loggedUserId ||
@@ -52,7 +52,7 @@ class EventsViewModel @Inject constructor(
                                 )
                             ),
                             loggedUser.favoriteEvents.contains(id),
-                            imagesRepository.downloadEventImage(id).first()
+                            eventsImages[id] ?: Uri.EMPTY
                         ),
                         when (selectedFilter) {
                             "organized" -> event.organizer == loggedUserId

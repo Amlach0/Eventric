@@ -9,14 +9,13 @@ import com.eventric.vo.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    private val eventRepository: EventRepository,
-    private val userRepository: UserRepository,
-    private val imagesRepository: ImagesRepository,
+    eventRepository: EventRepository,
+    userRepository: UserRepository,
+    imagesRepository: ImagesRepository,
 ) : ViewModel() {
 
     private val userFlow = userRepository.user
@@ -25,8 +24,10 @@ class ExploreViewModel @Inject constructor(
     val events: Flow<List<Triple<Pair<String, Event>, Boolean, Pair<Uri, Uri>>>> = combine(
         eventRepository.getAllEvents(),
         userRepository.getAllUsers(),
-        userFlow
-    ) { events, users, (loggedUserId, loggedUser) ->
+        userFlow,
+        imagesRepository.downloadAllEventsImages(),
+        imagesRepository.downloadAllUserImages()
+    ) { events, users, (loggedUserId, loggedUser), eventsImages, usersImages ->
         events
             .filter { (_, event) ->
                 event.organizer != loggedUserId
@@ -44,8 +45,8 @@ class ExploreViewModel @Inject constructor(
                     ),
                     loggedUser.favoriteEvents.contains(id),
                     Pair(
-                        imagesRepository.downloadEventImage(id).first(),
-                        imagesRepository.downloadUserImage(event.organizer.toString()).first()
+                        eventsImages[id] ?: Uri.EMPTY,
+                        usersImages[event.organizer] ?: Uri.EMPTY
                     )
                 )
             }
