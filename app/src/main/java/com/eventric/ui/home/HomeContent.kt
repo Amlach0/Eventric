@@ -80,7 +80,8 @@ fun HomeContent(
             }
             composable(BottomNavItem.Search.screen_route) {
                 SearchScreen(
-                    goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") }
+                    goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") },
+                    goToUserDetail = { userId -> mainNavController.navigate("profile?userId=$userId") }
                 )
             }
             composable(BottomNavItem.Events.screen_route) {
