@@ -38,11 +38,8 @@ fun HomeContent(
             when (navBackStackEntry?.destination?.route) {
                 BottomNavItem.Explore.screen_route ->
                     ExploreTopBar(
-                        address = "Via Esempio, 69",
-                        goToMap = {},
-                        goToNotifications = { mainNavController.navigate("notifications") },
                         isNotificationActive = isNotificationActive
-                    )
+                    ) { mainNavController.navigate("notifications") }
             }
         },
         bottomBar = { CustomBottomNavigation(navController = homeNavController) },

@@ -123,8 +123,6 @@ fun LoginContent(
                 onDone = onSubmit,
             )
             Spacer(Modifier.weight(1F))
-            //TODO Remember me
-            //TODO Forgot pwd
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -125,7 +125,6 @@ interface TopBarScope {
         }
     }
 
-    // TODO: da mettere apposto
     @Composable
     fun Title(
         modifier: Modifier = Modifier,
