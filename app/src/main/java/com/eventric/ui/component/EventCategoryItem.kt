@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -74,6 +75,37 @@ fun EventCategoryItem(
     }
 }
 
+@Composable
+fun CategoryIcon(
+    modifier: Modifier = Modifier,
+    category: EventCategory,
+) {
+    Icon(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colors.surface,
+                shape = RoundedCornerShape(7.dp)
+            )
+            .padding(5.dp),
+        painter = painterResource(category.icon),
+        contentDescription = null,
+        tint = category.color
+    )
+}
+
+@Composable
+fun CategoryCompactIcon(
+    modifier: Modifier = Modifier,
+    category: EventCategory,
+) {
+    Icon(
+        modifier = modifier
+            .size(20.dp),
+        painter = painterResource(category.icon),
+        contentDescription = null,
+        tint = category.color
+    )
+}
 
 @Composable
 @Preview
@@ -96,6 +128,26 @@ fun EventCategoryItemSelectedPreview() {
             selected = true,
             showLabel = false,
             onClick = {}
+        )
+    }
+}
+
+@Composable
+@Preview
+fun CategoryIconPreview() {
+    EventricTheme {
+        CategoryIcon(
+            category = EventCategory.Art,
+        )
+    }
+}
+
+@Composable
+@Preview
+fun CategoryCompactIconPreview() {
+    EventricTheme {
+        CategoryCompactIcon(
+            category = EventCategory.Art,
         )
     }
 }

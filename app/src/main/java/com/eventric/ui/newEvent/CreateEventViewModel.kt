@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
 import com.eventric.repo.ImagesRepository
 import com.eventric.repo.UserRepository
+import com.eventric.utils.ErrorOperation
 import com.eventric.utils.LoadingOperation
 import com.eventric.utils.Operation
 import com.eventric.utils.tryOperation
@@ -80,20 +81,24 @@ class CreateEventViewModel @Inject constructor(
             organizer = organizer
         )
 
-        createEventCodeResult.value = tryOperation {
-            if (eventId == "") {
-                eventIdFlow.value = eventRepository.createEvent(event)
-            } else
-                eventRepository.editEvent(eventId, event)
-            if (uriImage != Uri.EMPTY)
-                imagesRepository.uploadEventImage(uriImage, eventIdFlow.value)
-        }
+        if (event.name == "" || event.date?.start == "" || event.date?.end == "" || event.dateRegistration?.start == "" || event.dateRegistration?.end == "")
+            createEventCodeResult.value = ErrorOperation(Throwable("mancanza di dati"))
+        else
+            createEventCodeResult.value = tryOperation {
+                if (eventId == "") {
+                    eventIdFlow.value = eventRepository.createEvent(event)
+                } else
+                    eventRepository.editEvent(eventId, event)
+                if (uriImage != Uri.EMPTY)
+                    imagesRepository.uploadEventImage(uriImage, eventIdFlow.value)
+            }
     }
 
     suspend fun deleteEvent() {
         val eventId = eventIdFlow.value
         deleteEventCodeResult.value = tryOperation {
             if (eventId != "") {
+                userRepository.removeEventFavoriteFromAll(eventId)
                 eventRepository.deleteEvent(eventId)
                 imagesRepository.deleteEventImage(eventId)
             }

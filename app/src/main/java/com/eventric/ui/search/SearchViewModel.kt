@@ -8,17 +8,19 @@ import com.eventric.repo.ImagesRepository
 import com.eventric.repo.UserRepository
 import com.eventric.utils.getMilliFromDate
 import com.eventric.vo.Event
+import com.eventric.vo.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     eventRepository: EventRepository,
-    userRepository: UserRepository,
+    private val userRepository: UserRepository,
     imagesRepository: ImagesRepository,
 ) : ViewModel() {
 
@@ -61,11 +63,54 @@ class SearchViewModel @Inject constructor(
                         event.name?.contains(searchWord) == true
                                 || event.location?.contains(searchWord) == true
                                 || event.date?.start?.contains(searchWord) == true
+                                || event.organizer?.contains(searchWord) == true
                                 || event.info?.contains(searchWord) == true
                                 || event.type?.contains(searchWord) == true
                     )
                 }
         }
+
+    val users: Flow<List<Pair<Triple<Pair<String, User>, Boolean, Uri>, Boolean>>> =
+        combine(
+            eventRepository.getAllEvents(),
+            userRepository.getAllUsers(),
+            userFlow,
+            searchWordFlow,
+            imagesRepository.downloadAllUserImages()
+        ) { events, users, (loggedUserId, loggedUser), searchWord, usersImages ->
+            users
+                .filter { (userId, ) ->
+                    userId != loggedUserId
+                }
+                .map { (id, user) ->
+                    Log.d("test", "user")
+
+                    Pair(
+                        Triple(
+                            Pair(
+                                id,
+                                user
+                            ),
+                            loggedUser.followingUsers.contains(id),
+                            usersImages[id] ?: Uri.EMPTY
+                        ),
+                        user.name?.contains(searchWord) == true
+                                || user.surname?.contains(searchWord) == true
+                                || user.birthDate?.contains(searchWord) == true
+                                || user.email.contains(searchWord)
+                    )
+                }
+        }
+
+
+    suspend fun changeOrganizerFollow(
+        id: String,
+        isFollowed: Boolean,
+    ) = userRepository.addOrRemoveFollow(
+        followedUserId = id,
+        followingUserId = userFlow.first().first,
+        addOrRemove = isFollowed
+    )
 
     fun setSearchWord(word: String) {
         searchWordFlow.value = word

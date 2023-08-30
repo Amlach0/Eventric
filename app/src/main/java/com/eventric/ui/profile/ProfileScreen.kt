@@ -38,7 +38,6 @@ fun ProfileScreen(
         SelectorItemData(value = "events", label = "Events", iconId = null)
     )
 
-    val isInHome = (userId == "")
     val user by profileViewModel.userFlow.collectAsStateWithLifecycle(null)
     val uriImage by profileViewModel.uriImageFlow.collectAsStateWithLifecycle(Uri.EMPTY)
     val isUserFollowed by profileViewModel.isUserFollowedFlow.collectAsStateWithLifecycle(false)
@@ -46,6 +45,10 @@ fun ProfileScreen(
     val followed by profileViewModel.followedFlow.collectAsStateWithLifecycle(listOf())
     val organizedEvents by profileViewModel.organizedEvents.collectAsStateWithLifecycle(listOf())
     val loggedUserId by profileViewModel.loggedUserId.collectAsStateWithLifecycle("")
+
+    val isInHome = userId == ""
+    val isLoggedUser = userId == loggedUserId
+
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmValueChange = { it != ModalBottomSheetValue.Expanded }
@@ -94,6 +97,7 @@ fun ProfileScreen(
             user = user ?: User(),
             uriImage = uriImage,
             isInHome = isInHome,
+            isLoggedUser = isLoggedUser,
             followed = followed,
             followers = followers,
             isUserFollowed = isUserFollowed,

@@ -185,6 +185,20 @@ class UserRepository @Inject constructor() {
         )
     }
 
+    suspend fun removeEventFavoriteFromAll(
+        eventId: String
+    ) {
+        val userIds = getAllUsers().first().map { it.first }
+
+        for (userId in userIds) {
+            addOrRemoveFavorite(
+                userId,
+                eventId,
+                false
+            )
+        }
+    }
+
     /**
      * Adds or Removes a following User Id from the following users of the followed user
      * @param followedUserId The Followed user Id
@@ -220,6 +234,20 @@ class UserRepository @Inject constructor() {
             notification = notification,
             addOrRemove = addOrRemove
         )
+    }
+
+    suspend fun removeUserFollowFromAll(
+        userId: String
+    ) {
+        val userIds = getAllUsers().first().map { it.first }
+
+        for (uId in userIds) {
+            addOrRemoveFollow(
+                userId,
+                uId,
+                false
+            )
+        }
     }
 
     /**

@@ -83,7 +83,7 @@ class ProfileViewModel @Inject constructor(
                 event.organizer == userId
                         && (event.type == "public"
                         || (event.type == "private"
-                        && loggedUser.followingUsers.contains(event.organizer)))
+                            && loggedUser.followingUsers.contains(event.organizer)))
             }
             .map { (id, event) ->
                 Triple(

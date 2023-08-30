@@ -2,7 +2,9 @@ package com.eventric.ui.profile
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,6 +57,7 @@ fun ProfileContent(
     user: User,
     uriImage: Uri,
     isInHome: Boolean,
+    isLoggedUser: Boolean,
     isUserFollowed: Boolean,
     followers: List<Triple<String, User, Uri>>,
     followed: List<Triple<String, User, Uri>>,
@@ -126,7 +131,8 @@ fun ProfileContent(
                 Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(30.dp),
+                    .padding(top = 30.dp)
+                    .padding(horizontal = 30.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 AsyncImage(
@@ -179,7 +185,7 @@ fun ProfileContent(
                             color = MaterialTheme.colors.error
                         )
                         Spacer(modifier = Modifier.height(20.dp))
-                    } else
+                    } else if (!isLoggedUser)
                         CustomButtonSecondary(
                             text = stringResource(if (isUserFollowed) R.string.unfollow_label else R.string.follow_label),
                             modifier = Modifier
@@ -210,45 +216,67 @@ fun ProfileContent(
                             color = MaterialTheme.colors.onBackground
                         )
                     } else {
-                        BrandSelector(
-                            dataList = pages,
-                            selectedItem = selectedPage,
-                            onChangeSelectedItem = { onChangeSelectedPage(it) }
-                        )
-                        when (selectedPage.value) {
-                            "bio" -> {
-                                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(15.dp),
-                                    text = user.bio ?: "nessuna bio",
-                                    style = MaterialTheme.typography.body2,
-                                    color = MaterialTheme.colors.onBackground
-                                )
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(top = 25.dp)
+                            ) {
+                                when (selectedPage.value) {
+                                    "bio" -> {
+                                        Text(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 15.dp, vertical = 40.dp),
+                                            text = user.bio ?: "nessuna bio",
+                                            style = MaterialTheme.typography.body2,
+                                            color = MaterialTheme.colors.onBackground
+                                        )
+                                    }
+
+                                    "events" -> {
+                                        if (organizedEvents.isEmpty())
+                                            EventCardCompactEmptyItem(Modifier.padding(15.dp))
+                                        else
+                                            LazyColumn(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(horizontal = 15.dp),
+                                                contentPadding = PaddingValues(vertical = 40.dp),
+                                                verticalArrangement = Arrangement.spacedBy(15.dp)
+                                            ) {
+                                                items(organizedEvents) { (eventPair, isFavorite, uriImage) ->
+                                                    val eventId = eventPair.first
+                                                    val event = eventPair.second
+                                                    EventCardCompactItem(
+                                                        event = event,
+                                                        uriImage = uriImage,
+                                                        isFavorite = isFavorite,
+                                                        onClick = { onEvent(eventId) }
+                                                    )
+                                                }
+                                            }
+                                    }
+                                }
                             }
 
-                            "events" -> {
-                                if (organizedEvents.isEmpty())
-                                    EventCardCompactEmptyItem(Modifier.padding(15.dp))
-                                else
-                                    LazyColumn(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 15.dp),
-                                        contentPadding = PaddingValues(vertical = 15.dp),
-                                        verticalArrangement = Arrangement.spacedBy(15.dp)
-                                    ) {
-                                        items(organizedEvents) { (eventPair, isFavorite, uriImage) ->
-                                            val eventId = eventPair.first
-                                            val event = eventPair.second
-                                            EventCardCompactItem(
-                                                event = event,
-                                                uriImage = uriImage,
-                                                isFavorite = isFavorite,
-                                                onClick = { onEvent(eventId) }
-                                            )
-                                        }
-                                    }
+                            val colorStops = arrayOf(
+                                0f to MaterialTheme.colors.background,
+                                0.07f to MaterialTheme.colors.background,
+                                0.15f to Color.Transparent,
+                                0.9f to Color.Transparent,
+                                1f to MaterialTheme.colors.background
+                            )
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Brush.verticalGradient(colorStops = colorStops))
+                            ) {
+                                BrandSelector(
+                                    dataList = pages,
+                                    selectedItem = selectedPage,
+                                    onChangeSelectedItem = { onChangeSelectedPage(it) }
+                                )
                             }
                         }
                     }

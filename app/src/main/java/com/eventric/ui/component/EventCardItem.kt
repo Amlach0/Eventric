@@ -32,6 +32,7 @@ import coil.compose.AsyncImage
 import com.eventric.R
 import com.eventric.ui.theme.EventricTheme
 import com.eventric.vo.Event
+import com.eventric.vo.EventCategory
 
 
 @Composable
@@ -68,19 +69,31 @@ fun EventCardItem(
                     contentScale = ContentScale.Crop
                 )
 
-                Row(
+                Column (
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .padding(8.dp),
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalAlignment = Alignment.End
                 ) {
-                    DateCompactItem(
-                        startDate = event.date?.start ?: "",
-                        endDate = event.date?.end ?: ""
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        DateCompactItem(
+                            startDate = event.date?.start ?: "",
+                            endDate = event.date?.end ?: ""
+                        )
+                        FavoriteIcon(isFavorite)
+                    }
+
+                    CategoryIcon(
+                        category = EventCategory.fromDbString(event.category.toString())
                     )
-                    FavoriteIcon(isFavorite)
                 }
+
             }
 
             Column(
@@ -185,14 +198,23 @@ fun EventCardCompactItem(
                             tint = MaterialTheme.colors.primary
                         )
                     }
-                    Text(
+                    Row (
                         modifier = Modifier
                             .weight(1f)
                             .padding(vertical = 5.dp),
-                        text = event.name.toString(),
-                        style = MaterialTheme.typography.subtitle1,
-                        color = MaterialTheme.colors.onSecondary
-                    )
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CategoryCompactIcon(category = EventCategory.fromDbString(event.category.toString()))
+                        Text(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = 5.dp),
+                            text = event.name.toString(),
+                            style = MaterialTheme.typography.subtitle1,
+                            color = MaterialTheme.colors.onSecondary
+                        )
+                    }
+
                     LocationCompactItem(location = event.location ?: "")
                 }
             }
