@@ -105,7 +105,7 @@ fun SignupContent(
         Scaffold(
             modifier = Modifier
                 .fillMaxSize(),
-            backgroundColor = Color.Transparent,
+            backgroundColor = MaterialTheme.colors.background,
             topBar = {
                 if (isEdit)
                     BrandTopBar(
