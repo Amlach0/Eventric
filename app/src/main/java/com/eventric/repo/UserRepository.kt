@@ -306,6 +306,8 @@ class UserRepository @Inject constructor() {
     ) {
         try {
             users.document(userId).delete().await()
+            currentUserFlow.value?.delete()?.await()
+            logout()
             Log.d(E_TAG, "User $userId deleted")
         } catch (ce: CancellationException) {
             throw ce
