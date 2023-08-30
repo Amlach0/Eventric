@@ -11,8 +11,6 @@ data class User(
     val bio: String?,
     val birthDate: String?,
     val followingUsers: List<String>,
-    val organizedEvents: List<String>,
-    val subscribedEvents: List<String>,
     val favoriteEvents: List<String>,
     val notifications: List<Notification>,
 ) {
@@ -24,8 +22,6 @@ data class User(
         "",
         listOf(),
         listOf(),
-        listOf(),
-        listOf(),
         listOf()
     )
     constructor(email: String, name: String?, surname: String?, bio: String?, birthDate: String?): this(
@@ -34,8 +30,6 @@ data class User(
         surname,
         bio,
         birthDate,
-        listOf(),
-        listOf(),
         listOf(),
         listOf(),
         listOf()
@@ -49,8 +43,6 @@ data class User(
             bio = null,
             birthDate = null,
             followingUsers = listOf(),
-            organizedEvents = listOf(),
-            subscribedEvents = listOf(),
             favoriteEvents = listOf(),
             notifications = listOf()
         )

@@ -31,17 +31,20 @@ android {
     }
 
     buildTypes {
-        all{
+        configureEach {
             buildConfigField 'String', 'DS_NAME', withQuotes(dsName)
         }
         release {
+            debuggable false
+            minifyEnabled false
+
             buildConfigField 'String', 'USERNAME', withQuotes("")
             buildConfigField 'String', 'PASSWORD', withQuotes("")
 
-            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug{
+            debuggable true
             buildConfigField 'String', 'USERNAME', withQuotes(debugLoginUsername)
             buildConfigField 'String', 'PASSWORD', withQuotes(debugLoginPassword)
         }
@@ -80,7 +83,7 @@ dependencies {
     implementation "androidx.compose.ui:ui"
     implementation "androidx.compose.ui:ui-tooling-preview"
     implementation 'androidx.compose.material3:material3:1.2.0-alpha02'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.5.0"
     debugImplementation "androidx.compose.ui:ui-tooling"
     debugImplementation "androidx.compose.ui:ui-test-manifest"
     implementation 'androidx.activity:activity-compose'

@@ -4,6 +4,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 /**
  * Return date in specified format.
@@ -13,7 +14,7 @@ import java.util.Date
  */
 fun getDateFromMilli(milliSeconds: Long, format: String): String {
     // Create a DateFormatter object for displaying date in specified format.
-    val formatter = SimpleDateFormat(format)
+    val formatter = SimpleDateFormat(format, Locale.ITALIAN)
 
     // Create a calendar object that will convert the date and time value in milliseconds to date.
     val calendar: Calendar = Calendar.getInstance()
@@ -29,9 +30,9 @@ fun getDateFromMilli(milliSeconds: Long, format: String): String {
  */
 fun getMilliFromDate(dateFormat: String?, format: String): Long {
     var date = Date()
-    val formatter = SimpleDateFormat(format)
+    val formatter = SimpleDateFormat(format, Locale.ITALIAN)
     try {
-        date = formatter.parse(dateFormat)
+        date = formatter.parse(dateFormat.toString()) ?: Date()
     } catch (e: ParseException) {
         e.printStackTrace()
     }
