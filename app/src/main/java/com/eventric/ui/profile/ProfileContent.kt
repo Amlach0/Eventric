@@ -236,7 +236,7 @@ fun ProfileContent(
 
                                     "events" -> {
                                         if (organizedEvents.isEmpty())
-                                            EventCardCompactEmptyItem(Modifier.padding(15.dp))
+                                            EventCardCompactEmptyItem(Modifier.padding(horizontal = 15.dp, vertical = 40.dp))
                                         else
                                             LazyColumn(
                                                 modifier = Modifier
