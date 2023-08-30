@@ -2,6 +2,7 @@ package com.eventric.ui.detailEvent
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -119,7 +120,11 @@ fun DetailEventContent(
         },
         modifier = Modifier.fillMaxSize()
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
+        ) {
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -209,7 +214,7 @@ fun DetailEventContent(
                         EventInfoItem(
                             modifier = Modifier.padding(top = 16.dp),
                             iconId = R.drawable.ic_location,
-                            primaryText = event.location.toString(),
+                            primaryText = if(event.location!="") event.location.toString() else stringResource(R.string.empty_location_label),
                         )
                         ProfileOrganizerItem(
                             modifier = Modifier

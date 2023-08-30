@@ -23,13 +23,15 @@ fun LocationCompactItem(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            modifier = Modifier
-                .size(16.dp),
-            painter = painterResource(R.drawable.ic_map),
-            contentDescription = null,
-            tint = MaterialTheme.colors.onBackground
-        )
+        if(location != "") {
+            Icon(
+                modifier = Modifier
+                    .size(16.dp),
+                painter = painterResource(R.drawable.ic_map),
+                contentDescription = null,
+                tint = MaterialTheme.colors.onBackground
+            )
+        }
         Text(
             modifier = Modifier.padding(start = 5.dp),
             text = location,

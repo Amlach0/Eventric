@@ -58,7 +58,7 @@ fun SignupScreen(
     var errorBannerConfermationIsVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(signupState, deleteUserState) {
-        if (signupState is ErrorOperation) errorBannerIsVisible = true
+        if (signupState is ErrorOperation && !isEdit) errorBannerIsVisible = true
         if (deleteUserState is ErrorOperation) errorBannerDeleteIsVisible = true
         if (signupState is SuccessOperation) goToDispatcher()
         if (deleteUserState is SuccessOperation) goToDispatcher()

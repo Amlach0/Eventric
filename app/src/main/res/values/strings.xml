@@ -80,4 +80,5 @@
     <string name="search_label">Cerca</string>
     <string name="empty_events_label">Non ci sono Eventi</string>
     <string name="empty_users_label">Non ci sono Utenti</string>
+    <string name="empty_location_label">Luogo non specificato</string>
 </resources>

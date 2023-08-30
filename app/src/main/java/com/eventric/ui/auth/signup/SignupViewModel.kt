@@ -73,7 +73,7 @@ class SignupViewModel @Inject constructor(
                     imagesRepository.uploadUserImage(uriImage, userIdFlow.value)
             }
         else
-            signupCodeResult.value = ErrorOperation(Throwable("password non predente o non corrisponde"))
+            signupCodeResult.value = ErrorOperation(Throwable("password non presente o non corrisponde"))
     }
 
     suspend fun deleteUser() {
