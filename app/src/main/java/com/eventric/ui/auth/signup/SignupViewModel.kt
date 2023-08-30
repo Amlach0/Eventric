@@ -2,6 +2,7 @@ package com.eventric.ui.auth.signup
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import com.eventric.repo.EventRepository
 import com.eventric.repo.ImagesRepository
 import com.eventric.repo.UserRepository
 import com.eventric.utils.ErrorOperation
@@ -20,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignupViewModel @Inject constructor(
     private val userRepository: UserRepository,
+    private val eventRepository: EventRepository,
     private val imagesRepository: ImagesRepository,
 ) : ViewModel() {
 
@@ -80,6 +82,8 @@ class SignupViewModel @Inject constructor(
         val userId = userIdFlow.value
         deleteUserCodeResult.value = tryOperation {
             if (userId != "") {
+                eventRepository.removeUserSubscribeFromAll(userId)
+                userRepository.removeUserFollowFromAll(userId)
                 userRepository.deleteUser(userId)
                 imagesRepository.deleteUserImage(userId)
             }

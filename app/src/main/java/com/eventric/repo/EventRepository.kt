@@ -131,4 +131,18 @@ class EventRepository @Inject constructor() {
             mapFieldValue = mapOf("subscribed" to subscribed.toList())
         )
     }
+
+    suspend fun removeUserSubscribeFromAll(
+        userId: String
+    ) {
+        val eventIds = getAllEvents().first().map { it.first }
+
+        for (eventId in eventIds) {
+            addOrRemoveSubscribe(
+                eventId,
+                userId,
+                false
+            )
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.eventric.ui.component
 
 import android.net.Uri
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,9 +19,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.eventric.R
+import com.eventric.ui.theme.EventricTheme
 import com.eventric.vo.User
 
 
@@ -42,36 +45,35 @@ fun UserCardCompactItem(
         backgroundColor = MaterialTheme.colors.background
     ) {
         Row(
-            modifier = Modifier.padding(vertical = 7.dp, horizontal = 9.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 7.dp, horizontal = 9.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
                 modifier = Modifier
                     .size(44.dp)
                     .clip(MaterialTheme.shapes.small),
-                model = if (uriImage== Uri.EMPTY) R.drawable.img_profile_placeholder else uriImage,
+                model = if (uriImage == Uri.EMPTY) R.drawable.img_profile_placeholder else uriImage,
                 contentDescription = null,
                 placeholder = painterResource(R.drawable.img_profile_placeholder),
                 contentScale = ContentScale.Crop
             )
 
-            Row(
+            Text(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .padding(start = 17.dp),
-            ) {
-                Text(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(vertical = 5.dp),
-                    text = user.name.toString()+" "+user.surname.toString(),
-                    style = MaterialTheme.typography.subtitle1,
-                    color = MaterialTheme.colors.onSecondary
-                )
-                CustomButtonTertiary(
-                    text = stringResource(if (isFollowed) R.string.unfollow_label else R.string.follow_label),
-                    onClick = { onFollowClick() }
-                )
-            }
+                text = user.name.toString() + " " + user.surname.toString(),
+                style = MaterialTheme.typography.subtitle1,
+                color = MaterialTheme.colors.onSecondary
+            )
+            CustomButtonTertiary(
+                text = stringResource(if (isFollowed) R.string.unfollow_label else R.string.follow_label),
+                onClick = { onFollowClick() }
+            )
+
         }
     }
 }
@@ -96,6 +98,21 @@ fun UserCardCompactEmptyItem(
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onSecondary
             )
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun UserCardCompactItemPreview() {
+    EventricTheme {
+        UserCardCompactItem(
+            user = User().copy(name = "Antonio"),
+            isFollowed = true,
+            uriImage = Uri.EMPTY,
+            onClick = {}) {
+
         }
     }
 }

@@ -137,27 +137,6 @@ fun CreateEventContent(
             )
         }
     ) {
-
-        AnimatedVisibility(
-            visible = createErrorBannerIsVisible || deleteErrorBannerIsVisible,
-        ) {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .background(MaterialTheme.colors.error)
-            ) {
-                Text(
-                    text = stringResource(if (createErrorBannerIsVisible) R.string.error_new_event else R.string.error_delete_event),
-                    style = MaterialTheme.typography.h3,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.align(Alignment.Center),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Light,
-                )
-            }
-        }
-
         Box(
             Modifier
                 .fillMaxSize()
@@ -330,6 +309,26 @@ fun CreateEventContent(
                 )
             }
 
+        }
+
+        AnimatedVisibility(
+            visible = createErrorBannerIsVisible || deleteErrorBannerIsVisible,
+        ) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .background(MaterialTheme.colors.error)
+            ) {
+                Text(
+                    text = stringResource(if (createErrorBannerIsVisible) R.string.error_new_event else R.string.error_delete_event),
+                    style = MaterialTheme.typography.h3,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.align(Alignment.Center),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Light,
+                )
+            }
         }
     }
 }
