@@ -1,5 +1,6 @@
 package com.eventric.ui.profile
 
+import android.net.Uri
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -39,6 +40,7 @@ fun ProfileScreen(
 
     val isInHome = (userId == "")
     val user by profileViewModel.userFlow.collectAsStateWithLifecycle(null)
+    val uriImage by profileViewModel.uriImageFlow.collectAsStateWithLifecycle(Uri.EMPTY)
     val isUserFollowed by profileViewModel.isUserFollowedFlow.collectAsStateWithLifecycle(false)
     val followers by profileViewModel.followersFlow.collectAsStateWithLifecycle(listOf())
     val followed by profileViewModel.followedFlow.collectAsStateWithLifecycle(listOf())
@@ -90,6 +92,7 @@ fun ProfileScreen(
         ProfileContent(
             navController = navController,
             user = user ?: User(),
+            uriImage = uriImage,
             isInHome = isInHome,
             followed = followed,
             followers = followers,

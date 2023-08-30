@@ -1,6 +1,8 @@
 package com.eventric.ui.auth.signup
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
+import com.eventric.repo.ImagesRepository
 import com.eventric.repo.UserRepository
 import com.eventric.utils.ErrorOperation
 import com.eventric.utils.LoadingOperation
@@ -18,16 +20,22 @@ import javax.inject.Inject
 @HiltViewModel
 class SignupViewModel @Inject constructor(
     private val userRepository: UserRepository,
+    private val imagesRepository: ImagesRepository,
 ) : ViewModel() {
 
     var signupCodeResult = MutableStateFlow<Operation?>(null)
+    var deleteUserCodeResult = MutableStateFlow<Operation?>(null)
 
     val userIdFlow = MutableStateFlow("")
     val userFlow = userIdFlow.flatMapLatest { id ->
         if (id != "")
             userRepository.getUser(id).map { it.second }
         else
-            flowOf()
+            flowOf(User())
+    }
+
+    val uriImageFlow = userIdFlow.flatMapLatest { userId ->
+        imagesRepository.downloadUserImage(userId)
     }
 
     fun setUserId(id: String) {
@@ -37,6 +45,7 @@ class SignupViewModel @Inject constructor(
     suspend fun signupOrEdit(
         name: String,
         surname: String,
+        uriImage: Uri,
         email: String,
         password: String,
         confirmPassword: String,
@@ -50,7 +59,6 @@ class SignupViewModel @Inject constructor(
             email = email,
             name = name,
             surname = surname,
-            image = null,
             bio = bio,
             birthDate = birthDate,
         )
@@ -61,11 +69,21 @@ class SignupViewModel @Inject constructor(
                     userRepository.editUser(userIdFlow.value, user, password)
                 else
                     userRepository.createAccount(user, password)
+                if (uriImage != Uri.EMPTY)
+                    imagesRepository.uploadUserImage(uriImage, userIdFlow.value)
             }
         else
-            signupCodeResult.value = ErrorOperation(Throwable("password non predente o non corrisponde"))
+            signupCodeResult.value = ErrorOperation(Throwable("password non presente o non corrisponde"))
     }
 
-    suspend fun deleteUser() = userRepository.deleteUser(userIdFlow.value)
+    suspend fun deleteUser() {
+        val userId = userIdFlow.value
+        deleteUserCodeResult.value = tryOperation {
+            if (userId != "") {
+                userRepository.deleteUser(userId)
+                imagesRepository.deleteUserImage(userId)
+            }
+        }
+    }
 
 }

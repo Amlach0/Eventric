@@ -1,5 +1,6 @@
 package com.eventric.ui.detailEvent
 
+import android.net.Uri
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -32,7 +33,9 @@ fun DetailEventScreen(
     detailEventViewModel.setEventId(eventId)
 
     val event by detailEventViewModel.eventFlow.collectAsStateWithLifecycle(null)
+    val uriImage by detailEventViewModel.uriImageFlow.collectAsStateWithLifecycle(Uri.EMPTY)
     val organizer by detailEventViewModel.organizerFlow.collectAsStateWithLifecycle(null)
+    val uriOrganizerImage by detailEventViewModel.uriOrganiserImageFlow.collectAsStateWithLifecycle(Uri.EMPTY)
 
     val organizerName = "${organizer?.second?.name} ${organizer?.second?.surname}"
     val currentTime = Calendar.getInstance().time.time
@@ -63,7 +66,7 @@ fun DetailEventScreen(
     }
 
     fun onUserInviteChange(userId: String) = coroutineScope.launch {
-        detailEventViewModel.changeUserInvite(userId, invitableUsers.findLast { it.first== userId }?.second != true)
+        detailEventViewModel.changeUserInvite(userId, invitableUsers.findLast { it.first.first== userId }?.second != true)
     }
 
     fun onInvite() = coroutineScope.launch {
@@ -88,7 +91,9 @@ fun DetailEventScreen(
         DetailEventContent(
             navController = navControllerForBack,
             event = event ?: Event(),
+            uriImage = uriImage,
             organizerName = organizerName,
+            uriOrganizerImage = uriOrganizerImage,
             isFavorite = isFavorite,
             isRegistrationOpen = isRegistrationOpen,
             isUserOrganizer = isUserOrganizer,

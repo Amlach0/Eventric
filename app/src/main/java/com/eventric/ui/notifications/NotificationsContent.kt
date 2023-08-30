@@ -1,5 +1,6 @@
 package com.eventric.ui.notifications
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -22,7 +23,7 @@ import com.eventric.vo.User
 @Composable
 fun NotificationsContent(
     navControllerForBack: NavController,
-    notifications: List<Triple<Pair<String, User>, Pair<String, String>, Pair<String, Event>>>,
+    notifications: List<Triple<Triple<String, User, Uri>, Pair<String, String>, Pair<String, Event>>>,
     onAcceptEventInvite: (eventId: String, userId: String) -> Unit,
     onRejectEventInvite: (eventId: String, userId: String) -> Unit,
     onClearAll: () -> Unit,
@@ -63,14 +64,15 @@ fun NotificationsContent(
             contentPadding = PaddingValues(vertical = 35.dp),
             verticalArrangement = Arrangement.spacedBy(17.dp)
         ) {
-            items(items = notifications){ (userPair, textAndTime, eventPair) ->
-                val userId = userPair.first
-                val user = userPair.second
+            items(items = notifications){ (userTriple, textAndTime, eventPair) ->
+                val userId = userTriple.first
+                val user = userTriple.second
+                val uriUserImage = userTriple.third
                 val eventId = eventPair.first
                 val event = eventPair.second
                 NotificationItem(
                     userName = "${user.name} ${user.surname}",
-                    userImageId = R.drawable.img_profile,
+                    uriImage = uriUserImage,
                     text = textAndTime.first,
                     eventName = event.name ?: "",
                     timeStamp = textAndTime.second,

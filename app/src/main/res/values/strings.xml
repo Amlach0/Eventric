@@ -5,6 +5,7 @@
     <string name="error_confirmation_psw">Password e conferma password non corrispondono</string>
     <string name="error_new_event">Creazione evento fallita. Ripovare</string>
     <string name="error_delete_event">Eliminazione evento fallita. Ripovare</string>
+    <string name="error_delete_user">Eliminazione utente fallita. Ripovare</string>
     <string name="title_login">Log In</string>
     <string name="common_login">LOG IN</string>
     <string name="common_signup">SIGN UP</string>
@@ -56,7 +57,7 @@
     <string name="subscribed_list_label">Lista dei partecipanti</string>
     <string name="profile">Profilo</string>
     <string name="followed_label">Seguiti</string>
-    <string name="followers_label">Followers</string>
+    <string name="followers_label">Ti seguono</string>
     <string name="bio">Bio</string>
     <string name="edit_profile">Modifica</string>
     <string name="logout">Logout</string>
@@ -74,4 +75,10 @@
     <string name="organized_label">Organizzati</string>
     <string name="subscribed_label">Iscritti</string>
     <string name="favorites_label">Preferiti</string>
+    <string name="choose_event_image_label">Scegli</string>
+    <string name="choose_profile_image_label">Scegli</string>
+    <string name="search_label">Cerca</string>
+    <string name="empty_events_label">Non ci sono Eventi</string>
+    <string name="empty_users_label">Non ci sono Utenti</string>
+    <string name="empty_location_label">Luogo non specificato</string>
 </resources>

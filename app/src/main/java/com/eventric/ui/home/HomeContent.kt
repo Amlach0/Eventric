@@ -23,6 +23,7 @@ import com.eventric.ui.events.EventsScreen
 import com.eventric.ui.explore.ExploreScreen
 import com.eventric.ui.explore.ExploreTopBar
 import com.eventric.ui.profile.ProfileScreen
+import com.eventric.ui.search.SearchScreen
 
 @Composable
 fun HomeContent(
@@ -37,11 +38,8 @@ fun HomeContent(
             when (navBackStackEntry?.destination?.route) {
                 BottomNavItem.Explore.screen_route ->
                     ExploreTopBar(
-                        address = "Via Esempio, 69",
-                        goToMap = {},
-                        goToNotifications = { mainNavController.navigate("notifications") },
                         isNotificationActive = isNotificationActive
-                    )
+                    ) { mainNavController.navigate("notifications") }
             }
         },
         bottomBar = { CustomBottomNavigation(navController = homeNavController) },
@@ -78,6 +76,11 @@ fun HomeContent(
             composable(BottomNavItem.Explore.screen_route) {
                 ExploreScreen(
                     goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") },
+                )
+            }
+            composable(BottomNavItem.Search.screen_route) {
+                SearchScreen(
+                    goToEventDetail = { mainNavController.navigate("info_event?eventId=$it") }
                 )
             }
             composable(BottomNavItem.Events.screen_route) {

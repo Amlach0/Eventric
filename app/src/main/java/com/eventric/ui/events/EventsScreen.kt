@@ -1,8 +1,6 @@
 package com.eventric.ui.events
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,12 +22,8 @@ fun EventsScreen(
         SelectorItemData(value = "favorites", label = stringResource(R.string.favorites_label), iconId = R.drawable.ic_favorite_fill)
     )
 
-    val events by eventsViewModel.getEvents.collectAsStateWithLifecycle(listOf())
+    val events by eventsViewModel.events.collectAsStateWithLifecycle(listOf())
     var selectedPage by remember { mutableStateOf( pages[0] ) }
-
-    LaunchedEffect(events){
-        Log.d("test", "$events")
-    }
 
     fun onChangeSelectedPage(selected: SelectorItemData) {
         selectedPage = selected

@@ -1,7 +1,8 @@
 package com.eventric.ui.detailEvent
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
+import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -36,12 +37,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.eventric.R
 import com.eventric.ui.component.BrandTopBar
 import com.eventric.ui.component.CustomButtonPrimary
 import com.eventric.ui.component.CustomButtonSecondary
 import com.eventric.ui.component.EventCategoryItem
 import com.eventric.ui.component.EventInfoItem
+import com.eventric.ui.component.ProfileEmptyItem
 import com.eventric.ui.component.ProfileGoingExpandedItem
 import com.eventric.ui.component.ProfileItem
 import com.eventric.ui.component.ProfileOrganizerItem
@@ -55,7 +58,9 @@ import com.eventric.vo.User
 fun DetailEventContent(
     navController: NavController,
     event: Event,
+    uriImage: Uri,
     organizerName: String,
+    uriOrganizerImage: Uri,
     isFavorite: Boolean,
     isRegistrationOpen: Boolean,
     isUserOrganizer: Boolean,
@@ -63,8 +68,8 @@ fun DetailEventContent(
     isOrganizerFollowed: Boolean,
     sheetState: ModalBottomSheetState,
     isInviteSheet: Boolean,
-    subscribedUsers: List<Triple<String, Boolean, User>>,
-    invitableUsers: List<Triple<String, Boolean, User>>,
+    subscribedUsers: List<Triple<Pair<String, User>, Boolean, Uri>>,
+    invitableUsers: List<Triple<Pair<String, User>, Boolean, Uri>>,
     onEdit: () -> Unit,
     onUser: (String) -> Unit,
     onOrganizer: () -> Unit,
@@ -91,32 +96,42 @@ fun DetailEventContent(
                     style = MaterialTheme.typography.h4,
                     color = MaterialTheme.colors.onSecondary
                 )
-                LazyColumn(
-                    contentPadding = PaddingValues(vertical = 25.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(items = if (isInviteSheet) invitableUsers else subscribedUsers) { (userId, isInvited, user) ->
-                        ProfileItem(
-                            name = "${user.name} ${user.surname}",
-                            imageId = R.drawable.img_profile,
-                            isInvited = isInvited,
-                            showInviteButton = isInviteSheet,
-                            onInviteClick = { onUserInviteChange(userId) },
-                            onClick = { onUser(userId) },
-                        )
+                if ((isInviteSheet && invitableUsers.isEmpty()) || (!isInviteSheet && subscribedUsers.isEmpty()))
+                    ProfileEmptyItem(Modifier.padding(vertical = 25.dp))
+                else
+                    LazyColumn(
+                        contentPadding = PaddingValues(vertical = 25.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(items = if (isInviteSheet) invitableUsers else subscribedUsers) { (userPair, isInvited, uriImage) ->
+                            val userId = userPair.first
+                            val user = userPair.second
+                            ProfileItem(
+                                name = "${user.name} ${user.surname}",
+                                uriImage = uriImage,
+                                isInvited = isInvited,
+                                showInviteButton = isInviteSheet,
+                                onInviteClick = { onUserInviteChange(userId) },
+                                onClick = { onUser(userId) },
+                            )
+                        }
                     }
-                }
             }
         },
         modifier = Modifier.fillMaxSize()
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Image(
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
+        ) {
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(230.dp),
-                painter = painterResource(R.drawable.img_event),
+                model = if (uriImage == Uri.EMPTY) R.drawable.img_event_placeholder else uriImage,
                 contentDescription = null,
+                placeholder = painterResource(R.drawable.img_event_placeholder),
                 contentScale = ContentScale.Crop
             )
 
@@ -138,8 +153,7 @@ fun DetailEventContent(
                             )
                         },
                         right = {
-                            if (isUserOrganizer)
-                            {
+                            if (isUserOrganizer) {
                                 ActionButton(
                                     onClick = { onEdit() },
                                     iconId = R.drawable.ic_edit,
@@ -200,7 +214,7 @@ fun DetailEventContent(
                         EventInfoItem(
                             modifier = Modifier.padding(top = 16.dp),
                             iconId = R.drawable.ic_location,
-                            primaryText = event.location.toString(),
+                            primaryText = if(event.location!="") event.location.toString() else stringResource(R.string.empty_location_label),
                         )
                         ProfileOrganizerItem(
                             modifier = Modifier
@@ -211,9 +225,9 @@ fun DetailEventContent(
                                         color = MaterialTheme.colors.onPrimary,
                                         bounded = false
                                     )
-                                ){ onOrganizer() },
+                                ) { onOrganizer() },
                             name = organizerName,
-                            imageId = R.drawable.img_profile,
+                            uriImage = uriOrganizerImage,
                             isFollowed = isOrganizerFollowed,
                             showFollowButton = !isUserOrganizer,
                             onFollowClick = { onFollowChange() }

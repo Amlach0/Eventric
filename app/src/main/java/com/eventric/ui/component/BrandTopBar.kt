@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -124,7 +125,6 @@ interface TopBarScope {
         }
     }
 
-    // TODO: da mettere apposto
     @Composable
     fun Title(
         modifier: Modifier = Modifier,
@@ -139,6 +139,18 @@ interface TopBarScope {
             style = MaterialTheme.typography.h4,
             textAlign = textAlign
         )
+    }
+
+    @Composable
+    fun Logo(
+        modifier: Modifier = Modifier,
+    ) {
+       Icon(
+           modifier = modifier.height(38.dp),
+           painter = painterResource(R.drawable.ic_logo_horizontal_white),
+           tint = MaterialTheme.colors.onPrimary,
+           contentDescription = null
+       )
     }
 
 

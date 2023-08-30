@@ -103,7 +103,7 @@ fun LoginContent(
                 modifier = Modifier.padding(horizontal = 34.dp),
                 hint = stringResource(id = R.string.username_label),
                 value = email,
-                icon = R.drawable.ic_mail,
+                iconId = R.drawable.ic_mail,
                 passwordVisible = true,
                 isLastInput = false,
                 onValueChange = onEmailChange
@@ -114,7 +114,7 @@ fun LoginContent(
                     .padding(top = 18.dp),
                 hint = stringResource(R.string.pwd_label),
                 value = password,
-                icon = R.drawable.ic_pwd,
+                iconId = R.drawable.ic_pwd,
                 onValueChange = onPasswordChange,
                 visualTransformationEnabled = true,
                 passwordVisible = passwordVisible,
@@ -123,8 +123,6 @@ fun LoginContent(
                 onDone = onSubmit,
             )
             Spacer(Modifier.weight(1F))
-            //TODO Remember me
-            //TODO Forgot pwd
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

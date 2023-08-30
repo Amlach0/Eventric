@@ -1,13 +1,13 @@
 package com.eventric.ui.component
 
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,23 +33,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.eventric.R
 import com.eventric.ui.theme.EventricTheme
 
 @Composable
 fun ProfileCompactItem(
     name: String,
-    @DrawableRes imageId: Int,
+    uriImage: Uri,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
+        AsyncImage(
             modifier = Modifier
                 .size(30.dp)
                 .clip(MaterialTheme.shapes.small),
-            painter = painterResource(imageId),
+            model = if (uriImage== Uri.EMPTY) R.drawable.img_profile_placeholder else uriImage,
             contentDescription = null,
+            placeholder = painterResource(R.drawable.img_profile_placeholder),
             contentScale = ContentScale.Crop
         )
         Text(
@@ -65,7 +67,7 @@ fun ProfileCompactItem(
 fun ProfileOrganizerItem(
     modifier: Modifier = Modifier,
     name: String,
-    @DrawableRes imageId: Int,
+    uriImage: Uri,
     isFollowed: Boolean,
     showFollowButton: Boolean = true,
     onFollowClick: () -> Unit,
@@ -74,12 +76,13 @@ fun ProfileOrganizerItem(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
+        AsyncImage(
             modifier = Modifier
                 .size(44.dp)
                 .clip(MaterialTheme.shapes.small),
-            painter = painterResource(imageId),
+            model = if (uriImage== Uri.EMPTY) R.drawable.img_profile_placeholder else uriImage,
             contentDescription = null,
+            placeholder = painterResource(R.drawable.img_profile_placeholder),
             contentScale = ContentScale.Crop
         )
         Column(
@@ -134,7 +137,7 @@ fun ProfileGoingItem(
 fun ProfileItem(
     modifier: Modifier = Modifier,
     name: String,
-    @DrawableRes imageId: Int,
+    uriImage: Uri,
     isInvited: Boolean,
     showInviteButton: Boolean = false,
     onClick: () -> Unit,
@@ -144,12 +147,13 @@ fun ProfileItem(
         modifier = modifier.clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
+        AsyncImage(
             modifier = Modifier
                 .size(44.dp)
                 .clip(CircleShape),
-            painter = painterResource(imageId),
+            model = if (uriImage== Uri.EMPTY) R.drawable.img_profile_placeholder else uriImage,
             contentDescription = null,
+            placeholder = painterResource(R.drawable.img_profile_placeholder),
             contentScale = ContentScale.Crop
         )
         Text(
@@ -165,6 +169,26 @@ fun ProfileItem(
                 text = stringResource(if (isInvited) R.string.uninvite_label else R.string.invite_label),
                 onClick = { onInviteClick() }
             )
+    }
+}
+
+@Composable
+fun ProfileEmptyItem(
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 14.dp),
+            text = stringResource(R.string.empty_users_label),
+            style = MaterialTheme.typography.body2,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.onSecondary
+        )
     }
 }
 
@@ -293,7 +317,7 @@ fun ProfileExpandedItemPreview() {
     EventricTheme {
         ProfileOrganizerItem(
             name = "Antonio Cagliari",
-            imageId = R.drawable.img_profile,
+            uriImage = Uri.EMPTY,
             isFollowed = false,
             showFollowButton = true,
             onFollowClick = {},
@@ -307,7 +331,7 @@ fun ProfileItemPreview() {
     EventricTheme {
         ProfileItem(
             name = "Antonio Cagliari",
-            imageId = R.drawable.img_profile,
+            uriImage = Uri.EMPTY,
             isInvited = false,
             showInviteButton = true,
             onInviteClick = {},

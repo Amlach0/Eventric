@@ -6,7 +6,6 @@ import com.eventric.R
 
 data class Event(
     val name: String?,
-    val image: String?,
     val info: String?,
     val location: String?,
     val date: DateRange?,
@@ -16,8 +15,8 @@ data class Event(
     val organizer: String?,
     val subscribed: List<String?>,
 ){
-    constructor(): this(null, null, null, null, null, null, EventCategory.NoCategory.dbString, EventType.Private.dbString, null, listOf())
-    constructor(name: String, info: String?, location: String?, category: String, type: String, date: DateRange?, registrationDate: DateRange?, organizer: String?): this(name, null, info, location, date, registrationDate, category, type, organizer, listOf())
+    constructor(): this(null, null, null, null, null, EventCategory.NoCategory.dbString, EventType.Private.dbString, null, listOf())
+    constructor(name: String, info: String?, location: String?, category: String, type: String, date: DateRange?, registrationDate: DateRange?, organizer: String?): this(name, info, location, date, registrationDate, category, type, organizer, listOf())
 }
 
 data class DateRange(

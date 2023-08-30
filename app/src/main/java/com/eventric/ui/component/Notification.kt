@@ -1,9 +1,9 @@
 package com.eventric.ui.component
 
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,6 +23,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.eventric.R
 import com.eventric.ui.theme.EventricTheme
 
@@ -30,7 +31,7 @@ import com.eventric.ui.theme.EventricTheme
 fun NotificationItem(
     modifier: Modifier = Modifier,
     userName: String,
-    @DrawableRes userImageId: Int,
+    uriImage: Uri,
     text: String,
     eventName: String,
     timeStamp: String,
@@ -45,13 +46,14 @@ fun NotificationItem(
             modifier = modifier,
             verticalAlignment = Alignment.Top
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(CircleShape)
                     .clickable { onViewUser() },
-                painter = painterResource(userImageId),
+                model = if (uriImage== Uri.EMPTY) R.drawable.img_profile_placeholder else uriImage,
                 contentDescription = null,
+                placeholder = painterResource(R.drawable.img_profile_placeholder),
                 contentScale = ContentScale.Crop
             )
             Text(
@@ -88,6 +90,7 @@ fun NotificationItem(
                     modifier = Modifier.weight(1f),
                     color = MaterialTheme.colors.onBackground,
                     text = stringResource(R.string.reject_label),
+                    contentPadding = PaddingValues(0.dp),
                     onClick = { onRejectInvite() }
                 )
                 CustomButtonPrimary(
@@ -96,6 +99,7 @@ fun NotificationItem(
                         .padding(start = 10.dp),
                     text = stringResource(R.string.accept_label),
                     showArrowIcon = false,
+                    contentPadding = PaddingValues(0.dp),
                     onClick = { onAcceptInvite() }
                 )
                 CustomButtonSecondary(
@@ -103,6 +107,7 @@ fun NotificationItem(
                         .weight(1f)
                         .padding(start = 10.dp),
                     text = stringResource(R.string.view_event_label),
+                    contentPadding = PaddingValues(0.dp),
                     onClick = { onViewEvent() }
                 )
             }
@@ -120,7 +125,7 @@ fun NotificationItemPreview() {
     EventricTheme {
         NotificationItem(
             userName = "Mario Dragoni",
-            userImageId = R.drawable.img_profile,
+            uriImage = Uri.EMPTY,
             text = " ti ha invitato a ",
             eventName = "Festa dell'anno",
             timeStamp = "10/07/2023 02:00",

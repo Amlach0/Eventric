@@ -3,6 +3,7 @@ package com.eventric.ui.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ internal fun FullScreenLoader(
 ) {
     Box(
         modifier = modifier
+            .fillMaxSize()
             .clickable( // filter clicks
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,

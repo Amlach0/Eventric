@@ -1,4 +1,4 @@
-package com.eventric.ui.events
+package com.eventric.ui.search
 
 import android.net.Uri
 import android.util.Log
@@ -6,21 +6,23 @@ import androidx.lifecycle.ViewModel
 import com.eventric.repo.EventRepository
 import com.eventric.repo.ImagesRepository
 import com.eventric.repo.UserRepository
+import com.eventric.utils.getMilliFromDate
 import com.eventric.vo.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
-class EventsViewModel @Inject constructor(
+class SearchViewModel @Inject constructor(
     eventRepository: EventRepository,
     userRepository: UserRepository,
     imagesRepository: ImagesRepository,
 ) : ViewModel() {
 
-    private val selectedFilterFlow = MutableStateFlow("organized")
+    val searchWordFlow = MutableStateFlow("")
 
     private val userFlow = userRepository.user
 
@@ -29,15 +31,17 @@ class EventsViewModel @Inject constructor(
             eventRepository.getAllEvents(),
             userRepository.getAllUsers(),
             userFlow,
-            selectedFilterFlow,
+            searchWordFlow,
             imagesRepository.downloadAllEventsImages()
-        ) { events, users, (loggedUserId, loggedUser), selectedFilter, eventsImages ->
+        ) { events, users, (loggedUserId, loggedUser), searchWord, eventsImages ->
             events
-                .filter { (eventId, event) ->
-                    event.organizer == loggedUserId ||
-                            loggedUser.favoriteEvents.contains(eventId) ||
-                            event.subscribed.contains(loggedUserId)
-
+                .filter { (_, event) ->
+                    val currentTime = Calendar.getInstance().time.time
+                    event.organizer != loggedUserId
+                            && currentTime in getMilliFromDate(event.dateRegistration?.start ?: "", "dd/MM/yyyy hh:mm")..getMilliFromDate(event.dateRegistration?.end ?: "", "dd/MM/yyyy hh:mm")
+                            && ( event.type == "public"
+                            || (event.type == "private"
+                            && loggedUser.followingUsers.contains(event.organizer)))
                 }
                 .map { (id, event) ->
                     Log.d("test", "event")
@@ -54,17 +58,16 @@ class EventsViewModel @Inject constructor(
                             loggedUser.favoriteEvents.contains(id),
                             eventsImages[id] ?: Uri.EMPTY
                         ),
-                        when (selectedFilter) {
-                            "organized" -> event.organizer == loggedUserId
-                            "subscribed" -> event.subscribed.contains(loggedUserId)
-                            "favorites" -> loggedUser.favoriteEvents.contains(id)
-                            else -> false
-                        }
+                        event.name?.contains(searchWord) == true
+                                || event.location?.contains(searchWord) == true
+                                || event.date?.start?.contains(searchWord) == true
+                                || event.info?.contains(searchWord) == true
+                                || event.type?.contains(searchWord) == true
                     )
                 }
         }
 
-    fun setSelectedFilter(filter: String) {
-        selectedFilterFlow.value = filter
+    fun setSearchWord(word: String) {
+        searchWordFlow.value = word
     }
 }

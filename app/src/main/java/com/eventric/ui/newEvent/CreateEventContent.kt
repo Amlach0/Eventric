@@ -1,5 +1,6 @@
 package com.eventric.ui.newEvent
 
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,6 +43,7 @@ import com.eventric.ui.component.CustomTextInput
 import com.eventric.ui.component.DateAndTimeRangePickerDialog
 import com.eventric.ui.component.EventCategoryItem
 import com.eventric.ui.component.EventTypeItem
+import com.eventric.ui.component.ImageEventPicker
 import com.eventric.vo.EventCategory
 import com.eventric.vo.EventType
 
@@ -50,6 +54,7 @@ fun CreateEventContent(
     navControllerForBack: NavController,
     isEdit: Boolean,
     name: String,
+    uriImage: Uri,
     info: String,
     location: String,
     categoryList: List<EventCategory>,
@@ -63,6 +68,7 @@ fun CreateEventContent(
     createErrorBannerIsVisible: Boolean,
     deleteErrorBannerIsVisible: Boolean,
     onNameChange: (String) -> Unit,
+    onUriImageChange: (Uri) -> Unit,
     onInfoChanged: (String) -> Unit,
     onLocationChange: (String) -> Unit,
     onSelectedCategoryChange: (EventCategory) -> Unit,
@@ -152,29 +158,38 @@ fun CreateEventContent(
             }
         }
 
-        Column(
+        Box(
             Modifier
                 .fillMaxSize()
                 .padding(it)
         ) {
             Column(
                 Modifier
+                    .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .weight(1F)
                     .padding(horizontal = 30.dp)
                     .padding(top = 10.dp)
                     .padding(bottom = 20.dp)
             ) {
-                // TODO add image
 
+                Spacer(modifier = Modifier.height(20.dp))
 
+                // IMAGE
+
+                ImageEventPicker(
+                    uri = uriImage,
+                    onUriChange = onUriImageChange
+                )
+
+                // NAME
+
+                Spacer(modifier = Modifier.height(20.dp))
                 CustomTextInput(
                     hint = stringResource(id = R.string.event_label),
                     isLastInput = false,
                     value = name,
                     onValueChange = onNameChange,
                 )
-
 
                 //CATEGORY
 
@@ -212,7 +227,7 @@ fun CreateEventContent(
                 CustomTextInput(
                     hint = stringResource(id = R.string.location_label),
                     isLastInput = false,
-                    icon = R.drawable.ic_location,
+                    iconId = R.drawable.ic_location,
                     value = location,
                     onValueChange = onLocationChange
                 )
@@ -286,20 +301,35 @@ fun CreateEventContent(
                 CustomTextInput(
                     hint = "",
                     isLastInput = false,
-                    icon = R.drawable.ic_location,
+                    iconId = R.drawable.ic_info,
                     value = info,
                     onValueChange = onInfoChanged
                 )
+                Spacer(modifier = Modifier.height(80.dp))
 
             }
 
-            CustomButtonPrimary(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(15.dp),
-                text = stringResource(if (isEdit) R.string.common_edit else R.string.common_create),
-                onClick = { onSubmit() }
+            val colorStops = arrayOf(
+                0f to MaterialTheme.colors.background,
+                0.04f to Color.Transparent,
+                0.85f to Color.Transparent,
+                0.95f to MaterialTheme.colors.background,
+                1f to MaterialTheme.colors.background
             )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Brush.verticalGradient(colorStops = colorStops)),
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                CustomButtonPrimary(
+                    modifier = Modifier
+                        .padding(15.dp),
+                    text = stringResource(if (isEdit) R.string.common_edit else R.string.common_create),
+                    onClick = { onSubmit() }
+                )
+            }
+
         }
     }
 }
