@@ -1,6 +1,7 @@
 package com.eventric.ui.auth.signup
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -9,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -37,8 +39,13 @@ fun SignupScreen(
     val signupState by signupViewModel.signupCodeResult.collectAsState()
     val deleteUserState by signupViewModel.deleteUserCodeResult.collectAsState()
 
+    val mContext = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
+
+    fun mToast(text: String){
+        Toast.makeText(mContext, text, Toast.LENGTH_LONG).show()
+    }
 
     val user by signupViewModel.userFlow.collectAsStateWithLifecycle(User())
     val dbUriImage by signupViewModel.uriImageFlow.collectAsStateWithLifecycle(Uri.EMPTY)
@@ -53,15 +60,23 @@ fun SignupScreen(
     var birthDate by remember { mutableStateOf("") }
     var bio by remember { mutableStateOf("") }
 
+    var errorText by remember { mutableStateOf("Errore") }
+    var openDeleteDialog by remember { mutableStateOf(false) }
     var errorBannerIsVisible by remember { mutableStateOf(false) }
     var errorBannerDeleteIsVisible by remember { mutableStateOf(false) }
     var errorBannerConfermationIsVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(signupState, deleteUserState) {
-        if (signupState is ErrorOperation && !isEdit) errorBannerIsVisible = true
+        if (signupState is ErrorOperation) errorBannerIsVisible = true
         if (deleteUserState is ErrorOperation) errorBannerDeleteIsVisible = true
-        if (signupState is SuccessOperation) goToDispatcher()
-        if (deleteUserState is SuccessOperation) goToDispatcher()
+        if (signupState is SuccessOperation){
+            goToDispatcher()
+            mToast("User created successfully")
+        }
+        if (deleteUserState is SuccessOperation){
+            goToDispatcher()
+            mToast("User successfully deleted")
+        }
     }
 
     LaunchedEffect(user, dbUriImage)
@@ -96,6 +111,7 @@ fun SignupScreen(
 
     fun onPasswordChange(value: String) {
         password = value
+        errorText = "Password e Conferma Password non corrispondono"
         errorBannerConfermationIsVisible = (password != confirmPassword)
     }
 
@@ -105,6 +121,7 @@ fun SignupScreen(
 
     fun onConfirmPasswordChange(value: String) {
         confirmPassword = value
+        errorText = "Password e Conferma Password non corrispondono"
         errorBannerConfermationIsVisible = (password != confirmPassword)
     }
 
@@ -116,24 +133,27 @@ fun SignupScreen(
         bio = value
     }
 
+    fun onOpenDeleteDialog() { openDeleteDialog = true }
+
+    fun onCloseDeleteDialog() { openDeleteDialog = false }
+
     fun onSubmit() = coroutineScope.launch {
-        if (password == confirmPassword) {
-            if (signupState !is LoadingOperation) {
-                try {
-                    signupViewModel.signupOrEdit(
-                        name = name,
-                        surname = surname,
-                        uriImage = uriImage,
-                        email = email,
-                        password = password,
-                        confirmPassword = confirmPassword,
-                        birthDate = birthDate,
-                        bio = bio,
-                        isEdit = isEdit,
-                    )
-                } catch (e: Exception) {
-                    // Nothing to do
-                }
+        if (signupState !is LoadingOperation) {
+            try {
+                signupViewModel.signupOrEdit(
+                    name = name,
+                    surname = surname,
+                    uriImage = uriImage,
+                    email = email,
+                    password = password,
+                    confirmPassword = confirmPassword,
+                    birthDate = birthDate,
+                    bio = bio,
+                    isEdit = isEdit,
+                )
+            } catch (e: Exception) {
+                errorText = e.toString()
+                errorBannerIsVisible = true
             }
         }
     }
@@ -164,6 +184,8 @@ fun SignupScreen(
                 confirmPasswordVisible = confirmPasswordVisible,
                 birthDate = birthDate,
                 bio = bio,
+                errorText = errorText,
+                openDeleteDialog = openDeleteDialog,
                 errorBannerIsVisible = errorBannerIsVisible,
                 errorBannerConfirmationIsVisible = errorBannerConfermationIsVisible,
                 errorBannerDeleteIsVisible = errorBannerDeleteIsVisible,
@@ -177,6 +199,8 @@ fun SignupScreen(
                 onConfirmPasswordChange = ::onConfirmPasswordChange,
                 onBirthDateSelected = ::onBirthDateSelected,
                 onBioChange = ::onBioChange,
+                onOpenDeleteDialog = ::onOpenDeleteDialog,
+                onCloseDeleteDialog = ::onCloseDeleteDialog,
                 onSubmit = ::onSubmit,
                 onLoginPressed = ::onLoginPressed,
                 onDeletePressed = ::onDeletePressed,

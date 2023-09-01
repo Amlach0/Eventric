@@ -28,6 +28,7 @@ data class DateRange(
 
 
 sealed class EventCategory(var title: String, var icon: Int, var color: Color, var dbString: String) {
+    object All : EventCategory("Tutto", R.drawable.ic_show_pwd, Color(0xFF8400A5), "all")
     object NoCategory : EventCategory("None", R.drawable.ic_category_none, Color(0xFF807A7A), "none")
     object Music : EventCategory("Music", R.drawable.ic_category_music, Color(0xFF6B7AED), "music")
     object Art : EventCategory("Art", R.drawable.ic_category_art, Color(0xFF39C3F2), "art")

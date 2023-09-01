@@ -85,7 +85,7 @@ fun ProfileContent(
                     .padding(top = 34.dp)
             ) {
                 Text(
-                    text = stringResource(if (isFollowersSheet) R.string.followers_label else R.string.followed_label),
+                    text = stringResource(if (isFollowersSheet){ if(!isLoggedUser) R.string.followers_label else R.string.other_user_followers_label } else R.string.followed_label),
                     style = MaterialTheme.typography.h4,
                     color = MaterialTheme.colors.onSecondary
                 )
@@ -156,6 +156,7 @@ fun ProfileContent(
                 FollowedAndFollowersCounters(
                     modifier = Modifier
                         .padding(top = 10.dp),
+                    isLoggedUser = isLoggedUser || isInHome,
                     numberOfFollowed = followed.size,
                     numberOfFollowers = followers.size,
                     onFollowedClick = { onShowFollowed() },
@@ -203,7 +204,7 @@ fun ProfileContent(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            text = stringResource(R.string.bio),
+                            text = stringResource(R.string.bio_label),
                             style = MaterialTheme.typography.h1,
                             color = MaterialTheme.colors.onSecondary
                         )
@@ -223,7 +224,7 @@ fun ProfileContent(
                                     .padding(top = 25.dp)
                             ) {
                                 when (selectedPage.value) {
-                                    "bio" -> {
+                                    stringResource(R.string.bio_label) -> {
                                         Text(
                                             modifier = Modifier
                                                 .fillMaxWidth()
@@ -234,7 +235,7 @@ fun ProfileContent(
                                         )
                                     }
 
-                                    "events" -> {
+                                    stringResource(R.string.event) -> {
                                         if (organizedEvents.isEmpty())
                                             EventCardCompactEmptyItem(Modifier.padding(horizontal = 15.dp, vertical = 40.dp))
                                         else

@@ -225,7 +225,7 @@ class UserRepository @Inject constructor() {
         )
 
         val notification = Notification(
-            text = " ha cominciato a seguirti",
+            text = " started following you",
             userId = followingUserId,
             eventId = null,
         )
@@ -264,7 +264,7 @@ class UserRepository @Inject constructor() {
         addOrRemove: Boolean,
     ) {
         val notification = Notification(
-            text = " ti ha invitato all'evento ",
+            text = " invited you to ",
             userId = userId,
             eventId = eventId,
         )

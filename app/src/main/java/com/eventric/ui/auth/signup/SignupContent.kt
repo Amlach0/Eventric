@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.eventric.R
+import com.eventric.ui.component.BrandAlertDialog
 import com.eventric.ui.component.BrandTopBar
 import com.eventric.ui.component.CustomButtonPrimary
 import com.eventric.ui.component.CustomButtonSecondary
@@ -50,6 +51,7 @@ import com.eventric.ui.theme.EventricTheme
 @Composable
 fun SignupContent(
     navControllerForBack: NavController,
+    errorText: String,
     errorBannerIsVisible: Boolean,
     errorBannerConfirmationIsVisible: Boolean,
     isEdit: Boolean,
@@ -64,6 +66,7 @@ fun SignupContent(
     errorBannerDeleteIsVisible: Boolean,
     birthDate: String,
     bio: String,
+    openDeleteDialog: Boolean,
     onNameChange: (String) -> Unit,
     onUriImageChange: (Uri) -> Unit,
     onSurnameChange: (String) -> Unit,
@@ -74,6 +77,8 @@ fun SignupContent(
     onConfirmPasswordChange: (String) -> Unit,
     onBirthDateSelected: (String) -> Unit,
     onBioChange: (String) -> Unit,
+    onOpenDeleteDialog: () -> Unit,
+    onCloseDeleteDialog: () -> Unit,
     onSubmit: () -> Unit,
     onLoginPressed: () -> Unit,
     onDeletePressed: () -> Unit,
@@ -90,6 +95,14 @@ fun SignupContent(
             }
         )
     }
+
+    BrandAlertDialog(
+        openDialog = openDeleteDialog,
+        title = stringResource(R.string.delete_event_label),
+        text = "Are you sure you want to delete this event ?",
+        closeDialog = { onCloseDeleteDialog() },
+        onConfirm = { onDeletePressed() },
+    )
 
     Box(
         modifier = Modifier
@@ -143,8 +156,9 @@ fun SignupContent(
                             .background(MaterialTheme.colors.error)
                     ) {
                         Text(
-                            text = stringResource(if (errorBannerDeleteIsVisible) R.string.error_delete_user else if (errorBannerConfirmationIsVisible) R.string.error_confirmation_psw else R.string.error_signup),
+                            text = if (errorBannerDeleteIsVisible) "Eliminazione non riuscita" else errorText,
                             style = MaterialTheme.typography.h3,
+                            color = MaterialTheme.colors.onError,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.align(Alignment.Center),
                             fontSize = 16.sp,
@@ -160,7 +174,7 @@ fun SignupContent(
                             .align(Alignment.Start)
                             .padding(horizontal = 34.dp)
                             .padding(top = 10.dp),
-                        text = stringResource(R.string.title_login),
+                        text = stringResource(R.string.title_signin),
                         style = MaterialTheme.typography.h4,
                         fontSize = 27.sp,
                         color = MaterialTheme.colors.onBackground
@@ -176,7 +190,7 @@ fun SignupContent(
                         .padding(top = 18.dp),
                     hint = stringResource(id = R.string.name_label),
                     value = name,
-                    iconId = R.drawable.ic_type_private,
+                    iconId = R.drawable.ic_person,
                     isLastInput = false,
                     onValueChange = onNameChange
                 )
@@ -186,7 +200,7 @@ fun SignupContent(
                         .padding(top = 18.dp),
                     hint = stringResource(id = R.string.surname_label),
                     value = surname,
-                    iconId = R.drawable.ic_type_private,
+                    iconId = R.drawable.ic_person,
                     isLastInput = false,
                     onValueChange = onSurnameChange
                 )
@@ -233,7 +247,7 @@ fun SignupContent(
                         .align(Alignment.Start)
                         .padding(horizontal = 34.dp)
                         .padding(top = 18.dp),
-                    text = if (birthDate == "") stringResource(R.string.select_date) else birthDate,
+                    text = if (birthDate == "") stringResource(R.string.select_birthdate) else birthDate,
                     iconId = R.drawable.ic_calendar,
                     onClick = { openDateDialog = true }
                 )
@@ -276,7 +290,7 @@ fun SignupContent(
                 text = stringResource(id = if (isEdit) R.string.delete_account else R.string.common_login),
                 color = if (isEdit) MaterialTheme.colors.error else MaterialTheme.colors.primary,
                 iconId = if (isEdit) R.drawable.ic_delete else null,
-                onClick = { if (isEdit) onDeletePressed() else onLoginPressed() }
+                onClick = { if (isEdit) onOpenDeleteDialog() else onLoginPressed() }
             )
         }
     }
@@ -306,6 +320,7 @@ fun SignupContentPreview() {
             passwordVisible = passwordVisible,
             confirmPassword = confirmPassword,
             confirmPasswordVisible = confirmPasswordVisible,
+            errorText = "Errore",
             errorBannerIsVisible = false,
             errorBannerConfirmationIsVisible = false,
             birthDate = birthDate,
@@ -340,7 +355,10 @@ fun SignupContentPreview() {
             onBioChange = {},
             uriImage = Uri.EMPTY,
             onUriImageChange = {},
-            errorBannerDeleteIsVisible = false
+            errorBannerDeleteIsVisible = false,
+            openDeleteDialog = false,
+            onOpenDeleteDialog = {},
+            onCloseDeleteDialog = {}
         )
     }
 }

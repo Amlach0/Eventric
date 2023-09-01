@@ -111,7 +111,6 @@ class SearchViewModel @Inject constructor(
         followingUserId = userFlow.first().first,
         addOrRemove = isFollowed
     )
-
     fun setSearchWord(word: String) {
         searchWordFlow.value = word
     }

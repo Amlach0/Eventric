@@ -33,6 +33,7 @@ import com.eventric.R
 import com.eventric.ui.theme.EventricTheme
 import com.eventric.vo.Event
 import com.eventric.vo.EventCategory
+import com.eventric.vo.EventType
 
 
 @Composable
@@ -118,7 +119,13 @@ fun EventCardItem(
                     Spacer(modifier = Modifier.width(30.dp))
                     ProfileGoingItem(numberOfGoing = event.subscribed.size)
                 }
-                LocationCompactItem(location = event.location ?: "")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    LocationCompactItem(location = event.location ?: "")
+                    EventTypeCompactItem(type = EventType.fromDbString(event.type.toString()))
+                }
             }
         }
     }
@@ -215,7 +222,13 @@ fun EventCardCompactItem(
                         )
                     }
 
-                    LocationCompactItem(location = event.location ?: "")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        LocationCompactItem(location = event.location ?: "")
+                        EventTypeCompactItem(type = EventType.fromDbString(event.type.toString()))
+                    }
                 }
             }
     }

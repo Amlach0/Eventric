@@ -1,6 +1,7 @@
 package com.eventric.ui.detailEvent
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -10,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -36,7 +38,7 @@ fun DetailEventScreen(
     val uriImage by detailEventViewModel.uriImageFlow.collectAsStateWithLifecycle(Uri.EMPTY)
     val organizer by detailEventViewModel.organizerFlow.collectAsStateWithLifecycle(null)
     val uriOrganizerImage by detailEventViewModel.uriOrganiserImageFlow.collectAsStateWithLifecycle(Uri.EMPTY)
-
+    val mContext = LocalContext.current
     val organizerName = "${organizer?.second?.name} ${organizer?.second?.surname}"
     val currentTime = Calendar.getInstance().time.time
     val isRegistrationOpen = currentTime in getMilliFromDate(event?.dateRegistration?.start ?: "", "dd/MM/yyyy hh:mm")..getMilliFromDate(event?.dateRegistration?.end ?: "", "dd/MM/yyyy hh:mm")
@@ -53,12 +55,18 @@ fun DetailEventScreen(
     val invitableUsers by detailEventViewModel.invitableUsersFlow.collectAsStateWithLifecycle(listOf())
 
 
+    fun mToast(text: String){
+        Toast.makeText(mContext, text, Toast.LENGTH_LONG).show()
+    }
+
     fun onFavoriteChange() = coroutineScope.launch {
         detailEventViewModel.changeFavourite(!isFavorite)
+        mToast(if(isFavorite) "Event added to favorites" else "Event removed from favorites")
     }
 
     fun onSubscribeChange(subscribed: Boolean)  = coroutineScope.launch {
         detailEventViewModel.changeSubscribe(subscribed)
+        mToast(if(subscribed) "Successfully unsubscribed" else "Successfully subscribed")
     }
 
     fun onFollowChange() = coroutineScope.launch {
@@ -86,6 +94,7 @@ fun DetailEventScreen(
         goToProfile(userId)
     }
     fun onOrganizer() = goToProfile(organizer!!.first)
+
 
     EventricTheme {
         DetailEventContent(
