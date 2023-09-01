@@ -120,7 +120,7 @@ fun ProfileGoingItem(
         Icon(
             modifier = Modifier
                 .size(24.dp),
-            painter = painterResource(R.drawable.ic_type_public),
+            painter = painterResource(R.drawable.ic_people),
             contentDescription = null,
             tint = MaterialTheme.colors.primary
         )
@@ -214,7 +214,7 @@ fun ProfileGoingExpandedItem(
         ) {
             Icon(
                 modifier = Modifier.size(34.dp),
-                painter = painterResource(id = R.drawable.ic_type_public),
+                painter = painterResource(id = R.drawable.ic_people),
                 contentDescription = null,
                 tint = MaterialTheme.colors.primary,
             )
@@ -248,6 +248,7 @@ fun ProfileGoingExpandedItem(
 @Composable
 fun FollowedAndFollowersCounters(
     modifier: Modifier = Modifier,
+    isLoggedUser: Boolean = false,
     numberOfFollowed: Int,
     numberOfFollowers: Int,
     onFollowedClick: () -> Unit,
@@ -302,7 +303,7 @@ fun FollowedAndFollowersCounters(
                 color = MaterialTheme.colors.onSecondary
             )
             Text(
-                text = stringResource(R.string.followers_label),
+                text = stringResource(if(isLoggedUser) R.string.followers_label else R.string.other_user_followers_label ),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onBackground
             )
@@ -366,6 +367,7 @@ fun ProfileGoingItemPreview() {
 fun FollowedAndFollowersCountersPreview() {
     EventricTheme {
         FollowedAndFollowersCounters(
+            isLoggedUser = false,
             numberOfFollowed = 10,
             numberOfFollowers = 10,
             onFollowedClick = {},

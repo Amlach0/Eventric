@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
@@ -60,6 +61,30 @@ fun EventTypeItem(
 }
 
 @Composable
+fun EventTypeCompactItem(
+    type: EventType
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier
+                .size(16.dp),
+            painter = painterResource(type.icon),
+            contentDescription = null,
+            tint = MaterialTheme.colors.onBackground
+        )
+        Text(
+            modifier = Modifier.padding(start = 5.dp),
+            text = type.title,
+            style = MaterialTheme.typography.caption,
+            color = MaterialTheme.colors.onBackground
+        )
+    }
+}
+
+
+@Composable
 @Preview
 fun EventTypeItemPreview() {
 
@@ -69,5 +94,12 @@ fun EventTypeItemPreview() {
             selected = false,
             onClick = {}
         )
+    }
+}
+@Composable
+@Preview
+fun EventTypeCompactItemPreview() {
+    EventricTheme {
+        EventTypeCompactItem(EventType.Public)
     }
 }

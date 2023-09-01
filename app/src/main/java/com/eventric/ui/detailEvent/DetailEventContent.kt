@@ -50,6 +50,7 @@ import com.eventric.ui.component.ProfileItem
 import com.eventric.ui.component.ProfileOrganizerItem
 import com.eventric.vo.Event
 import com.eventric.vo.EventCategory
+import com.eventric.vo.EventType
 import com.eventric.vo.User
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -215,6 +216,11 @@ fun DetailEventContent(
                             modifier = Modifier.padding(top = 16.dp),
                             iconId = R.drawable.ic_location,
                             primaryText = if(event.location!="") event.location.toString() else stringResource(R.string.empty_location_label),
+                        )
+                        EventInfoItem(
+                            modifier = Modifier.padding(top = 16.dp),
+                            iconId = EventType.fromDbString(event.type.toString()).icon,
+                            primaryText = "Evento "+EventType.fromDbString(event.type.toString()).title
                         )
                         ProfileOrganizerItem(
                             modifier = Modifier

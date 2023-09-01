@@ -65,17 +65,21 @@ class SignupViewModel @Inject constructor(
             birthDate = birthDate,
         )
 
-        if ((password.isNotEmpty() && password == confirmPassword) || isEdit)
+        if (password == confirmPassword)
             signupCodeResult.value = tryOperation {
                 if (isEdit)
                     userRepository.editUser(userIdFlow.value, user, password)
                 else
-                    userRepository.createAccount(user, password)
+                    if(password.isNotEmpty()){
+                        userRepository.createAccount(user, password)
+                    }else{
+                        signupCodeResult.value = ErrorOperation(Throwable("La password non è presente"))
+                    }
                 if (uriImage != Uri.EMPTY)
                     imagesRepository.uploadUserImage(uriImage, userIdFlow.value)
             }
         else
-            signupCodeResult.value = ErrorOperation(Throwable("password non presente o non corrisponde"))
+            signupCodeResult.value = ErrorOperation(Throwable("password e conferma password non corrispondono"))
     }
 
     suspend fun deleteUser() {

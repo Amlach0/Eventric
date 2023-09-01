@@ -2,7 +2,9 @@ package com.eventric.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -72,6 +74,59 @@ fun EventCategoryItem(
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onBackground
             )
+    }
+}
+
+@Composable
+fun EventCategoryCompactItem(
+    modifier: Modifier = Modifier,
+    category: EventCategory,
+    selected: Boolean = false,
+    onClick: () -> Unit = {},
+){
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        IconButton(
+            modifier = Modifier
+                .size(40.dp)
+                .shadow(
+                    elevation = 20.dp,
+                    shape = CircleShape,
+                    clip = true,
+                    spotColor = if (selected) category.color else Color.Transparent
+                )
+                .background(
+                    color = if (selected) category.color else MaterialTheme.colors.onBackground.copy(alpha = 0.1f),
+                    shape = CircleShape
+                )
+                .border(
+                    width = 0.8.dp,
+                    color = if (!selected) MaterialTheme.colors.onBackground else Color.Transparent,
+                    shape = CircleShape
+                ),
+            onClick = { onClick() }
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(20.dp),
+                    painter = painterResource(category.icon),
+                    contentDescription = null,
+                    tint = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onBackground
+                )
+            }
+        }
+        Text(
+            modifier = Modifier.padding(top = 10.dp),
+            text = category.title,
+            style = MaterialTheme.typography.body1,
+            color = MaterialTheme.colors.onBackground
+        )
     }
 }
 

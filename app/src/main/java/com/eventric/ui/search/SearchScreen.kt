@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eventric.ui.component.SelectorItemData
+import com.eventric.vo.EventCategory
 import kotlinx.coroutines.launch
 
 @Composable
@@ -26,15 +27,30 @@ fun SearchScreen(
 
     var selectedPage by remember { mutableStateOf( pages[0] ) }
 
-    fun onChangeSelectedPage(selected: SelectorItemData) {
-        selectedPage = selected
-    }
+    val categoryList = listOf(
+        EventCategory.All,
+        EventCategory.NoCategory,
+        EventCategory.Music,
+        EventCategory.Art,
+        EventCategory.Food,
+        EventCategory.Sport,
+    )
 
+    var selectedCategory: EventCategory by remember { mutableStateOf(EventCategory.All) }
     val events by searchViewModel.events.collectAsStateWithLifecycle(listOf())
     val users by searchViewModel.users.collectAsStateWithLifecycle(listOf())
 
     val searchWord by searchViewModel.searchWordFlow.collectAsStateWithLifecycle("")
 
+
+
+    fun onChangeSelectedPage(selected: SelectorItemData) {
+        selectedPage = selected
+    }
+
+    fun onEventCategoryChange(category: EventCategory) {
+        selectedCategory = category
+    }
 
     fun onChangeSearchWord(word: String) {
         searchViewModel.setSearchWord(word)
@@ -57,6 +73,9 @@ fun SearchScreen(
         users = users,
         pages = pages,
         selectedPage = selectedPage,
+        categoryList = categoryList,
+        selectedCategory = selectedCategory,
+        onSelectedCategoryChange = ::onEventCategoryChange,
         onChangeSelectedPage = ::onChangeSelectedPage,
         searchWord = searchWord,
         onChangeSearchWord = ::onChangeSearchWord,

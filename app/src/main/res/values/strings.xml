@@ -6,14 +6,15 @@
     <string name="error_new_event">Creazione evento fallita. Ripovare</string>
     <string name="error_delete_event">Eliminazione evento fallita. Ripovare</string>
     <string name="error_delete_user">Eliminazione utente fallita. Ripovare</string>
-    <string name="title_login">Log In</string>
+    <string name="title_login">Accedi</string>
+    <string name="title_signin">Registrati</string>
     <string name="common_login">LOG IN</string>
     <string name="common_signup">SIGN UP</string>
-    <string name="pwd_label">Your Password</string>
+    <string name="pwd_label">Password</string>
     <string name="username_label">Email</string>
     <string name="name_label">Name</string>
     <string name="surname_label">Surname</string>
-    <string name="confirm_pwd_label">Confirm Your Password</string>
+    <string name="confirm_pwd_label">Confirm password</string>
     <string name="bio_label">Bio</string>
     <string name="new_event_name">Nome evento</string>
     <string name="event_label">Nome Evento</string>
@@ -23,10 +24,6 @@
     <string name="new_event_date">Data Evento</string>
     <string name="new_event_registration_date">Data di iscrizione</string>
     <string name="new_event_category">Categoria</string>
-    <string name="category_none">none</string>
-    <string name="category_music">music</string>
-    <string name="category_art">art</string>
-    <string name="category_food">food</string>
     <string name="category_sport">sport</string>
     <string name="new_event_type">Tipo evento</string>
     <string name="common_create">Crea</string>
@@ -37,6 +34,7 @@
     <string name="done">Fatto</string>
     <string name="forward">Avanti</string>
     <string name="select_date">Seleziona la data</string>
+    <string name="select_birthdate">Seleziona la data di nascita</string>
     <string name="select_dates">Seleziona la data di inizio e fine</string>
     <string name="select_time_start_date">Seleziona l\'orario di inizio per il </string>
     <string name="select_time_end_date">Seleziona l\'orario di fine per il </string>
@@ -50,6 +48,7 @@
     <string name="unfollow_label">Non seguire</string>
     <string name="invite_label">Invita</string>
     <string name="uninvite_label">Togli invito</string>
+    <string name="event">Evento</string>
     <string name="info_label">Dettagli Evento</string>
     <string name="common_close_subscribe">Le iscrizioni sono chiuse</string>
     <string name="common_unsubscribe">DISISCRIVITI</string>
@@ -58,7 +57,7 @@
     <string name="profile">Profilo</string>
     <string name="followed_label">Seguiti</string>
     <string name="followers_label">Ti seguono</string>
-    <string name="bio">Bio</string>
+    <string name="other_user_followers_label">Lo seguono</string>
     <string name="edit_profile">Modifica</string>
     <string name="logout">Logout</string>
     <string name="new_pwd_label">New Password</string>

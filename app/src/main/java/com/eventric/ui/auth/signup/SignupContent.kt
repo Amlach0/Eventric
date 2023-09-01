@@ -50,6 +50,7 @@ import com.eventric.ui.theme.EventricTheme
 @Composable
 fun SignupContent(
     navControllerForBack: NavController,
+    errorText: String,
     errorBannerIsVisible: Boolean,
     errorBannerConfirmationIsVisible: Boolean,
     isEdit: Boolean,
@@ -143,7 +144,7 @@ fun SignupContent(
                             .background(MaterialTheme.colors.error)
                     ) {
                         Text(
-                            text = stringResource(if (errorBannerDeleteIsVisible) R.string.error_delete_user else if (errorBannerConfirmationIsVisible) R.string.error_confirmation_psw else R.string.error_signup),
+                            text = if (errorBannerDeleteIsVisible) "Eliminazione non riuscita" else errorText,
                             style = MaterialTheme.typography.h3,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.align(Alignment.Center),
@@ -160,7 +161,7 @@ fun SignupContent(
                             .align(Alignment.Start)
                             .padding(horizontal = 34.dp)
                             .padding(top = 10.dp),
-                        text = stringResource(R.string.title_login),
+                        text = stringResource(R.string.title_signin),
                         style = MaterialTheme.typography.h4,
                         fontSize = 27.sp,
                         color = MaterialTheme.colors.onBackground
@@ -176,7 +177,7 @@ fun SignupContent(
                         .padding(top = 18.dp),
                     hint = stringResource(id = R.string.name_label),
                     value = name,
-                    iconId = R.drawable.ic_type_private,
+                    iconId = R.drawable.ic_person,
                     isLastInput = false,
                     onValueChange = onNameChange
                 )
@@ -186,7 +187,7 @@ fun SignupContent(
                         .padding(top = 18.dp),
                     hint = stringResource(id = R.string.surname_label),
                     value = surname,
-                    iconId = R.drawable.ic_type_private,
+                    iconId = R.drawable.ic_person,
                     isLastInput = false,
                     onValueChange = onSurnameChange
                 )
@@ -233,7 +234,7 @@ fun SignupContent(
                         .align(Alignment.Start)
                         .padding(horizontal = 34.dp)
                         .padding(top = 18.dp),
-                    text = if (birthDate == "") stringResource(R.string.select_date) else birthDate,
+                    text = if (birthDate == "") stringResource(R.string.select_birthdate) else birthDate,
                     iconId = R.drawable.ic_calendar,
                     onClick = { openDateDialog = true }
                 )
@@ -306,6 +307,7 @@ fun SignupContentPreview() {
             passwordVisible = passwordVisible,
             confirmPassword = confirmPassword,
             confirmPasswordVisible = confirmPasswordVisible,
+            errorText = "Errore",
             errorBannerIsVisible = false,
             errorBannerConfirmationIsVisible = false,
             birthDate = birthDate,

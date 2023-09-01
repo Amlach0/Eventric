@@ -3,15 +3,18 @@ package com.eventric.ui.search
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -25,10 +28,12 @@ import com.eventric.ui.component.BrandSelector
 import com.eventric.ui.component.CustomTextInput
 import com.eventric.ui.component.EventCardCompactEmptyItem
 import com.eventric.ui.component.EventCardCompactItem
+import com.eventric.ui.component.EventCategoryCompactItem
 import com.eventric.ui.component.SelectorItemData
 import com.eventric.ui.component.UserCardCompactEmptyItem
 import com.eventric.ui.component.UserCardCompactItem
 import com.eventric.vo.Event
+import com.eventric.vo.EventCategory
 import com.eventric.vo.User
 
 @Composable
@@ -37,8 +42,11 @@ fun SearchContent(
     users: List<Pair<Triple<Pair<String, User>, Boolean, Uri>, Boolean>>,
     pages: List<SelectorItemData>,
     selectedPage: SelectorItemData,
-    onChangeSelectedPage: (SelectorItemData) -> Unit,
+    categoryList: List<EventCategory>,
+    selectedCategory: EventCategory,
     searchWord: String,
+    onSelectedCategoryChange: (EventCategory) -> Unit,
+    onChangeSelectedPage: (SelectorItemData) -> Unit,
     onChangeSearchWord: (String) -> Unit,
     goToEvent: (eventId: String) -> Unit,
     goToUser: (userId: String) -> Unit,
@@ -57,14 +65,15 @@ fun SearchContent(
                 .padding(horizontal = 25.dp)
         ){
             AnimatedVisibility(
-                visible = selectedPage == pages[0]
+                visible = selectedPage == pages[0],
+                modifier = Modifier.padding(top = 90.dp)
             )
             {
                 if (!events.any { it.second })
                     EventCardCompactEmptyItem(Modifier.padding(vertical = 60.dp))
                 else
                     LazyColumn(
-                        contentPadding = PaddingValues(vertical = 60.dp)
+                        contentPadding = PaddingValues(vertical = 60.dp),
                     ) {
                         items(events) { (eventTriple, isVisible) ->
                             val eventId = eventTriple.first.first
@@ -72,7 +81,7 @@ fun SearchContent(
                             val isFavourite = eventTriple.second
                             val uriImage = eventTriple.third
                             AnimatedVisibility(
-                                visible = isVisible
+                                visible = isVisible && (selectedCategory.dbString == EventCategory.All.dbString || (event.category == selectedCategory.dbString))
                             ) {
                                 EventCardCompactItem(
                                     modifier = Modifier.padding(vertical = 10.dp),
@@ -120,14 +129,20 @@ fun SearchContent(
 
         val colorStops = arrayOf(
             0f to MaterialTheme.colors.background,
-            0.12f to MaterialTheme.colors.background,
+            0.15f to MaterialTheme.colors.background,
             0.24f to Color.Transparent,
+            1f to Color.Transparent
+        )
+        val colorStops2 = arrayOf(
+            0f to MaterialTheme.colors.background,
+            0.30f to MaterialTheme.colors.background,
+            0.34f to Color.Transparent,
             1f to Color.Transparent
         )
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .background(Brush.verticalGradient(colorStops = colorStops))
+                .background(Brush.verticalGradient(colorStops = if(selectedPage == pages[0]) colorStops2 else colorStops))
         ) {
             CustomTextInput(
                 value = searchWord,
@@ -139,12 +154,32 @@ fun SearchContent(
                 onValueChange = onChangeSearchWord,
             )
             Spacer(modifier = Modifier.height(20.dp))
-            BrandSelector(
-                modifier = Modifier.padding(horizontal = 100.dp),
-                dataList = pages,
-                selectedItem = selectedPage,
-                onChangeSelectedItem = { selected -> onChangeSelectedPage(selected) }
-            )
+            Row() {
+                BrandSelector(
+                    modifier = Modifier
+                        .padding(horizontal = 80.dp),
+                    dataList = pages,
+                    selectedItem = selectedPage,
+                    onChangeSelectedItem = { selected -> onChangeSelectedPage(selected) }
+                )
+            }
+            AnimatedVisibility(visible = selectedPage == pages[0]) {
+                //Row of categories
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                ) {
+                    items(items = categoryList) { category ->
+                        EventCategoryCompactItem(
+                            category = category,
+                            selected = category == selectedCategory,
+                            onClick = { onSelectedCategoryChange(category) }
+                        )
+                    }
+                }
+            }
         }
     }
 }
