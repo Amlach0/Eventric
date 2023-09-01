@@ -1,14 +1,15 @@
 package com.eventric.ui.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -79,54 +80,47 @@ fun EventCategoryItem(
 
 @Composable
 fun EventCategoryCompactItem(
-    modifier: Modifier = Modifier,
     category: EventCategory,
     selected: Boolean = false,
+    onlyIcon: Boolean = false,
     onClick: () -> Unit = {},
-){
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
+) {
+    Button(
+        modifier = Modifier
+            .shadow(
+                elevation = 20.dp,
+                shape = CircleShape,
+                clip = true,
+                spotColor = if (selected) category.color else Color.Transparent
+            ),
+        shape = CircleShape,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = if (selected) category.color else Color.Transparent,
+        ),
+        border = BorderStroke(
+            width = 0.8.dp,
+            color = if (!selected) MaterialTheme.colors.onBackground else Color.Transparent,
+        ),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp, pressedElevation = 0.dp
+        ),
+        onClick = { onClick() }
     ) {
-        IconButton(
+        Icon(
             modifier = Modifier
-                .size(40.dp)
-                .shadow(
-                    elevation = 20.dp,
-                    shape = CircleShape,
-                    clip = true,
-                    spotColor = if (selected) category.color else Color.Transparent
-                )
-                .background(
-                    color = if (selected) category.color else MaterialTheme.colors.onBackground.copy(alpha = 0.1f),
-                    shape = CircleShape
-                )
-                .border(
-                    width = 0.8.dp,
-                    color = if (!selected) MaterialTheme.colors.onBackground else Color.Transparent,
-                    shape = CircleShape
-                ),
-            onClick = { onClick() }
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(20.dp),
-                    painter = painterResource(category.icon),
-                    contentDescription = null,
-                    tint = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onBackground
-                )
-            }
-        }
-        Text(
-            modifier = Modifier.padding(top = 10.dp),
-            text = category.title,
-            style = MaterialTheme.typography.body1,
-            color = MaterialTheme.colors.onBackground
+                .size(18.dp),
+            painter = painterResource(category.icon),
+            contentDescription = null,
+            tint = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onBackground
         )
+        if (!onlyIcon)
+            Text(
+                modifier = Modifier
+                    .padding(start = 5.dp),
+                text = category.title,
+                style = MaterialTheme.typography.body2,
+                color = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onBackground
+            )
     }
 }
 
@@ -184,6 +178,18 @@ fun EventCategoryItemSelectedPreview() {
             showLabel = false,
             onClick = {}
         )
+    }
+}
+
+@Composable
+@Preview
+fun EventCategoryCompactItemPreview() {
+    EventricTheme {
+        EventCategoryCompactItem(
+            category = EventCategory.Art,
+            selected = false,
+            onlyIcon = false
+        ) {}
     }
 }
 

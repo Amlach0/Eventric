@@ -2,7 +2,10 @@ package com.eventric.ui.search
 
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,14 +16,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.eventric.R
@@ -45,28 +54,30 @@ fun SearchContent(
     categoryList: List<EventCategory>,
     selectedCategory: EventCategory,
     searchWord: String,
+    isCategorySelectorShown: Boolean,
     onSelectedCategoryChange: (EventCategory) -> Unit,
     onChangeSelectedPage: (SelectorItemData) -> Unit,
     onChangeSearchWord: (String) -> Unit,
+    onChangeCategorySelector: (Boolean) -> Unit,
     goToEvent: (eventId: String) -> Unit,
     goToUser: (userId: String) -> Unit,
     onFollowClick: (String, Boolean) -> Unit,
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 25.dp)
             .padding(horizontal = 10.dp)
     ) {
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 80.dp)
                 .padding(horizontal = 25.dp)
-        ){
+        ) {
             AnimatedVisibility(
-                visible = selectedPage == pages[0],
-                modifier = Modifier.padding(top = 90.dp)
+                visible = selectedPage == pages[0]
             )
             {
                 if (!events.any { it.second })
@@ -133,16 +144,10 @@ fun SearchContent(
             0.24f to Color.Transparent,
             1f to Color.Transparent
         )
-        val colorStops2 = arrayOf(
-            0f to MaterialTheme.colors.background,
-            0.30f to MaterialTheme.colors.background,
-            0.34f to Color.Transparent,
-            1f to Color.Transparent
-        )
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Brush.verticalGradient(colorStops = if(selectedPage == pages[0]) colorStops2 else colorStops))
+                .background(Brush.verticalGradient(colorStops = colorStops))
         ) {
             CustomTextInput(
                 value = searchWord,
@@ -154,29 +159,78 @@ fun SearchContent(
                 onValueChange = onChangeSearchWord,
             )
             Spacer(modifier = Modifier.height(20.dp))
-            Row() {
-                BrandSelector(
+
+            Column {
+                Row(
                     modifier = Modifier
-                        .padding(horizontal = 80.dp),
-                    dataList = pages,
-                    selectedItem = selectedPage,
-                    onChangeSelectedItem = { selected -> onChangeSelectedPage(selected) }
-                )
-            }
-            AnimatedVisibility(visible = selectedPage == pages[0]) {
-                //Row of categories
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    items(items = categoryList) { category ->
-                        EventCategoryCompactItem(
-                            category = category,
-                            selected = category == selectedCategory,
-                            onClick = { onSelectedCategoryChange(category) }
-                        )
+                    Spacer(
+                        modifier = Modifier.weight(1f),
+                    )
+                    BrandSelector(
+                        modifier = Modifier
+                            .width(190.dp),
+                        dataList = pages,
+                        selectedItem = selectedPage,
+                        onChangeSelectedItem = { selected -> onChangeSelectedPage(selected) }
+                    )
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        AnimatedVisibility(
+                            visible = selectedPage == pages[0],
+                            enter = fadeIn(),
+                            exit = fadeOut()
+                        ) {
+
+                            Row(
+                                modifier = Modifier
+                                    .background(
+                                        color = MaterialTheme.colors.onBackground.copy(alpha = 0.1f),
+                                        shape = CircleShape
+                                    )
+                                    .clickable { onChangeCategorySelector(!isCategorySelectorShown) }
+                                    .padding(horizontal = 5.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                EventCategoryCompactItem(
+                                    category = selectedCategory,
+                                    selected = true,
+                                    onlyIcon = true
+                                ) { onChangeCategorySelector(!isCategorySelectorShown) }
+                                Icon(
+                                    painter = painterResource(if (isCategorySelectorShown) R.drawable.iv_expand_less else R.drawable.ic_expand_more),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    }
+                }
+
+                AnimatedVisibility(
+                    modifier = Modifier.padding(vertical = 5.dp, horizontal = 10.dp),
+                    visible = isCategorySelectorShown
+                ) {
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(CircleShape)
+                            .background(
+                                color = MaterialTheme.colors.onBackground.copy(alpha = 0.1f),
+                                shape = CircleShape
+                            ),
+                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                        contentPadding = PaddingValues(horizontal = 15.dp, vertical = 1.dp)
+                    ) {
+                        items(items = categoryList) { category ->
+                            EventCategoryCompactItem(
+                                category = category,
+                                selected = category == selectedCategory
+                            ) { onSelectedCategoryChange(category) }
+                        }
                     }
                 }
             }

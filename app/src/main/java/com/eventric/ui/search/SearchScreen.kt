@@ -26,6 +26,7 @@ fun SearchScreen(
     )
 
     var selectedPage by remember { mutableStateOf( pages[0] ) }
+    var isCategorySelectorShown by remember { mutableStateOf(false) }
 
     val categoryList = listOf(
         EventCategory.All,
@@ -46,6 +47,7 @@ fun SearchScreen(
 
     fun onChangeSelectedPage(selected: SelectorItemData) {
         selectedPage = selected
+        isCategorySelectorShown = false
     }
 
     fun onEventCategoryChange(category: EventCategory) {
@@ -55,6 +57,8 @@ fun SearchScreen(
     fun onChangeSearchWord(word: String) {
         searchViewModel.setSearchWord(word)
     }
+
+    fun onChangeCategorySelector(value: Boolean) { isCategorySelectorShown = value }
 
     fun goToEvent(eventId: String) {
         goToEventDetail(eventId)
@@ -75,10 +79,12 @@ fun SearchScreen(
         selectedPage = selectedPage,
         categoryList = categoryList,
         selectedCategory = selectedCategory,
+        isCategorySelectorShown = isCategorySelectorShown,
         onSelectedCategoryChange = ::onEventCategoryChange,
         onChangeSelectedPage = ::onChangeSelectedPage,
         searchWord = searchWord,
         onChangeSearchWord = ::onChangeSearchWord,
+        onChangeCategorySelector = ::onChangeCategorySelector,
         goToEvent = ::goToEvent,
         goToUser = ::goToUser,
         onFollowClick = ::changeFollowUser,
