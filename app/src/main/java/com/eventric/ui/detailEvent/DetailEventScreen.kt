@@ -61,22 +61,20 @@ fun DetailEventScreen(
 
     fun onFavoriteChange() = coroutineScope.launch {
         detailEventViewModel.changeFavourite(!isFavorite)
-        mToast(if(isFavorite) "Evento aggiunto ai preferiti" else "Evento rimosso dai preferiti")
+        mToast(if(isFavorite) "Event added to favorites" else "Event removed from favorites")
     }
 
     fun onSubscribeChange(subscribed: Boolean)  = coroutineScope.launch {
         detailEventViewModel.changeSubscribe(subscribed)
-        mToast(if(subscribed) "Disiscritto con successo" else "iscritto con successo")
+        mToast(if(subscribed) "Successfully unsubscribed" else "Successfully subscribed")
     }
 
     fun onFollowChange() = coroutineScope.launch {
         detailEventViewModel.changeOrganizerFollow(!isOrganizerFollowed)
-        mToast(if(isOrganizerFollowed) "Utente seguito" else "Utente rimosso dagli utenti seguiti")
     }
 
     fun onUserInviteChange(userId: String) = coroutineScope.launch {
         detailEventViewModel.changeUserInvite(userId, invitableUsers.findLast { it.first.first== userId }?.second != true)
-        mToast("Utente invitato")
     }
 
     fun onInvite() = coroutineScope.launch {

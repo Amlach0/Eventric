@@ -71,11 +71,11 @@ fun SignupScreen(
         if (deleteUserState is ErrorOperation) errorBannerDeleteIsVisible = true
         if (signupState is SuccessOperation){
             goToDispatcher()
-            mToast("Utente creato con successo")
+            mToast("User created successfully")
         }
         if (deleteUserState is SuccessOperation){
             goToDispatcher()
-            mToast("Utente eliminato con successo")
+            mToast("User successfully deleted")
         }
     }
 

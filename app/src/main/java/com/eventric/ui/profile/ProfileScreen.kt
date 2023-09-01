@@ -1,7 +1,6 @@
 package com.eventric.ui.profile
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -11,7 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -31,12 +29,8 @@ fun ProfileScreen(
     goToDispatcher: () -> Unit,
     profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
-    val mContext = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    fun mToast(text: String){
-        Toast.makeText(mContext, text, Toast.LENGTH_LONG).show()
-    }
 
     profileViewModel.setUserId(userId)
 
@@ -65,7 +59,6 @@ fun ProfileScreen(
 
     fun onFollowChange() = coroutineScope.launch {
         profileViewModel.changeUserFollow(!isUserFollowed)
-        mToast(if(isUserFollowed) "Utente seguito" else "Utente rimosso dagli utenti seguiti")
     }
 
     fun onEdit() {

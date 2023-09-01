@@ -99,12 +99,12 @@ fun CreateEventScreen(
         if (deleteEventState is ErrorOperation) deleteErrorBannerIsVisible = true
         if (createEventState is SuccessOperation)
         {
-            mToast(if (isEdit) "Evento Modificato" else "Evento Creato")
+            mToast(if (isEdit) "Event modified" else "Event created")
             onSuccess(eventId)
         }
         if (deleteEventState is SuccessOperation)
         {
-            mToast("Evento Eliminato")
+            mToast("Deleted Event")
             onDelete()
         }
     }
