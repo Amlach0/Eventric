@@ -3,7 +3,7 @@
     <string name="error_login">Login fallito. Verifica i tuoi dati d\'accesso</string>
     <string name="error_signup">Registrazione fallita. Verifica i tuoi dati</string>
     <string name="error_confirmation_psw">Password e conferma password non corrispondono</string>
-    <string name="error_new_event">Creazione evento fallita. Ripovare</string>
+    <string name="error_new_event">Creazione evento fallita. Controllare i dati inseriti e ripovare</string>
     <string name="error_delete_event">Eliminazione evento fallita. Ripovare</string>
     <string name="error_delete_user">Eliminazione utente fallita. Ripovare</string>
     <string name="title_login">Accedi</string>
