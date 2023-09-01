@@ -75,6 +75,7 @@ fun CreateEventScreen(
     var startRegistrationDate by remember { mutableStateOf("") }
     var endRegistrationDate by remember { mutableStateOf("") }
     var info by remember { mutableStateOf("") }
+    var openDeleteDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(event, dbUriImage) {
         name = event.name ?: ""
@@ -163,6 +164,10 @@ fun CreateEventScreen(
         info = value
     }
 
+    fun onOpenDeleteDialog() { openDeleteDialog = true }
+
+    fun onCloseDeleteDialog() { openDeleteDialog = false }
+
     fun onSubmit() = coroutineScope.launch {
         if (createEventState !is LoadingOperation) {
             createEventViewModel.createOrEditEvent(
@@ -204,6 +209,7 @@ fun CreateEventScreen(
                 info = info,
                 startRegistrationDate = startRegistrationDate,
                 endRegistrationDate = endRegistrationDate,
+                openDeleteDialog = openDeleteDialog,
                 createErrorBannerIsVisible = createErrorBannerIsVisible,
                 deleteErrorBannerIsVisible = deleteErrorBannerIsVisible,
                 onNameChange = ::onEventNameChange,
@@ -216,6 +222,8 @@ fun CreateEventScreen(
                 onStartRegistrationDateChanged = ::onStartRegistrationDateChanged,
                 onEndRegistrationDateChanged = ::onEndRegistrationDateChanged,
                 onInfoChanged = ::onInfoChanged,
+                onOpenDeleteDialog = ::onOpenDeleteDialog,
+                onCloseDeleteDialog = ::onCloseDeleteDialog,
                 onSubmit = ::onSubmit,
                 onDelete = ::onDelete,
             )

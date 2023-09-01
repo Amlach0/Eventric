@@ -75,6 +75,7 @@ fun LoginContent(
                     Text(
                         text = stringResource(R.string.error_login),
                         style = MaterialTheme.typography.h3,
+                        color = MaterialTheme.colors.onError,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.align(Alignment.Center),
                         fontSize = 16.sp,

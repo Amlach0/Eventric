@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.eventric.R
+import com.eventric.ui.component.BrandAlertDialog
 import com.eventric.ui.component.BrandTopBar
 import com.eventric.ui.component.CustomButtonPrimary
 import com.eventric.ui.component.CustomButtonSelector
@@ -65,6 +66,7 @@ fun CreateEventContent(
     endDate: String,
     startRegistrationDate: String,
     endRegistrationDate: String,
+    openDeleteDialog: Boolean,
     createErrorBannerIsVisible: Boolean,
     deleteErrorBannerIsVisible: Boolean,
     onNameChange: (String) -> Unit,
@@ -77,6 +79,8 @@ fun CreateEventContent(
     onEndDateChanged: (String) -> Unit,
     onStartRegistrationDateChanged: (String) -> Unit,
     onEndRegistrationDateChanged: (String) -> Unit,
+    onOpenDeleteDialog: () -> Unit,
+    onCloseDeleteDialog: () -> Unit,
     onDelete: () -> Unit,
     onSubmit: () -> Unit,
 ) {
@@ -111,6 +115,14 @@ fun CreateEventContent(
         )
     }
 
+    BrandAlertDialog(
+        openDialog = openDeleteDialog,
+        title = stringResource(R.string.delete_event_label),
+        text = "Are you sure you want to delete this event ?",
+        closeDialog = { onCloseDeleteDialog() },
+        onConfirm = { onDelete() },
+    )
+
     Scaffold(
         topBar = {
             BrandTopBar(
@@ -131,7 +143,7 @@ fun CreateEventContent(
                         ActionButton(
                             iconId = R.drawable.ic_delete,
                             iconColor = MaterialTheme.colors.error,
-                            onClick = { onDelete() }
+                            onClick = { onOpenDeleteDialog() }
                         )
                 }
             )
@@ -323,6 +335,7 @@ fun CreateEventContent(
                 Text(
                     text = stringResource(if (createErrorBannerIsVisible) R.string.error_new_event else R.string.error_delete_event),
                     style = MaterialTheme.typography.h3,
+                    color = MaterialTheme.colors.onError,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.align(Alignment.Center),
                     fontSize = 16.sp,

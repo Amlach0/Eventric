@@ -13,7 +13,8 @@ private val DarkColors = darkColors(
     onSecondary = White,
     background = Black,
     onBackground = LightGray,
-    error = Red
+    error = Red,
+    onError = White
 )
 
 private val LightColors = lightColors(
@@ -25,6 +26,7 @@ private val LightColors = lightColors(
     onBackground = LightGray,
     surface = White70,
     error = Red,
+    onError = White
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.eventric.R
+import com.eventric.ui.component.BrandAlertDialog
 import com.eventric.ui.component.BrandTopBar
 import com.eventric.ui.component.CustomButtonPrimary
 import com.eventric.ui.component.CustomButtonSecondary
@@ -65,6 +66,7 @@ fun SignupContent(
     errorBannerDeleteIsVisible: Boolean,
     birthDate: String,
     bio: String,
+    openDeleteDialog: Boolean,
     onNameChange: (String) -> Unit,
     onUriImageChange: (Uri) -> Unit,
     onSurnameChange: (String) -> Unit,
@@ -75,6 +77,8 @@ fun SignupContent(
     onConfirmPasswordChange: (String) -> Unit,
     onBirthDateSelected: (String) -> Unit,
     onBioChange: (String) -> Unit,
+    onOpenDeleteDialog: () -> Unit,
+    onCloseDeleteDialog: () -> Unit,
     onSubmit: () -> Unit,
     onLoginPressed: () -> Unit,
     onDeletePressed: () -> Unit,
@@ -91,6 +95,14 @@ fun SignupContent(
             }
         )
     }
+
+    BrandAlertDialog(
+        openDialog = openDeleteDialog,
+        title = stringResource(R.string.delete_event_label),
+        text = "Are you sure you want to delete this event ?",
+        closeDialog = { onCloseDeleteDialog() },
+        onConfirm = { onDeletePressed() },
+    )
 
     Box(
         modifier = Modifier
@@ -146,6 +158,7 @@ fun SignupContent(
                         Text(
                             text = if (errorBannerDeleteIsVisible) "Eliminazione non riuscita" else errorText,
                             style = MaterialTheme.typography.h3,
+                            color = MaterialTheme.colors.onError,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.align(Alignment.Center),
                             fontSize = 16.sp,
@@ -277,7 +290,7 @@ fun SignupContent(
                 text = stringResource(id = if (isEdit) R.string.delete_account else R.string.common_login),
                 color = if (isEdit) MaterialTheme.colors.error else MaterialTheme.colors.primary,
                 iconId = if (isEdit) R.drawable.ic_delete else null,
-                onClick = { if (isEdit) onDeletePressed() else onLoginPressed() }
+                onClick = { if (isEdit) onOpenDeleteDialog() else onLoginPressed() }
             )
         }
     }
@@ -342,7 +355,10 @@ fun SignupContentPreview() {
             onBioChange = {},
             uriImage = Uri.EMPTY,
             onUriImageChange = {},
-            errorBannerDeleteIsVisible = false
+            errorBannerDeleteIsVisible = false,
+            openDeleteDialog = false,
+            onOpenDeleteDialog = {},
+            onCloseDeleteDialog = {}
         )
     }
 }

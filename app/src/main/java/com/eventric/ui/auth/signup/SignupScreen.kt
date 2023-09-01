@@ -61,6 +61,7 @@ fun SignupScreen(
     var bio by remember { mutableStateOf("") }
 
     var errorText by remember { mutableStateOf("Errore") }
+    var openDeleteDialog by remember { mutableStateOf(false) }
     var errorBannerIsVisible by remember { mutableStateOf(false) }
     var errorBannerDeleteIsVisible by remember { mutableStateOf(false) }
     var errorBannerConfermationIsVisible by remember { mutableStateOf(false) }
@@ -132,6 +133,10 @@ fun SignupScreen(
         bio = value
     }
 
+    fun onOpenDeleteDialog() { openDeleteDialog = true }
+
+    fun onCloseDeleteDialog() { openDeleteDialog = false }
+
     fun onSubmit() = coroutineScope.launch {
         if (signupState !is LoadingOperation) {
             try {
@@ -180,6 +185,7 @@ fun SignupScreen(
                 birthDate = birthDate,
                 bio = bio,
                 errorText = errorText,
+                openDeleteDialog = openDeleteDialog,
                 errorBannerIsVisible = errorBannerIsVisible,
                 errorBannerConfirmationIsVisible = errorBannerConfermationIsVisible,
                 errorBannerDeleteIsVisible = errorBannerDeleteIsVisible,
@@ -193,6 +199,8 @@ fun SignupScreen(
                 onConfirmPasswordChange = ::onConfirmPasswordChange,
                 onBirthDateSelected = ::onBirthDateSelected,
                 onBioChange = ::onBioChange,
+                onOpenDeleteDialog = ::onOpenDeleteDialog,
+                onCloseDeleteDialog = ::onCloseDeleteDialog,
                 onSubmit = ::onSubmit,
                 onLoginPressed = ::onLoginPressed,
                 onDeletePressed = ::onDeletePressed,

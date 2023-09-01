@@ -80,4 +80,7 @@
     <string name="empty_events_label">Non ci sono Eventi</string>
     <string name="empty_users_label">Non ci sono Utenti</string>
     <string name="empty_location_label">Luogo non specificato</string>
+    <string name="confirm_dialog_label">Confirm</string>
+    <string name="dismiss_dialog_label">Dismiss</string>
+    <string name="delete_event_label">Delete Event</string>
 </resources>
